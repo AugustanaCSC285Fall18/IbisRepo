@@ -18,8 +18,10 @@ public class LaunchScreenController {
 	@FXML
 	public void handleBrowse() {
 		FileChooser fileChooser = new FileChooser();
-		
-		fileChooser.setTitle("Open Image File");
+		Video video = new Video();	
+		fileChooser.setTitle("Open Video File");
+		video.importVideo();
+		textField.setText(video.getVideoPath());
 	}
 	
 	@FXML

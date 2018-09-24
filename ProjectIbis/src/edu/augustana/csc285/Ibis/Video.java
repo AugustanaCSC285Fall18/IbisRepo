@@ -37,6 +37,10 @@ public class Video {
 		
 	}
 	
+	public String getVideoPath() {
+		return videoPath;
+	}
+	
 }
 
 
