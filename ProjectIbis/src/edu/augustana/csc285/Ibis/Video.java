@@ -1,19 +1,15 @@
 package edu.augustana.csc285.Ibis;
 
+import java.awt.Rectangle;
 import java.io.File;
 import org.opencv.videoio.VideoCapture;
-import javafx.scene.shape.Rectangle;
-import javafx.stage.FileChooser;
-import javafx.stage.Window;
+
 
 public class Video {
 
 	public VideoCapture vidCap = new VideoCapture();
 	
-	private FileChooser fileChooser = new FileChooser();
-
-	private Window mainWindow;
-	
+		
 	private File videoFile;   
 	//private String videoPath; taking this out since can get the path from videoFile.getAbsolutePath() see LanchSreenController 
 	
@@ -26,14 +22,14 @@ public class Video {
 	private Rectangle arenaBounds;
 	
 	
+	
 	public File getVideoFile() {
 		return this.videoFile;
 	}
 	
-	public void importVideo() {
-		fileChooser.setTitle("Open Video File");
-		this.videoFile = fileChooser.showOpenDialog(mainWindow);
-
+	public void setVideoFile(File vidFile) {
+		this.videoFile = vidFile;
+		vidCap.open(vidFile.getPath());
 	}
 	
 }

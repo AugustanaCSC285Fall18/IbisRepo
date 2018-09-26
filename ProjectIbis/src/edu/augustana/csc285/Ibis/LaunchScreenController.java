@@ -1,5 +1,6 @@
 package edu.augustana.csc285.Ibis;
 
+import java.io.File;
 import java.io.IOException;
 
 import javafx.fxml.FXML;
@@ -10,6 +11,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.stage.Window;
 
 public class LaunchScreenController {
 	@FXML private Button browseButton;
@@ -19,7 +21,11 @@ public class LaunchScreenController {
 
 	@FXML
 	public void handleBrowse() {
-		video.importVideo();
+		FileChooser fileChooser = new FileChooser();
+
+		fileChooser.setTitle("Open Video File");
+		File videoFile = fileChooser.showOpenDialog(browseButton.getScene().getWindow());
+		video.setVideoFile(videoFile);
 		textField.setText(video.getVideoFile().getAbsolutePath());
 	}
 
