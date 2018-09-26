@@ -1,10 +1,22 @@
 package edu.augustana.csc285.Ibis;
 
+import java.io.ByteArrayInputStream;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+
 import org.opencv.core.Mat;
+import org.opencv.core.MatOfByte;
+import org.opencv.imgcodecs.Imgcodecs;
+import org.opencv.videoio.Videoio;
+
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 public class MainWindowController {
@@ -37,7 +49,7 @@ public class MainWindowController {
 	@FXML
 	public void initialize() {
 	}
-	new Video capture = Video();
+	Video capture = new Video();
 	
 	// called to play to video continuously by repeatedly calling the grab frame
 	// method every 33 milliseconds
@@ -70,7 +82,7 @@ public class MainWindowController {
 
 			// sets the video to display the desired frame
 			videoView.setImage(imageToShow);
-		}
+		
 
 		/*public void handleBrowse() {
 			FileChooser fileChooser = new FileChooser();

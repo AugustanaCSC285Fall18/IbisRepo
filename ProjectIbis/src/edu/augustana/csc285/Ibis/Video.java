@@ -36,6 +36,10 @@ public class Video {
 
 	}
 	
+	public VideoCapture returnVidCap() {
+		return this.vidCap;
+	}
+	
 }
 
 
