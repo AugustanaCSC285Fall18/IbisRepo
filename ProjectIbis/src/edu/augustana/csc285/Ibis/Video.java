@@ -26,7 +26,12 @@ public class Video {
 	
 	
 	public Video() {
-		//this.videoPath = this.videoFile.getAbsolutePath();
+		try {
+			this.videoPath = this.videoFile.getAbsolutePath();
+			setVideoFile(this.videoFile);
+		} catch (NullPointerException n) {
+			
+		}
 	}
 	
 	public File getVideoFile() {
@@ -35,7 +40,7 @@ public class Video {
 	
 	public void setVideoFile(File vidFile) {
 		this.videoFile = vidFile;
-		vidCap.open(vidFile.getPath());
+		vidCap.open(vidFile.getAbsolutePath());
 	}
 	
 	public VideoCapture returnVidCap() {

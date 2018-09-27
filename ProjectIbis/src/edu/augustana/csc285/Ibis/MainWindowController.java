@@ -117,8 +117,8 @@ public class MainWindowController {
 				@Override
 				public void changed(ObservableValue<? extends Number> observable, Number initalVal, Number finalVal) {
 					if (videoSlider.isValueChanging()) {
-						timer.shutdown();
 						try {
+							timer.shutdown();
 							Thread.sleep(33);
 						} catch (InterruptedException e) {
 							// TODO Auto-generated catch block
