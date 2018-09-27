@@ -1,0 +1,71 @@
+[1mdiff --git a/ProjectIbis/src/edu/augustana/csc285/Ibis/MainWindowController.java b/ProjectIbis/src/edu/augustana/csc285/Ibis/MainWindowController.java[m
+[1mindex 1cf550a..d12f78e 100644[m
+[1m--- a/ProjectIbis/src/edu/augustana/csc285/Ibis/MainWindowController.java[m
+[1m+++ b/ProjectIbis/src/edu/augustana/csc285/Ibis/MainWindowController.java[m
+[36m@@ -124,7 +124,7 @@[m [mpublic class MainWindowController {[m
+ 							// TODO Auto-generated catch block[m
+ 							e.printStackTrace();[m
+ 						}[m
+[31m-						capture.set(Videoio.CAP_PROP_POS_FRAMES, (double) finalVal);[m
+[32m+[m						[32mcapture.setCurrentFrameNum((double) finalVal);[m
+ 						// resumes player[m
+ 						player();[m
+ 					}[m
+[1mdiff --git a/ProjectIbis/src/edu/augustana/csc285/Ibis/Video.java b/ProjectIbis/src/edu/augustana/csc285/Ibis/Video.java[m
+[1mindex d3200e6..9485dd0 100644[m
+[1m--- a/ProjectIbis/src/edu/augustana/csc285/Ibis/Video.java[m
+[1m+++ b/ProjectIbis/src/edu/augustana/csc285/Ibis/Video.java[m
+[36m@@ -3,6 +3,8 @@[m [mpackage edu.augustana.csc285.Ibis;[m
+ import java.awt.Rectangle;[m
+ import java.io.File;[m
+ import org.opencv.videoio.VideoCapture;[m
+[32m+[m[32mimport org.opencv.core.Mat;[m
+[32m+[m[32mimport org.opencv.videoio.Videoio;[m
+ [m
+ [m
+ public class Video {[m
+[36m@@ -11,7 +13,7 @@[m [mpublic class Video {[m
+ 	[m
+ 		[m
+ 	private File videoFile;   [m
+[31m-	//private String videoPath; taking this out since can get the path from videoFile.getAbsolutePath() see LanchSreenController [m
+[32m+[m	[32mprivate String videoPath;[m
+ 	[m
+ 	private double frameRate;[m
+ 	private double xPixelsPerCm;[m
+[36m@@ -23,6 +25,10 @@[m [mpublic class Video {[m
+ 	[m
+ 	[m
+ 	[m
+[32m+[m	[32mpublic Video() {[m
+[32m+[m		[32m//this.videoPath = this.videoFile.getAbsolutePath();[m
+[32m+[m	[32m}[m
+[32m+[m[41m	[m
+ 	public File getVideoFile() {[m
+ 		return this.videoFile;[m
+ 	}[m
+[36m@@ -36,6 +42,24 @@[m [mpublic class Video {[m
+ 		return this.vidCap;[m
+ 	}[m
+ 	[m
+[32m+[m	[32mpublic Mat read(Mat frame) {[m
+[32m+[m		[32mframe = new Mat();[m
+[32m+[m		[32mvidCap.read(frame);[m
+[32m+[m		[32mreturn frame;[m
+[32m+[m	[32m}[m
+[32m+[m[41m	[m
+[32m+[m	[32mpublic void setCurrentFrameNum(double seekFrame) {[m
+[32m+[m		[32mvidCap.set(Videoio.CV_CAP_PROP_POS_FRAMES, (double) seekFrame);[m
+[32m+[m	[32m}[m
+[32m+[m[41m	[m
+[32m+[m	[32mpublic String getFilePath() {[m
+[32m+[m		[32mreturn this.videoFile.getAbsolutePath();[m
+[32m+[m	[32m}[m
+[32m+[m[41m	[m
+[32m+[m	[32mpublic void setFilePath(String videoPath) {[m
+[32m+[m		[32mthis.videoPath = videoFile.getAbsolutePath();[m
+[32m+[m	[32m}[m
+[32m+[m[41m	[m
+ }[m
+ [m
+ [m

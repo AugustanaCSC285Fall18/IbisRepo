@@ -124,7 +124,7 @@ public class MainWindowController {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
-						capture.set(Videoio.CAP_PROP_POS_FRAMES, (double) finalVal);
+						capture.setCurrentFrameNum((double) finalVal);
 						// resumes player
 						player();
 					}
