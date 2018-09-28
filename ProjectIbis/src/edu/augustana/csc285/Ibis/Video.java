@@ -47,10 +47,14 @@ public class Video {
 		return this.vidCap;
 	}
 	
-	public Mat read(Mat frame) {
-		frame = new Mat();
+	public Mat read() {
+		Mat frame = new Mat();
 		vidCap.read(frame);
 		return frame;
+	}
+
+	public int getTotalNumFrames() {
+		return (int) vidCap.get(Videoio.CAP_PROP_FRAME_COUNT);
 	}
 	
 	public void setCurrentFrameNum(double seekFrame) {
