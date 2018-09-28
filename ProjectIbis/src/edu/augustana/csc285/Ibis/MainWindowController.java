@@ -10,6 +10,7 @@ import org.opencv.core.MatOfByte;
 import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.videoio.Videoio;
 
+import edu.augustana.csc285.Ibis.utils.UtilsForOpenCV;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
@@ -46,14 +47,43 @@ public class MainWindowController {
 	// a timer for acquiring the video stream
 	private ScheduledExecutorService timer;
 
+	private Video video;
+
+	public void setVideo(Video video) {
+		this.video = video;
+		videoSlider.setMax(video.getTotalNumFrames());
+	}
+	
 	@FXML
 	public void initialize() {
+		videoSlider.valueProperty().addListener(new ChangeListener<Number>() {
+			@Override
+			public void changed(ObservableValue<? extends Number> observable, Number initalVal, Number finalVal) {
+				if (videoSlider.isValueChanging()) {
+					try {
+						if (timer != null) {
+							timer.shutdown();
+							timer.awaitTermination(1000, TimeUnit.MILLISECONDS);
+						}
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					System.out.println(finalVal);
+					video.setCurrentFrameNum((double) finalVal);
+					grabFrame();
+
+					// resumes player
+					//startPlaying();
+				}
+			}
+		});
+		
 	}
-	Video capture = new Video();
 	
 	// called to play to video continuously by repeatedly calling the grab frame
 	// method every 33 milliseconds
-	protected void player() {
+	protected void startPlaying() {
 		Runnable frameGrabber = new Runnable() {
 			@Override
 			public void run() {
@@ -69,66 +99,14 @@ public class MainWindowController {
 	// displays the next frame in the input stream of the video
 	public void grabFrame() {
 			// grabs video's info and puts it into a usable Mat object.
-			Mat frame = new Mat();
-			capture.read(frame);
-
-			// takes a new MatOfByte object and with frame reads in the Mat image into a BMP
-			// file
-			MatOfByte buffer = new MatOfByte();
-
-			// LOOK INTO MOST EFFICIENT FILE TYPE
-			Imgcodecs.imencode(".bmp", frame, buffer);
-			Image imageToShow = new Image(new ByteArrayInputStream(buffer.toArray()));
-
-			// sets the video to display the desired frame
-			videoView.setImage(imageToShow);
-		
-
-		/*public void handleBrowse() {
-			FileChooser fileChooser = new FileChooser();
-			fileChooser.setTitle("Open Image File");
-			Window mainWindow = videoView.getScene().getWindow();
-			File chosenFile = fileChooser.showOpenDialog(mainWindow);
-			if (chosenFile != null) {
-				try {
-					// takes chosenFile uses it to make a new FileInputStream which is used to make
-					// a new image, this image is then set as the new image of videoView
-					videoView.setImage(new Image(new FileInputStream(chosenFile)));
-
-					capture.open(chosenFile.getAbsolutePath());
-
-					// sets slide bar to the appropriate length to match the videos length.
-					double frames = capture.get(Videoio.CV_CAP_PROP_FRAME_COUNT);
-					videoSlider.setMax(frames - 1);
-
-					// calls the recurring player
-					player();
-
-				} catch (FileNotFoundException e) {
-					e.printStackTrace();
-				}
-			}*/
+			
+			Mat frame = video.read();
+			videoView.setImage(UtilsForOpenCV.matToJavaFXImage(frame));
 			
 			// when slider is dragged (not clicked, problem?) the timer from player() will
 			// pause, display is updated to desired frame and player resumes
 			// ISSUE while clicked but not dragged video plays
 			// ISSUE slider node does not move with video
-			videoSlider.valueProperty().addListener(new ChangeListener<Number>() {
-				@Override
-				public void changed(ObservableValue<? extends Number> observable, Number initalVal, Number finalVal) {
-					if (videoSlider.isValueChanging()) {
-						try {
-							timer.shutdown();
-							Thread.sleep(33);
-						} catch (InterruptedException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-						capture.setCurrentFrameNum((double) finalVal);
-						// resumes player
-						player();
-					}
-				}
-			});
+			
 		}
 }

@@ -34,6 +34,10 @@ public class LaunchScreenController {
 		if (video.getVideoFile() != null) {
 				FXMLLoader loader = new FXMLLoader(getClass().getResource("MainWindow.fxml"));
 				AnchorPane root = (AnchorPane) loader.load();
+				
+				MainWindowController nextController = loader.getController();
+				nextController.setVideo(video);
+				
 				Scene nextScene = new Scene(root, root.getPrefWidth(), root.getPrefHeight());
 				nextScene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 				Stage primary = (Stage) okButton.getScene().getWindow();
