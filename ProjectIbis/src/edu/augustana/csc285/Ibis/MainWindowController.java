@@ -71,11 +71,7 @@ public class MainWindowController {
 			public void changed(ObservableValue<? extends Number> observable, Number initalVal, Number finalVal) {
 				if (videoSlider.isValueChanging()) {
 					
-					//timeLabel updates as slider moves				
-					int timeInSecs = (int)Math.round(video.convertFrameNumsToSeconds((int) videoSlider.getValue()));
-					String timeString = String.format("%d:%02d", timeInSecs / 60, timeInSecs % 60);
-					timeDisplayed.setText(timeString);
-					System.out.println(timeDisplayed.getText());
+					updateTimeLabel();
 					
 					try {
 						if (timer != null) {
@@ -137,5 +133,12 @@ public class MainWindowController {
 		canvasView.setHeight(videoView.getFitHeight());
 		canvasView.setWidth(videoView.getFitWidth());
 	}
-
+	
+	//timeLabel updates as slider moves	
+	public void updateTimeLabel() {			
+		int timeInSecs = (int)Math.round(video.convertFrameNumsToSeconds((int) videoSlider.getValue()));
+		String timeString = String.format("%d:%02d", timeInSecs / 60, timeInSecs % 60);
+		timeDisplayed.setText(timeString);
+		System.out.println(timeDisplayed.getText());
+	}
 }
