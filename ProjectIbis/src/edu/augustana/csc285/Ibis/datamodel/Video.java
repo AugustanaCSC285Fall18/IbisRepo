@@ -28,7 +28,7 @@ public class Video {
 	
 	
 	public Video() {
-		
+
 		this.emptyFrameNum = 0;
 		this.startFrameNum = 0;
 		this.endFrameNum = this.getTotalNumFrames()-1;
@@ -77,7 +77,7 @@ public class Video {
 	}
 	
 	public double getFrameRate() {
-		return this.frameRate;
+		return vidCap.get(Videoio.CAP_PROP_FPS);
 	}
 	
 	public double convertFrameNumsToSeconds(int numFrames) {

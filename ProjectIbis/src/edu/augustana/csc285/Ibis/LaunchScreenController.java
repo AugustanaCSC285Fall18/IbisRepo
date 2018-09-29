@@ -27,7 +27,6 @@ public class LaunchScreenController {
 
 		fileChooser.setTitle("Open Video File");
 		File videoFile = fileChooser.showOpenDialog(browseButton.getScene().getWindow());
-		
 		try {
 			video.setVideoFile(videoFile);
 		} catch (FileNotFoundException e) {
