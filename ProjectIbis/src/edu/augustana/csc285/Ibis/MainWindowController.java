@@ -126,6 +126,7 @@ public class MainWindowController {
 	
 	public void findRealImageSize(Image image) {
 		
+		//thanks johnniegf on StackExchange. You the real G
 		double aspectRatio = image.getWidth() / image.getHeight();
 		double realWidth = Math.min(videoView.getFitWidth(), videoView.getFitHeight() * aspectRatio);
 		double realHeight = Math.min(videoView.getFitHeight(), videoView.getFitWidth() / aspectRatio);
@@ -136,11 +137,5 @@ public class MainWindowController {
 		canvasView.setHeight(videoView.getFitHeight());
 		canvasView.setWidth(videoView.getFitWidth());
 	}
-
-//	public void mouseClicked(MouseEvent e) {
-//		if (e.getSceneX() <= video.getArenaBounds().getX() && e.getSceneY() <= video.getArenaBounds().getY()) {
-//			System.out.println(e.getSceneX() + " y= " + e.getSceneY());
-//		}
-//	}
 
 }
