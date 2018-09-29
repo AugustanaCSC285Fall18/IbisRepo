@@ -12,15 +12,21 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.paint.Color;
 
 public class MainWindowController {
 	@FXML
 	private ImageView videoView;
+	@FXML
+	private Canvas canvasView;
 	@FXML
 	private Slider videoSlider;
 	@FXML
@@ -42,15 +48,22 @@ public class MainWindowController {
 	public void setVideo(Video video) {
 		this.video = video;
 		videoSlider.setMax(video.getTotalNumFrames());
+		
+		//video.setCurrentFrameNum();
+		grabFrame();
+
 	}
 
 	@FXML
 	public void initialize() {
-		videoView.setOnMouseClicked(new EventHandler<MouseEvent>() {
+		canvasView.setOnMouseClicked(new EventHandler<MouseEvent>() {
 			@Override
 			//modify the location to reflect the actual location and not with the comparison to the whole GUI
 			public void handle(MouseEvent event) {
-					System.out.println(event.getSceneX() + " y= " + event.getSceneY());
+				GraphicsContext drawingPen = canvasView.getGraphicsContext2D();
+				drawingPen.setFill(Color.GREENYELLOW);
+				drawingPen.fillOval(event.getX(),event.getY() , 10, 10);
+					System.out.println(event.getX() + " y= " + event.getY());
 			}
 		});
 		videoSlider.valueProperty().addListener(new ChangeListener<Number>() {
@@ -103,13 +116,31 @@ public class MainWindowController {
 		// grabs video's info and puts it into a usable Mat object.
 
 		Mat frame = video.read();
-		videoView.setImage(UtilsForOpenCV.matToJavaFXImage(frame));
+		Image image = UtilsForOpenCV.matToJavaFXImage(frame);
+		
+		findRealImageSize(image);
+		videoView.setImage(image);
+			
+		
+	}
+	
+	public void findRealImageSize(Image image) {
+		
+		double aspectRatio = image.getWidth() / image.getHeight();
+		double realWidth = Math.min(videoView.getFitWidth(), videoView.getFitHeight() * aspectRatio);
+		double realHeight = Math.min(videoView.getFitHeight(), videoView.getFitWidth() / aspectRatio);
+		
+		videoView.setFitHeight(realHeight);
+		videoView.setFitWidth(realWidth);
+		
+		canvasView.setHeight(videoView.getFitHeight());
+		canvasView.setWidth(videoView.getFitWidth());
 	}
 
-	public void mouseClicked(MouseEvent e) {
-		if (e.getSceneX() <= video.getArenaBounds().getX() && e.getSceneY() <= video.getArenaBounds().getY()) {
-			System.out.println(e.getSceneX() + " y= " + e.getSceneY());
-		}
-	}
+//	public void mouseClicked(MouseEvent e) {
+//		if (e.getSceneX() <= video.getArenaBounds().getX() && e.getSceneY() <= video.getArenaBounds().getY()) {
+//			System.out.println(e.getSceneX() + " y= " + e.getSceneY());
+//		}
+//	}
 
 }
