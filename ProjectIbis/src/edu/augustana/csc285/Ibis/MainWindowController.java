@@ -1,24 +1,22 @@
 package edu.augustana.csc285.Ibis;
 
-import java.io.ByteArrayInputStream;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import org.opencv.core.Mat;
-import org.opencv.core.MatOfByte;
-import org.opencv.imgcodecs.Imgcodecs;
-import org.opencv.videoio.Videoio;
 
+import edu.augustana.csc285.Ibis.datamodel.Video;
 import edu.augustana.csc285.Ibis.utils.UtilsForOpenCV;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 
 public class MainWindowController {
 	@FXML
@@ -37,14 +35,6 @@ public class MainWindowController {
 
 	}
 
-	// Jacob Bell 9/29/18
-
-	// handles the slider behavior and the browse button
-	// we can rip this into the video class and the gui
-	// to deal with the aforementioned features.
-	// private VideoCapture capture = new VideoCapture();
-	
-	// a timer for acquiring the video stream
 	private ScheduledExecutorService timer;
 
 	private Video video;
@@ -53,9 +43,16 @@ public class MainWindowController {
 		this.video = video;
 		videoSlider.setMax(video.getTotalNumFrames());
 	}
-	
+
 	@FXML
 	public void initialize() {
+		videoView.setOnMouseClicked(new EventHandler<MouseEvent>() {
+			@Override
+			//modify the location to reflect the actual location and not with the comparison to the whole GUI
+			public void handle(MouseEvent event) {
+					System.out.println(event.getSceneX() + " y= " + event.getSceneY());
+			}
+		});
 		videoSlider.valueProperty().addListener(new ChangeListener<Number>() {
 			@Override
 			public void changed(ObservableValue<? extends Number> observable, Number initalVal, Number finalVal) {
@@ -69,20 +66,18 @@ public class MainWindowController {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-					System.out.println(finalVal);
+					// System.out.println(finalVal);
 					video.setCurrentFrameNum((double) finalVal);
 					grabFrame();
 
 					// resumes player
-					//startPlaying();
+					// startPlaying();
 				}
 			}
 		});
-		
+
 	}
-	
-	// called to play to video continuously by repeatedly calling the grab frame
-	// method every 33 milliseconds
+
 	protected void startPlaying() {
 		Runnable frameGrabber = new Runnable() {
 			@Override
@@ -98,15 +93,16 @@ public class MainWindowController {
 
 	// displays the next frame in the input stream of the video
 	public void grabFrame() {
-			// grabs video's info and puts it into a usable Mat object.
-			
-			Mat frame = video.read();
-			videoView.setImage(UtilsForOpenCV.matToJavaFXImage(frame));
-			
-			// when slider is dragged (not clicked, problem?) the timer from player() will
-			// pause, display is updated to desired frame and player resumes
-			// ISSUE while clicked but not dragged video plays
-			// ISSUE slider node does not move with video
-			
+		// grabs video's info and puts it into a usable Mat object.
+
+		Mat frame = video.read();
+		videoView.setImage(UtilsForOpenCV.matToJavaFXImage(frame));
+	}
+
+	public void mouseClicked(MouseEvent e) {
+		if (e.getSceneX() <= video.getArenaBounds().getX() && e.getSceneY() <= video.getArenaBounds().getY()) {
+			System.out.println(e.getSceneX() + " y= " + e.getSceneY());
 		}
+	}
+
 }

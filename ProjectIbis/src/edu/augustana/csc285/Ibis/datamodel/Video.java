@@ -1,4 +1,4 @@
-package edu.augustana.csc285.Ibis;
+package edu.augustana.csc285.Ibis.datamodel;
 
 import java.awt.Rectangle;
 import java.io.File;
@@ -20,7 +20,6 @@ public class Video {
 	private double frameRate;
 	private double xPixelsPerCm;
 	private double yPixelsPerCm;
-	private int totalNumFrames;
 	private int emptyFrameNum;
 	private int startFrameNum;
 	private int endFrameNum;
@@ -29,9 +28,6 @@ public class Video {
 	
 	
 	public Video() {
-		this.videoPath = videoFile.getAbsolutePath();
-		this.vidCap = new VideoCapture(videoPath);
-		
 		
 		this.emptyFrameNum = 0;
 		this.startFrameNum = 0;
@@ -78,10 +74,6 @@ public class Video {
 	
 	public void setFilePath(String videoPath) {
 		this.videoPath = videoFile.getAbsolutePath();
-	}
-	
-	public int getTotalNumFrames() {
-		return this.totalNumFrames;
 	}
 	
 	public double getFrameRate() {

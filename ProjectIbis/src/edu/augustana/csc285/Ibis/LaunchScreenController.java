@@ -1,8 +1,10 @@
 package edu.augustana.csc285.Ibis;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
+import edu.augustana.csc285.Ibis.datamodel.Video;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -20,12 +22,19 @@ public class LaunchScreenController {
 	private Video video = new Video();
 
 	@FXML
-	public void handleBrowse() {
+	public void handleBrowse()  {
 		FileChooser fileChooser = new FileChooser();
 
 		fileChooser.setTitle("Open Video File");
 		File videoFile = fileChooser.showOpenDialog(browseButton.getScene().getWindow());
-		video.setVideoFile(videoFile);
+		
+		try {
+			video.setVideoFile(videoFile);
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		textField.setText(video.getVideoFile().getAbsolutePath());
 	}
 
