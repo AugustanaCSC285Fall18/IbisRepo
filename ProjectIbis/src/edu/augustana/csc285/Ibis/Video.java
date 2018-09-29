@@ -29,10 +29,7 @@ public class Video {
 	
 	
 	public Video() {
-		this.videoPath = videoFile.getAbsolutePath();
-		this.vidCap = new VideoCapture(videoPath);
-		
-		
+
 		this.emptyFrameNum = 0;
 		this.startFrameNum = 0;
 		this.endFrameNum = this.getTotalNumFrames()-1;
@@ -80,12 +77,8 @@ public class Video {
 		this.videoPath = videoFile.getAbsolutePath();
 	}
 	
-	public int getTotalNumFrames() {
-		return this.totalNumFrames;
-	}
-	
 	public double getFrameRate() {
-		return this.frameRate;
+		return vidCap.get(Videoio.CAP_PROP_FPS);
 	}
 	
 	public double convertFrameNumsToSeconds(int numFrames) {
