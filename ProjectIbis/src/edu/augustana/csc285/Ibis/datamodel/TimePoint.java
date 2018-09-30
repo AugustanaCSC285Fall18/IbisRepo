@@ -42,7 +42,7 @@ public class TimePoint implements Comparable<TimePoint> {
 
 	@Override
 	public String toString() {
-		return String.format("(%.1f,%.1f@T=%d)",x,y,frameNum);
+		return String.format("(%.1f, %.1f @T=%d)",x,y,frameNum);
 	}
 
 	public double getDistanceTo(TimePoint other) {

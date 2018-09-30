@@ -54,7 +54,7 @@ public class AutoTracker {
 		List<AnimalTrack> currentlyTrackingSegments = new ArrayList<>();
 
 		vid.setCurrentFrameNum(vid.getEmptyFrameNum());
-		Mat emptyFrame = vid.read();
+		Mat emptyFrame = vid.readFrame();
 
 
 		double minShapePixelArea= 0.5*targetShapeArea*vid.getXPixelsPerCm()*vid.getYPixelsPerCm();
@@ -75,7 +75,7 @@ public class AutoTracker {
 			}
 
 			
-			Mat matFrame = vid.read();			
+			Mat matFrame = vid.readFrame();			
 			List<DetectedShape> candidateShapes = frameAnalyzer.findShapes(matFrame);
 			
 			Mat visualizationFrame = frameAnalyzer.getVisualizationFrame();

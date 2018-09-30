@@ -1,14 +1,21 @@
 package edu.augustana.csc285.Ibis;
 
+import java.io.FileNotFoundException;
+import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import org.opencv.core.Mat;
 
+import edu.augustana.csc285.Ibis.datamodel.ProjectData;
+import edu.augustana.csc285.Ibis.datamodel.TimePoint;
+import edu.augustana.csc285.Ibis.autotracking.AutoTrackListener;
 import edu.augustana.csc285.Ibis.autotracking.AutoTracker;
+import edu.augustana.csc285.Ibis.datamodel.AnimalTrack;
 import edu.augustana.csc285.Ibis.datamodel.Video;
 import edu.augustana.csc285.Ibis.utils.UtilsForOpenCV;
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
@@ -17,13 +24,15 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.Labeled;
 import javafx.scene.control.Slider;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 
-public class MainWindowController {
+public class MainWindowController  { //implements AutoTrackListener will have to implement it for AutoTracking
 	@FXML
 	private ImageView videoView;
 	@FXML
@@ -36,12 +45,22 @@ public class MainWindowController {
 	private Label timeDisplayed;
 	@FXML
 	private Button exportToCSV;
+
 	@FXML
-	private Button autoTrack;
+	private TextField textFieldCurFrameNum;
 	
 	private ScheduledExecutorService timer;
 	private Video video;
+	
+	private TimePoint timePoint;
+	
+/**
+ * private ProjectData project;
 	private AutoTracker autoTracker = new AutoTracker();
+	@FXML
+	private Button btnTrack;
+ */
+	
 
 	@FXML
 	public void initialize() {
@@ -51,15 +70,16 @@ public class MainWindowController {
 			public void handle(MouseEvent event) {
 				GraphicsContext drawingPen = canvasView.getGraphicsContext2D();
 				drawingPen.setFill(Color.GREENYELLOW);
-				drawingPen.fillOval(event.getX(),event.getY() , 10, 10);
-					System.out.println(event.getX() + " y= " + event.getY());
+				drawingPen.fillOval(event.getX(),event.getY() , 5, 5);
+					timePoint= new TimePoint (event.getX(),event.getY(),(int)videoSlider.getValue());
+					System.out.println("Point that's being stored " +timePoint);
 			}
 		});
 		videoSlider.valueProperty().addListener(new ChangeListener<Number>() {
 			@Override
 			public void changed(ObservableValue<? extends Number> observable, Number initalVal, Number finalVal) {
 				if (videoSlider.isValueChanging()) {
-					
+
 					updateTimeLabel();
 					
 					try {
@@ -86,16 +106,10 @@ public class MainWindowController {
 	public void handleExport() {
 
 	}
-	@FXML
-	public void	handleAutoTrack (){
-		autoTracker.startAnalysis(video);
-	}
 	
-
 	public void setVideo(Video video) {
 		this.video = video;
 		videoSlider.setMax(video.getTotalNumFrames()-1); // need the minus one to not go off the video and resolve the errors.
-		
 		//video.setCurrentFrameNum();
 		grabFrame();
 
@@ -118,7 +132,7 @@ public class MainWindowController {
 	public void grabFrame() {
 		// grabs video's info and puts it into a usable Mat object.
 
-		Mat frame = video.read();
+		Mat frame = video.readFrame();
 		Image image = UtilsForOpenCV.matToJavaFXImage(frame);
 		
 		findRealImageSize(image);
@@ -128,7 +142,6 @@ public class MainWindowController {
 	}
 	
 	public void findRealImageSize(Image image) {
-		
 		//thanks johnniegf on StackExchange. You the real G
 		double aspectRatio = image.getWidth() / image.getHeight();
 		double realWidth = Math.min(videoView.getFitWidth(), videoView.getFitHeight() * aspectRatio);
@@ -147,5 +160,73 @@ public class MainWindowController {
 		String timeString = String.format("%d:%02d", timeInSecs / 60, timeInSecs % 60);
 		timeDisplayed.setText(timeString);
 		System.out.println(timeDisplayed.getText());
+		
+		textFieldCurFrameNum.setText(String.format("%05d",(int)videoSlider.getValue()));
+
+		
 	}
+
+	/**
+	 * 
+	 * Code Below has to do with AutoTracking. DOES NOT WORK YET
+	 * It needs the start and end frame for tracking 
+	 
+	public void showFrameAt(int frameNum) {
+		if (autoTracker == null || !autoTracker.isRunning()) {
+			project.getVideo().setCurrentFrameNum(frameNum);
+			Image curFrame = UtilsForOpenCV.matToJavaFXImage(project.getVideo().readFrame());
+			videoView.setImage(curFrame);
+			textFieldCurFrameNum.setText(String.format("%05d",frameNum));
+			
+		}		
+	}
+	@FXML
+	public void	handleAutoTrack (){
+		if (autoTracker == null || !autoTracker.isRunning()) {
+			Video video = project.getVideo();
+			//video.setStartFrameNum(Integer.parseInt(textfieldStartFrame.getText()));
+		//	video.setEndFrameNum(Integer.parseInt(textfieldEndFrame.getText()));
+			autoTracker = new AutoTracker();
+			// Use Observer Pattern to give autotracker a reference to this object, 
+			// and call back to methods in this class to update progress.
+			autoTracker.addAutoTrackListener(this);
+			
+			// this method will start a new thread to run AutoTracker in the background
+			// so that we don't freeze up the main JavaFX UI thread.
+			autoTracker.startAnalysis(video);
+			btnTrack.setText("CANCEL auto-tracking");
+		} else {
+			autoTracker.cancelAnalysis();
+			btnTrack.setText("Start auto-tracking");
+		}
+	}
+	@Override
+	public void handleTrackedFrame(Mat frame, int frameNumber, double fractionComplete) {
+		Image imgFrame = UtilsForOpenCV.matToJavaFXImage(frame);
+		// this method is being run by the AutoTracker's thread, so we must
+		// ask the JavaFX UI thread to update some visual properties
+		Platform.runLater(() -> { 
+			videoView.setImage(imgFrame);
+			videoSlider.setValue(frameNumber);
+			textFieldCurFrameNum.setText(String.format("%05d",frameNumber));
+		});	
+		
+	}
+
+	@Override
+	public void trackingComplete(List<AnimalTrack> trackedSegments) {
+		project.getUnassignedSegments().clear();
+		project.getUnassignedSegments().addAll(trackedSegments);
+
+		for (AnimalTrack track: trackedSegments) {
+			System.out.println(track);
+//			System.out.println("  " + track.getPositions());
+		}
+		Platform.runLater(() -> { 
+			btnTrack.setText("Start auto-tracking");
+		});	
+		
+	}
+	*/
+	
 }

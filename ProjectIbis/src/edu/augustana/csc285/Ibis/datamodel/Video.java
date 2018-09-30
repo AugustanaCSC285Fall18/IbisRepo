@@ -54,7 +54,7 @@ public class Video {
 		return this.vidCap;
 	}
 	
-	public Mat read() {
+	public Mat readFrame() {
 		Mat frame = new Mat();
 		vidCap.read(frame);
 		return frame;
