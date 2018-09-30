@@ -6,6 +6,7 @@ import java.util.concurrent.TimeUnit;
 
 import org.opencv.core.Mat;
 
+import edu.augustana.csc285.Ibis.autotracking.AutoTracker;
 import edu.augustana.csc285.Ibis.datamodel.Video;
 import edu.augustana.csc285.Ibis.utils.UtilsForOpenCV;
 import javafx.beans.value.ChangeListener;
@@ -35,24 +36,12 @@ public class MainWindowController {
 	private Label timeDisplayed;
 	@FXML
 	private Button exportToCSV;
-
 	@FXML
-	public void handleExport() {
-
-	}
-
+	private Button autoTrack;
+	
 	private ScheduledExecutorService timer;
-
 	private Video video;
-
-	public void setVideo(Video video) {
-		this.video = video;
-		videoSlider.setMax(video.getTotalNumFrames());
-		
-		//video.setCurrentFrameNum();
-		grabFrame();
-
-	}
+	private AutoTracker autoTracker = new AutoTracker();
 
 	@FXML
 	public void initialize() {
@@ -91,6 +80,24 @@ public class MainWindowController {
 				}
 			}
 		});
+	}
+	
+	@FXML
+	public void handleExport() {
+
+	}
+	@FXML
+	public void	handleAutoTrack (){
+		autoTracker.startAnalysis(video);
+	}
+	
+
+	public void setVideo(Video video) {
+		this.video = video;
+		videoSlider.setMax(video.getTotalNumFrames()-1); // need the minus one to not go off the video and resolve the errors.
+		
+		//video.setCurrentFrameNum();
+		grabFrame();
 
 	}
 
