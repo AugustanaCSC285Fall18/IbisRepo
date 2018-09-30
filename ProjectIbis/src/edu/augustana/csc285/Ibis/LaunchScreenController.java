@@ -50,6 +50,7 @@ public class LaunchScreenController {
 				nextScene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 				Stage primary = (Stage) okButton.getScene().getWindow();
 				primary.setScene(nextScene);
+				primary.setTitle("Chick Tracker 1.0");
 		}
 	}
 }

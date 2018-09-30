@@ -30,7 +30,7 @@
          </padding>
       </Label>
       <Button fx:id="exportToCSV" layoutX="17.0" layoutY="293.0" mnemonicParsing="false" onAction="#handleExport" prefHeight="27.0" prefWidth="144.0" text="Export Data to CSV File" />
-      <Label fx:id="timeDisplayed" layoutX="622.0" layoutY="298.0" prefHeight="21.0" prefWidth="86.0" text="00:00" />
-      <TextField fx:id="textFieldCurFrameNum" layoutX="640.0" layoutY="320.0" prefHeight="25.0" prefWidth="68.0" />
+      <Label fx:id="timeDisplayed" layoutX="620.0" layoutY="296.0" prefHeight="21.0" prefWidth="68.0" text="00:00" />
+      <TextField fx:id="textFieldCurFrameNum" editable="false" layoutX="6.0" layoutY="14.0" prefHeight="25.0" prefWidth="68.0" text="0" />
    </children>
 </AnchorPane>

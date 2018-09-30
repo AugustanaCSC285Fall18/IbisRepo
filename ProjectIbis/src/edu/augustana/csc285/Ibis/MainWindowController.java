@@ -53,6 +53,7 @@ public class MainWindowController  { //implements AutoTrackListener will have to
 	private Video video;
 	
 	private TimePoint timePoint;
+	private AnimalTrack animalTrack;
 	
 /**
  * private ProjectData project;
@@ -71,8 +72,12 @@ public class MainWindowController  { //implements AutoTrackListener will have to
 				GraphicsContext drawingPen = canvasView.getGraphicsContext2D();
 				drawingPen.setFill(Color.GREENYELLOW);
 				drawingPen.fillOval(event.getX(),event.getY() , 5, 5);
+				animalTrack = new AnimalTrack("Chick manual 1");
 					timePoint= new TimePoint (event.getX(),event.getY(),(int)videoSlider.getValue());
 					System.out.println("Point that's being stored " +timePoint);
+					animalTrack.add(timePoint);
+					System.out.println(animalTrack);
+	
 			}
 		});
 		videoSlider.valueProperty().addListener(new ChangeListener<Number>() {
@@ -184,8 +189,8 @@ public class MainWindowController  { //implements AutoTrackListener will have to
 	public void	handleAutoTrack (){
 		if (autoTracker == null || !autoTracker.isRunning()) {
 			Video video = project.getVideo();
-			//video.setStartFrameNum(Integer.parseInt(textfieldStartFrame.getText()));
-		//	video.setEndFrameNum(Integer.parseInt(textfieldEndFrame.getText()));
+			video.setStartFrameNum(Integer.parseInt(textfieldStartFrame.getText()));
+			video.setEndFrameNum(Integer.parseInt(textfieldEndFrame.getText()));
 			autoTracker = new AutoTracker();
 			// Use Observer Pattern to give autotracker a reference to this object, 
 			// and call back to methods in this class to update progress.
