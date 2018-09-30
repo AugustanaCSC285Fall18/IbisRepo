@@ -25,6 +25,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Labeled;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
@@ -32,7 +33,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 
-public class MainWindowController  { //implements AutoTrackListener will have to implement it for AutoTracking
+public class MainWindowController implements AutoTrackListener {
 	@FXML
 	private ImageView videoView;
 	@FXML
@@ -55,13 +56,16 @@ public class MainWindowController  { //implements AutoTrackListener will have to
 	private TimePoint timePoint;
 	private AnimalTrack animalTrack;
 	
-/**
- * private ProjectData project;
+ private ProjectData project;
 	private AutoTracker autoTracker = new AutoTracker();
 	@FXML
 	private Button btnTrack;
- */
-	
+	@FXML
+	private TextField textfieldStartFrame;
+	@FXML
+	private TextField textfieldEndFrame;
+	@FXML
+	private ProgressBar progressAutoTrack;
 
 	@FXML
 	public void initialize() {
@@ -112,10 +116,10 @@ public class MainWindowController  { //implements AutoTrackListener will have to
 
 	}
 	
-	public void setVideo(Video video) {
+	public void setVideo(Video video) throws FileNotFoundException {
+		// project = new ProjectData(video.getPath());
 		this.video = video;
-		videoSlider.setMax(video.getTotalNumFrames()-1); // need the minus one to not go off the video and resolve the errors.
-		//video.setCurrentFrameNum();
+		videoSlider.setMax(this.video.getTotalNumFrames()-1); // need the minus one to not go off the video and resolve the errors.
 		grabFrame();
 
 	}
@@ -171,14 +175,10 @@ public class MainWindowController  { //implements AutoTrackListener will have to
 		
 	}
 
-	/**
-	 * 
-	 * Code Below has to do with AutoTracking. DOES NOT WORK YET
-	 * It needs the start and end frame for tracking 
-	 
+
 	public void showFrameAt(int frameNum) {
 		if (autoTracker == null || !autoTracker.isRunning()) {
-			project.getVideo().setCurrentFrameNum(frameNum);
+			//project.getVideo().setCurrentFrameNum(frameNum);
 			Image curFrame = UtilsForOpenCV.matToJavaFXImage(project.getVideo().readFrame());
 			videoView.setImage(curFrame);
 			textFieldCurFrameNum.setText(String.format("%05d",frameNum));
@@ -188,8 +188,8 @@ public class MainWindowController  { //implements AutoTrackListener will have to
 	@FXML
 	public void	handleAutoTrack (){
 		if (autoTracker == null || !autoTracker.isRunning()) {
-			Video video = project.getVideo();
-			video.setStartFrameNum(Integer.parseInt(textfieldStartFrame.getText()));
+			//Video video = project.getVideo();
+			video.setStartFrameNum(Integer.parseInt(textfieldStartFrame.getText())); 
 			video.setEndFrameNum(Integer.parseInt(textfieldEndFrame.getText()));
 			autoTracker = new AutoTracker();
 			// Use Observer Pattern to give autotracker a reference to this object, 
@@ -203,6 +203,7 @@ public class MainWindowController  { //implements AutoTrackListener will have to
 		} else {
 			autoTracker.cancelAnalysis();
 			btnTrack.setText("Start auto-tracking");
+			updateTimeLabel();
 		}
 	}
 	@Override
@@ -211,12 +212,15 @@ public class MainWindowController  { //implements AutoTrackListener will have to
 		// this method is being run by the AutoTracker's thread, so we must
 		// ask the JavaFX UI thread to update some visual properties
 		Platform.runLater(() -> { 
+			updateTimeLabel();
 			videoView.setImage(imgFrame);
+			progressAutoTrack.setProgress(fractionComplete);
 			videoSlider.setValue(frameNumber);
 			textFieldCurFrameNum.setText(String.format("%05d",frameNumber));
 		});	
 		
 	}
+	
 
 	@Override
 	public void trackingComplete(List<AnimalTrack> trackedSegments) {
@@ -228,10 +232,12 @@ public class MainWindowController  { //implements AutoTrackListener will have to
 //			System.out.println("  " + track.getPositions());
 		}
 		Platform.runLater(() -> { 
+			progressAutoTrack.setProgress(1.0);
 			btnTrack.setText("Start auto-tracking");
 		});	
 		
+		
 	}
-	*/
+
 	
 }
