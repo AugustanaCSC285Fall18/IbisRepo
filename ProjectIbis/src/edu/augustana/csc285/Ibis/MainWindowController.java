@@ -6,8 +6,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import javax.swing.ButtonGroup;
-
 import org.opencv.core.Mat;
 import org.opencv.videoio.VideoCapture;
 
@@ -98,30 +96,15 @@ public class MainWindowController implements AutoTrackListener {
 			@Override
 			//modify the location to reflect the actual location and not with the comparison to the whole GUI
 			public void handle(MouseEvent event) {
-				GraphicsContext drawingPen = canvasView.getGraphicsContext2D();
-				drawingPen.setFill(Color.TOMATO);
-				drawingPen.fillOval(event.getX(),event.getY() , 5, 5);
 				
 				timePoint= new TimePoint (event.getX(),event.getY(),(int)videoSlider.getValue());
 				
-				if (buttonGroup.getSelectedToggle()==chickOneButton) {
-					animalTrack1.add(timePoint);
-					System.out.println(animalTrack1.toString());
-				} else if (buttonGroup.getSelectedToggle()==chickTwoButton) {
-					animalTrack2.add(timePoint);
-					System.out.println(animalTrack2.toString());
-				} else if (buttonGroup.getSelectedToggle()==chickThreeButton){
-					animalTrack3.add(timePoint);
-					System.out.println(animalTrack3.toString());
-				}
-				
-					
-					System.out.println("Point that's being stored " + timePoint.toString());
-
-				//	System.out.println(animalTrack.getTimePointAtTime((int) videoSlider.getValue()));
+				drawPoint(event);
+				addTimePointToAnimalTrack();
 	
 			}
 		});
+		
 		videoSlider.valueProperty().addListener(new ChangeListener<Number>() {
 			@Override
 			public void changed(ObservableValue<? extends Number> observable, Number initalVal, Number finalVal) {
@@ -212,8 +195,28 @@ public class MainWindowController implements AutoTrackListener {
 
 		
 	}
+	
+	//adds a timepoint to the correct animaltrack
+	public void addTimePointToAnimalTrack(){ 
+		if (buttonGroup.getSelectedToggle()==chickOneButton) {
+			animalTrack1.add(timePoint);
+			System.out.println(animalTrack1.toString());
+		} else if (buttonGroup.getSelectedToggle()==chickTwoButton) {
+			animalTrack2.add(timePoint);
+			System.out.println(animalTrack2.toString());
+		} else if (buttonGroup.getSelectedToggle()==chickThreeButton){
+			animalTrack3.add(timePoint);
+			System.out.println(animalTrack3.toString());
+		}
+		System.out.println("Point that's being stored " + timePoint.toString());
+	}
 
-
+	public void drawPoint(MouseEvent event) {
+		GraphicsContext drawingPen = canvasView.getGraphicsContext2D();
+		drawingPen.setFill(Color.TOMATO);
+		drawingPen.fillOval(event.getX(),event.getY() , 5, 5);
+	}
+	
 	public void showFrameAt(int frameNum) {
 		if (autoTracker == null || !autoTracker.isRunning()) {
 			//project.getVideo().setCurrentFrameNum(frameNum);
