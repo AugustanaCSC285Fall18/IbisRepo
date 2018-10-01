@@ -105,7 +105,6 @@ public class MainWindowController implements AutoTrackListener {
 				timePoint= new TimePoint (event.getX(),event.getY(),(int)videoSlider.getValue());
 				
 				if (buttonGroup.getSelectedToggle()==chickOneButton) {
-					if(timePoint.getFrameNum()==animalTrack1.getTimePointAtIndex(index))
 					animalTrack1.add(timePoint);
 					System.out.println(animalTrack1.toString());
 				} else if (buttonGroup.getSelectedToggle()==chickTwoButton) {
