@@ -9,8 +9,8 @@ public class ProjectData {
 	private List<AnimalTrack> tracks;
 	private List<AnimalTrack> unassignedSegments;
 	
-	public ProjectData(String videoFilePath) throws FileNotFoundException {
-		video.setFilePath(videoFilePath);
+	public ProjectData(Video video) throws FileNotFoundException {
+		this.video = video;
 		tracks = new ArrayList<>();
 		unassignedSegments = new ArrayList<>();
 	}

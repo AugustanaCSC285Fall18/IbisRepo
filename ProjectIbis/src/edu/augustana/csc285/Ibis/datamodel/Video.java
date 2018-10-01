@@ -29,13 +29,6 @@ public class Video {
 	
 	public Video() {
 
-		this.emptyFrameNum = 0;
-		this.startFrameNum = 0;
-		this.endFrameNum = this.getTotalNumFrames()-1;
-		
-		int frameWidth = (int)vidCap.get(Videoio.CAP_PROP_FRAME_WIDTH);
-		int frameHeight = (int)vidCap.get(Videoio.CAP_PROP_FRAME_HEIGHT);
-		this.arenaBounds = new Rectangle(0,0,frameWidth,frameHeight);
 	}
 	
 	public File getVideoFile() {
@@ -48,6 +41,15 @@ public class Video {
 		if (!vidCap.isOpened()) {
 			throw new FileNotFoundException("Unable to open video file: " + videoPath);
 		}
+
+		this.emptyFrameNum = 0;
+		this.startFrameNum = 0;
+		this.endFrameNum = this.getTotalNumFrames()-1;
+		
+		int frameWidth = (int)vidCap.get(Videoio.CAP_PROP_FRAME_WIDTH);
+		int frameHeight = (int)vidCap.get(Videoio.CAP_PROP_FRAME_HEIGHT);
+		this.arenaBounds = new Rectangle(0,0,frameWidth,frameHeight);
+
 	}
 	
 	public VideoCapture returnVidCap() {
@@ -66,6 +68,10 @@ public class Video {
 	
 	public void setCurrentFrameNum(double seekFrame) {
 		vidCap.set(Videoio.CV_CAP_PROP_POS_FRAMES, (double) seekFrame);
+	}
+
+	public int getCurrentFrameNum() {
+		return (int) vidCap.get(Videoio.CV_CAP_PROP_POS_FRAMES);
 	}
 	
 	public String getFilePath() {

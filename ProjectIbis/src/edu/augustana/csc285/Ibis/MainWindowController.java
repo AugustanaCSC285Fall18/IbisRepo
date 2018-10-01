@@ -71,7 +71,6 @@ public class MainWindowController implements AutoTrackListener {
 
 	
 	private ScheduledExecutorService timer;
-	private Video video;
 	
 	private TimePoint timePoint;
 	
@@ -105,31 +104,41 @@ public class MainWindowController implements AutoTrackListener {
 			}
 		});
 		
+//		videoSlider.valueProperty().addListener(new ChangeListener<Number>() {
+//			@Override
+//			public void changed(ObservableValue<? extends Number> observable, Number initalVal, Number finalVal) {
+//				if (videoSlider.isValueChanging()) {
+//
+//					updateTimeLabel();
+//					
+//					try {
+//						if (timer != null) {
+//							timer.shutdown();
+//							timer.awaitTermination(1000, TimeUnit.MILLISECONDS);
+//						}
+//					} catch (InterruptedException e) {
+//						// TODO Auto-generated catch block
+//						e.printStackTrace();
+//					}
+//					// System.out.println(finalVal);
+//					video.setCurrentFrameNum((double) finalVal);
+//					grabFrame();
+//
+//					// resumes player
+//					// startPlaying();
+//				}
+//			}
+//		});
+		
+		
 		videoSlider.valueProperty().addListener(new ChangeListener<Number>() {
 			@Override
 			public void changed(ObservableValue<? extends Number> observable, Number initalVal, Number finalVal) {
-				if (videoSlider.isValueChanging()) {
-
 					updateTimeLabel();
-					
-					try {
-						if (timer != null) {
-							timer.shutdown();
-							timer.awaitTermination(1000, TimeUnit.MILLISECONDS);
-						}
-					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-					// System.out.println(finalVal);
-					video.setCurrentFrameNum((double) finalVal);
-					grabFrame();
-
-					// resumes player
-					// startPlaying();
-				}
+					showFrameAt(finalVal.intValue());
 			}
 		});
+		
 	}
 	
 	@FXML
@@ -138,18 +147,20 @@ public class MainWindowController implements AutoTrackListener {
 	}
 	
 	public void setVideo(Video video) throws FileNotFoundException {
-		// project = new ProjectData(video.getPath());
-		this.video = video;
-		videoSlider.setMax(this.video.getTotalNumFrames()-1); // need the minus one to not go off the video and resolve the errors.
-		grabFrame();
-
+		project = new ProjectData(video);
+		project.getVideo().setXPixelsPerCm(6);
+		project.getVideo().setYPixelsPerCm(6);
+		videoSlider.setMax(project.getVideo().getTotalNumFrames()-1); // need the minus one to not go off the video and resolve the errors.
+		showFrameAt(0);
 	}
 
 	protected void startPlaying() {
 		Runnable frameGrabber = new Runnable() {
 			@Override
 			public void run() {
-				grabFrame();
+				//grabFrame();
+				// TODO: this playing approach doesn't work yet... may need a different approach...
+				showFrameAt(project.getVideo().getCurrentFrameNum()+1);
 			}
 		};
 		// timer for 33 milliseconds, can call in larger increments of frames to play
@@ -158,18 +169,7 @@ public class MainWindowController implements AutoTrackListener {
 		this.timer.scheduleAtFixedRate(frameGrabber, 0, 33, TimeUnit.MILLISECONDS);
 	}
 
-	// displays the next frame in the input stream of the video
-	public void grabFrame() {
-		// grabs video's info and puts it into a usable Mat object.
 
-		Mat frame = video.readFrame();
-		Image image = UtilsForOpenCV.matToJavaFXImage(frame);
-		
-		findRealImageSize(image);
-		videoView.setImage(image);
-			
-		
-	}
 	
 	public void findRealImageSize(Image image) {
 		//thanks johnniegf on StackExchange. You the real G
@@ -186,10 +186,9 @@ public class MainWindowController implements AutoTrackListener {
 	
 	//timeLabel updates as slider moves	
 	public void updateTimeLabel() {			
-		int timeInSecs = (int)Math.round(video.convertFrameNumsToSeconds((int) videoSlider.getValue()));
+		int timeInSecs = (int)Math.round(project.getVideo().convertFrameNumsToSeconds((int) videoSlider.getValue()));
 		String timeString = String.format("%d:%02d", timeInSecs / 60, timeInSecs % 60);
 		timeDisplayed.setText(timeString);
-		System.out.println(timeDisplayed.getText());
 		
 		textFieldCurFrameNum.setText(String.format("%05d",(int)videoSlider.getValue()));
 
@@ -207,6 +206,13 @@ public class MainWindowController implements AutoTrackListener {
 		} else if (buttonGroup.getSelectedToggle()==chickThreeButton){
 			animalTrack3.add(timePoint);
 			System.out.println(animalTrack3.toString());
+			System.out.println(animalTrack3.getTimePointAtTime((int)videoSlider.getValue()));
+			
+			for (int i = 0; i < animalTrack3.size(); i++) {
+				System.out.println(i + ": " + animalTrack3.getTimePointAtIndex(i));
+			}
+			
+			
 		}
 		System.out.println("Point that's being stored " + timePoint.toString());
 	}
@@ -219,17 +225,20 @@ public class MainWindowController implements AutoTrackListener {
 	
 	public void showFrameAt(int frameNum) {
 		if (autoTracker == null || !autoTracker.isRunning()) {
-			//project.getVideo().setCurrentFrameNum(frameNum);
+			project.getVideo().setCurrentFrameNum(frameNum);
 			Image curFrame = UtilsForOpenCV.matToJavaFXImage(project.getVideo().readFrame());
 			videoView.setImage(curFrame);
 			textFieldCurFrameNum.setText(String.format("%05d",frameNum));
 			
+			GraphicsContext drawingPen = canvasView.getGraphicsContext2D();
+			drawingPen.clearRect(0, 0, canvasView.getWidth(), canvasView.getHeight());
+			// want to draw the correct dots that had been previously stored for this frame
 		}		
 	}
 	@FXML
 	public void	handleAutoTrack (){
 		if (autoTracker == null || !autoTracker.isRunning()) {
-			//Video video = project.getVideo();
+			Video video = project.getVideo();
 			video.setStartFrameNum(Integer.parseInt(textfieldStartFrame.getText())); 
 			video.setEndFrameNum(Integer.parseInt(textfieldEndFrame.getText()));
 			autoTracker = new AutoTracker();
@@ -265,6 +274,8 @@ public class MainWindowController implements AutoTrackListener {
 
 	@Override
 	public void trackingComplete(List<AnimalTrack> trackedSegments) {
+		System.out.println("TRACKING COMPLETE");
+		System.out.println("Size: " + trackedSegments.size());
 		project.getUnassignedSegments().clear();
 		project.getUnassignedSegments().addAll(trackedSegments);
 
