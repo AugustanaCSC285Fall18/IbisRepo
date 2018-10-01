@@ -6,6 +6,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import javax.swing.ButtonGroup;
+
 import org.opencv.core.Mat;
 import org.opencv.videoio.VideoCapture;
 
@@ -27,8 +29,10 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Labeled;
 import javafx.scene.control.ProgressBar;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -47,18 +51,8 @@ public class MainWindowController implements AutoTrackListener {
 	private Label timeDisplayed;
 	@FXML
 	private Button exportToCSV;
-
 	@FXML
 	private TextField textFieldCurFrameNum;
-	
-	private ScheduledExecutorService timer;
-	private Video video;
-	
-	private TimePoint timePoint;
-	private AnimalTrack animalTrack;
-	
- private ProjectData project;
-	private AutoTracker autoTracker = new AutoTracker();
 	@FXML
 	private Button btnTrack;
 	@FXML
@@ -67,9 +61,39 @@ public class MainWindowController implements AutoTrackListener {
 	private TextField textfieldEndFrame;
 	@FXML
 	private ProgressBar progressAutoTrack;
+	
+	ToggleGroup buttonGroup = new ToggleGroup();
+	
+	@FXML
+	private RadioButton chickOneButton;
+	@FXML
+	private RadioButton chickTwoButton;
+	@FXML
+	private RadioButton chickThreeButton;
 
+	
+	private ScheduledExecutorService timer;
+	private Video video;
+	
+	private TimePoint timePoint;
+	
+	private AnimalTrack animalTrack1 = new AnimalTrack("Chick manual 1");
+	private AnimalTrack animalTrack2 = new AnimalTrack("Chick manual 2");
+	private AnimalTrack animalTrack3 = new AnimalTrack("Chick manual 3");
+	
+	
+	private ProjectData project;
+	private AutoTracker autoTracker = new AutoTracker();
+
+	
+	
 	@FXML
 	public void initialize() {
+		
+		chickOneButton.setToggleGroup(buttonGroup);
+		chickTwoButton.setToggleGroup(buttonGroup);
+		chickThreeButton.setToggleGroup(buttonGroup);
+		
 		canvasView.setOnMouseClicked(new EventHandler<MouseEvent>() {
 			@Override
 			//modify the location to reflect the actual location and not with the comparison to the whole GUI
@@ -78,12 +102,24 @@ public class MainWindowController implements AutoTrackListener {
 				drawingPen.setFill(Color.TOMATO);
 				drawingPen.fillOval(event.getX(),event.getY() , 5, 5);
 				
-				animalTrack = new AnimalTrack("Chick manual 1");
+				timePoint= new TimePoint (event.getX(),event.getY(),(int)videoSlider.getValue());
 				
-					timePoint= new TimePoint (event.getX(),event.getY(),(int)videoSlider.getValue());
-					animalTrack.add(timePoint);
+				if (buttonGroup.getSelectedToggle()==chickOneButton) {
+					if(timePoint.getFrameNum()==animalTrack1.getTimePointAtIndex(index))
+					animalTrack1.add(timePoint);
+					System.out.println(animalTrack1.toString());
+				} else if (buttonGroup.getSelectedToggle()==chickTwoButton) {
+					animalTrack2.add(timePoint);
+					System.out.println(animalTrack2.toString());
+				} else if (buttonGroup.getSelectedToggle()==chickThreeButton){
+					animalTrack3.add(timePoint);
+					System.out.println(animalTrack3.toString());
+				}
+				
+					
 					System.out.println("Point that's being stored " + timePoint.toString());
-					System.out.println(animalTrack.getTimePointAtTime((int) videoSlider.getValue()));
+
+				//	System.out.println(animalTrack.getTimePointAtTime((int) videoSlider.getValue()));
 	
 			}
 		});
