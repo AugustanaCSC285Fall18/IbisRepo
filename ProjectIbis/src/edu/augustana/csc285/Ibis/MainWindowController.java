@@ -7,6 +7,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import org.opencv.core.Mat;
+import org.opencv.videoio.VideoCapture;
 
 import edu.augustana.csc285.Ibis.datamodel.ProjectData;
 import edu.augustana.csc285.Ibis.datamodel.TimePoint;
@@ -74,13 +75,15 @@ public class MainWindowController implements AutoTrackListener {
 			//modify the location to reflect the actual location and not with the comparison to the whole GUI
 			public void handle(MouseEvent event) {
 				GraphicsContext drawingPen = canvasView.getGraphicsContext2D();
-				drawingPen.setFill(Color.GREENYELLOW);
+				drawingPen.setFill(Color.TOMATO);
 				drawingPen.fillOval(event.getX(),event.getY() , 5, 5);
+				
 				animalTrack = new AnimalTrack("Chick manual 1");
+				
 					timePoint= new TimePoint (event.getX(),event.getY(),(int)videoSlider.getValue());
-					System.out.println("Point that's being stored " +timePoint);
 					animalTrack.add(timePoint);
-					System.out.println(animalTrack);
+					System.out.println("Point that's being stored " + timePoint.toString());
+					System.out.println(animalTrack.getTimePointAtTime((int) videoSlider.getValue()));
 	
 			}
 		});

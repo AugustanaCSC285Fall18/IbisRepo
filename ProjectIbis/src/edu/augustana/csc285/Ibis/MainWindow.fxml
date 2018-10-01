@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.effect.*?>
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.canvas.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
 <?import javafx.geometry.Rectangle2D?>
 <?import javafx.scene.canvas.Canvas?>
@@ -12,7 +19,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.StackPane?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="477.0" prefWidth="711.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.augustana.csc285.Ibis.MainWindowController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="477.0" prefWidth="711.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.augustana.csc285.Ibis.MainWindowController">
    <children>
       <StackPane layoutX="207.0" layoutY="14.0">
          <children>
@@ -25,17 +32,17 @@
          </children>
       </StackPane>
       <Slider fx:id="videoSlider" blockIncrement="1.0" layoutX="207.0" layoutY="299.0" onDragDetected="#grabFrame" prefHeight="14.0" prefWidth="413.0" />
-      <Label fx:id="messageScreen" layoutX="21.0" layoutY="329.0" prefHeight="131.0" prefWidth="135.0" text="Message  Screen">
+      <Label fx:id="messageScreen" layoutX="10.0" layoutY="123.0" prefHeight="95.0" prefWidth="145.0" text="This label will display messages according to the desired chick." wrapText="true">
          <padding>
             <Insets left="15.0" />
          </padding>
       </Label>
-      <Button fx:id="exportToCSV" layoutX="17.0" layoutY="293.0" mnemonicParsing="false" onAction="#handleExport" prefHeight="27.0" prefWidth="144.0" text="Export Data to CSV File" />
+      <Button fx:id="exportToCSV" layoutX="10.0" layoutY="58.0" mnemonicParsing="false" onAction="#handleExport" prefHeight="37.0" prefWidth="178.0" text="Export Data to CSV File" />
       <Label fx:id="timeDisplayed" layoutX="620.0" layoutY="296.0" prefHeight="21.0" prefWidth="68.0" text="00:00" />
-      <TextField fx:id="textFieldCurFrameNum" editable="false" layoutX="6.0" layoutY="14.0" prefHeight="25.0" prefWidth="68.0" text="0" />
-      <Button fx:id="btnTrack" layoutX="552.0" layoutY="362.0" mnemonicParsing="false" onAction="#handleAutoTrack" text="Start auto-tracking" />
-      <TextField fx:id="textfieldStartFrame" layoutX="249.0" layoutY="374.0" prefHeight="25.0" prefWidth="68.0" text="100" />
-      <TextField fx:id="textfieldEndFrame" layoutX="356.0" layoutY="374.0" prefHeight="25.0" prefWidth="52.0" text="5000" />
-      <ProgressBar fx:id="progressAutoTrack" layoutX="468.0" layoutY="422.0" prefWidth="200.0" progress="0.0" />
+      <TextField fx:id="textFieldCurFrameNum" editable="false" layoutX="14.0" layoutY="14.0" prefHeight="25.0" prefWidth="68.0" text="0" />
+      <Button fx:id="btnTrack" layoutX="10.0" layoutY="386.0" mnemonicParsing="false" onAction="#handleAutoTrack" prefHeight="31.0" prefWidth="178.0" text="Start auto-tracking" />
+      <TextField fx:id="textfieldStartFrame" layoutX="10.0" layoutY="344.0" prefHeight="25.0" prefWidth="68.0" text="100" />
+      <TextField fx:id="textfieldEndFrame" layoutX="120.0" layoutY="344.0" prefHeight="25.0" prefWidth="68.0" text="5000" />
+      <ProgressBar fx:id="progressAutoTrack" layoutX="10.0" layoutY="425.0" prefHeight="23.0" prefWidth="178.0" progress="0.0" />
    </children>
 </AnchorPane>
