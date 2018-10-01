@@ -44,5 +44,12 @@
       <TextField fx:id="textfieldStartFrame" layoutX="10.0" layoutY="344.0" prefHeight="25.0" prefWidth="68.0" text="100" />
       <TextField fx:id="textfieldEndFrame" layoutX="120.0" layoutY="344.0" prefHeight="25.0" prefWidth="68.0" text="5000" />
       <ProgressBar fx:id="progressAutoTrack" layoutX="10.0" layoutY="425.0" prefHeight="23.0" prefWidth="178.0" progress="0.0" />
+      <RadioButton fx:id="radioButton1" layoutX="262.0" layoutY="349.0" mnemonicParsing="false" text="Chick #1">
+         <toggleGroup>
+            <ToggleGroup fx:id="chickToAddCoordinatesTo" />
+         </toggleGroup>
+      </RadioButton>
+      <RadioButton fx:id="radioButton2" layoutX="372.0" layoutY="349.0" mnemonicParsing="false" text="Chick #2" toggleGroup="$chickToAddCoordinatesTo" />
+      <RadioButton fx:id="radioButton3" layoutX="484.0" layoutY="349.0" mnemonicParsing="false" text="Chick #3" toggleGroup="$chickToAddCoordinatesTo" />
    </children>
 </AnchorPane>
