@@ -133,7 +133,11 @@ public class MainWindowController implements AutoTrackListener {
 		videoSlider.setMax(project.getVideo().getTotalNumFrames()-1); // need the minus one to not go off the video and resolve the errors.
 		showFrameAt(0);
 	}
-
+	
+	public Slider getSlider() {
+		return this.videoSlider;
+	}
+	
 	protected void startPlaying() {
 		Runnable frameGrabber = new Runnable() {
 			@Override

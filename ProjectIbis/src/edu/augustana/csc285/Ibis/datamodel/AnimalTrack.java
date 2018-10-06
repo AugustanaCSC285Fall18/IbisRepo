@@ -5,7 +5,6 @@ import java.util.List;
 
 public class AnimalTrack {
 	private String animalID;
-	
 	private List<TimePoint> positions;
 	
 	public AnimalTrack(String id) {
@@ -14,11 +13,11 @@ public class AnimalTrack {
 	}
 	
 	public void add(TimePoint pt) {
-		positions.add(pt);
+			positions.add(pt);
 	}
 	
 	public TimePoint getTimePointAtIndex(int index) {
-		return positions.get(index);
+			return positions.get(index);
 	}
 
 	/**
@@ -44,6 +43,10 @@ public class AnimalTrack {
 	
 	public int size() {
 		return positions.size();
+	}
+	
+	public String getAnimalId() {
+		return this.animalID;
 	}
 	
 	public String toString() {

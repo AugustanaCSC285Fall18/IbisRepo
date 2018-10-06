@@ -121,7 +121,7 @@ public class AutoTracker {
 		double slowestSpeed = Double.POSITIVE_INFINITY;
 		for (AnimalTrack track: currentSegments) {
 			TimePoint maybePredecessor = track.getFinalTimePoint();
-			double estimatedSpeed = pt.getDistanceTo(maybePredecessor) / pt.getTimeDiffAfter(maybePredecessor);
+			double estimatedSpeed = pt.getDistanceTo(maybePredecessor) / pt.compareTo(maybePredecessor);
 //          TODO: delete this debugging code later
 //			if (estimatedSpeed >= 0 && estimatedSpeed < Double.POSITIVE_INFINITY) {
 //				System.out.printf("%s  est: %.2f  max: %.2f\n", pt, estimatedSpeed, maxPixelMovementPerFrame);
