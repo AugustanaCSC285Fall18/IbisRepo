@@ -79,14 +79,20 @@ public class MainWindowController implements AutoTrackListener {
 	private AnimalTrack animalTrack3 = new AnimalTrack("Chick manual 3");
 	
 	
-	private ProjectData project;
+
 	private AutoTracker autoTracker = new AutoTracker();
+	
+	private ProjectData project = autoTracker.getChickData();
 
 	
 	
 	@FXML
 	public void initialize() {
 		
+//		for (int i = 1; i <= ; i++) {
+//			
+//			chickButton.setToggleGroup(buttonGroup);
+//		}
 		chickOneButton.setToggleGroup(buttonGroup);
 		chickTwoButton.setToggleGroup(buttonGroup);
 		chickThreeButton.setToggleGroup(buttonGroup);
@@ -103,32 +109,6 @@ public class MainWindowController implements AutoTrackListener {
 	
 			}
 		});
-		
-//		videoSlider.valueProperty().addListener(new ChangeListener<Number>() {
-//			@Override
-//			public void changed(ObservableValue<? extends Number> observable, Number initalVal, Number finalVal) {
-//				if (videoSlider.isValueChanging()) {
-//
-//					updateTimeLabel();
-//					
-//					try {
-//						if (timer != null) {
-//							timer.shutdown();
-//							timer.awaitTermination(1000, TimeUnit.MILLISECONDS);
-//						}
-//					} catch (InterruptedException e) {
-//						// TODO Auto-generated catch block
-//						e.printStackTrace();
-//					}
-//					// System.out.println(finalVal);
-//					video.setCurrentFrameNum((double) finalVal);
-//					grabFrame();
-//
-//					// resumes player
-//					// startPlaying();
-//				}
-//			}
-//		});
 		
 		
 		videoSlider.valueProperty().addListener(new ChangeListener<Number>() {

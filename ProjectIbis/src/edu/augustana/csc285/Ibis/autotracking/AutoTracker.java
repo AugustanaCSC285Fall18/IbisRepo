@@ -26,6 +26,8 @@ public class AutoTracker {
 	
 	private final double maxTimeGapWithinSegment = 0.5; // end a segment after this many seconds with no point detected
 	private final double maxMovementSpeed = 80.0; // guess for chicks
+	
+	private ProjectData chickData;
 
 	public AutoTracker() {
 		//TODO: pass in some thresholds/parameters for fine-tuning the auto-tracking 
@@ -41,7 +43,7 @@ public class AutoTracker {
 
 			@Override
 			protected Void call() throws Exception {
-				analyzeWholeVideo(vid);
+				analyzeWholeVideo(vid, chickData);
 				return null;
 			}
 		};
@@ -49,7 +51,7 @@ public class AutoTracker {
 		execService.submit(task);
 	}
 	
-	private void analyzeWholeVideo(Video vid) {
+	private void analyzeWholeVideo(Video vid, ProjectData trackData) {
 		List<AnimalTrack> archivedTrackedSegments = new ArrayList<>();
 		List<AnimalTrack> currentlyTrackingSegments = new ArrayList<>();
 
@@ -101,8 +103,16 @@ public class AutoTracker {
 		
 		archivedTrackedSegments.addAll(currentlyTrackingSegments);
 		
+//		this might be causing an infinite loop or something
+//		we need this though to be able to take the list of AnimalTracks
+//		out of this method and use them in MainWindowController
+//		for manual tracking
+//		
+//		trackData.setUnassignedSegments(archivedTrackedSegments);
+		
 		for (AutoTrackListener listener : listeners) {
 			listener.trackingComplete(archivedTrackedSegments);
+			System.out.println(trackData.getUnassignedSegments().toString());
 		}
 	}
 	
@@ -150,6 +160,10 @@ public class AutoTracker {
 	 */
 	public void addAutoTrackListener(AutoTrackListener listener) {
 		listeners.add(listener);
+	}
+	
+	public ProjectData getChickData() {
+		return this.chickData;
 	}
 	
 }

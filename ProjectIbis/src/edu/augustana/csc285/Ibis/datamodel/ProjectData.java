@@ -26,6 +26,10 @@ public class ProjectData {
 	public List<AnimalTrack> getUnassignedSegments() {
 		return unassignedSegments;
 	}
+	
+	public void setUnassignedSegments(List<AnimalTrack> track) {
+		this.unassignedSegments = track;
+	}
 
 	
 }
