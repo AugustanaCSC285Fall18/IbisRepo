@@ -27,7 +27,7 @@ public class AutoTracker {
 	private final double maxTimeGapWithinSegment = 0.5; // end a segment after this many seconds with no point detected
 	private final double maxMovementSpeed = 80.0; // guess for chicks
 	
-	private ProjectData chickData;
+	public ProjectData chickData;
 
 	public AutoTracker() {
 		//TODO: pass in some thresholds/parameters for fine-tuning the auto-tracking 
@@ -51,6 +51,8 @@ public class AutoTracker {
 		execService.submit(task);
 	}
 	
+	//Doesn't use the trackData parameter anymore inside the method, haven't looked at
+	//other classes and how it's utilized yet. But it's still there.
 	private void analyzeWholeVideo(Video vid, ProjectData trackData) {
 		List<AnimalTrack> archivedTrackedSegments = new ArrayList<>();
 		List<AnimalTrack> currentlyTrackingSegments = new ArrayList<>();
@@ -108,11 +110,11 @@ public class AutoTracker {
 //		out of this method and use them in MainWindowController
 //		for manual tracking
 //		
-//		trackData.setUnassignedSegments(archivedTrackedSegments);
+//		this.chickData.setUnassignedSegments(archivedTrackedSegments);
 		
 		for (AutoTrackListener listener : listeners) {
 			listener.trackingComplete(archivedTrackedSegments);
-			System.out.println(trackData.getUnassignedSegments().toString());
+			System.out.println(this.chickData.getUnassignedSegments().toString());
 		}
 	}
 	

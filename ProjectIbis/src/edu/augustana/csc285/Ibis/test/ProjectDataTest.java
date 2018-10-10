@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeAll;
 import org.opencv.core.Core;
 
+import edu.augustana.csc285.Ibis.autotracking.AutoTracker;
 import edu.augustana.csc285.Ibis.datamodel.AnimalTrack;
 import edu.augustana.csc285.Ibis.datamodel.ProjectData;
 import edu.augustana.csc285.Ibis.datamodel.TimePoint;
@@ -57,6 +58,8 @@ class ProjectDataTest {
 			 *	+project.getTracks().get(0).getFinalTimePoint().getFrameNum()+"]", project.getTracks().get(0));
 			 */
 		}
+		
+
 	}
 
 

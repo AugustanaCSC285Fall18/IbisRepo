@@ -29,6 +29,7 @@ public class AnimalTrack {
 	public TimePoint getTimePointAtTime(int frameNum) {
 		//TODO: This method's implementation is inefficient [linear search is O(N)]
 		// Replace this with binary search (O(log n)] or use a Map for fast access
+		// now utilizes binary searching (Omid and Jacob)
 		int first=0;
 		int last = positions.size();		
 		while(first<= last) {
