@@ -75,11 +75,7 @@ public class Video {
 	}
 	
 	public String getFilePath() {
-		return this.videoFile.getAbsolutePath();
-	}
-	
-	public void setFilePath(String videoPath) {
-		this.videoPath=videoPath;
+		return this.videoFile.getPath();
 	}
 	
 	public double getFrameRate() {

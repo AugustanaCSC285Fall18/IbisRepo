@@ -2,6 +2,7 @@ package edu.augustana.csc285.Ibis.test;
 
 import static org.junit.Assert.assertNotNull;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -23,7 +24,7 @@ class ProjectDataTest {
 
 		ProjectData createVideo() throws FileNotFoundException {
 			Video video =new Video();
-			video.setFilePath("testVideos/CircleTest1_no_overlap.mp4");
+			video.setVideoFile(new File("testVideos/CircleTest1_no_overlap.mp4"));
 			ProjectData project = new ProjectData(video);
 			AnimalTrack track1 = new AnimalTrack("chicken1");
 			AnimalTrack track2 = new AnimalTrack("chicken2");
