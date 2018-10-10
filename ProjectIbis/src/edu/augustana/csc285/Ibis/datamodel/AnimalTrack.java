@@ -28,14 +28,23 @@ public class AnimalTrack {
 	
 	public TimePoint getTimePointAtTime(int frameNum) {
 		//TODO: This method's implementation is inefficient [linear search is O(N)]
-		//      Replace this with binary search (O(log n)] or use a Map for fast access
-		for (TimePoint pt : positions) {
-			if (pt.getFrameNum() == frameNum) {
-				return pt;
+		// Replace this with binary search (O(log n)] or use a Map for fast access
+		int first=0;
+		int last = positions.size();		
+		while(first<= last) {
+			int middle= (first+last)/2;
+			if(positions.get(middle).getFrameNum()<frameNum) {
+				first=middle+1;
+			}else if(positions.get(middle).getFrameNum()==frameNum) {
+				return positions.get(middle);
+			}else {
+				last = middle-1;
+				middle=(first+last)/2;
 			}
 		}
-		return null;
+		return null; //if not in the list
 	}
+	
 	
 	public TimePoint getFinalTimePoint() {
 		return positions.get(positions.size()-1);

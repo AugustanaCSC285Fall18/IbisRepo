@@ -13,7 +13,6 @@ class TimePointTest {
 		TimePoint point = new TimePoint(15.0,16.0,335);
 		TimePoint point2=new TimePoint (14.0,12.0,255);
 		assertEquals(Math.sqrt(17), point.getDistanceTo(point2));
-	//	assertEquals(80, point.getTimeDiffAfter(point2));
 		assertEquals(80, point.compareTo(point2));
 	}
 	
@@ -23,6 +22,8 @@ class TimePointTest {
 		TimePoint point2=new TimePoint (10,-5,250);
 		assertEquals(Math.sqrt(225), point.getDistanceTo(point2));
 		assertEquals(-100, point.compareTo(point2));
+		TimePoint point3 = new TimePoint(-5.0,6,-560);
+		assertEquals(-560,point3.getFrameNum());
 	}
 	
 	@Test

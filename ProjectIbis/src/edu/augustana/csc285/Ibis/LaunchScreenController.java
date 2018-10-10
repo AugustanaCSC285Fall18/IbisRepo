@@ -21,6 +21,11 @@ public class LaunchScreenController {
 	@FXML private TextField textField;
 	private Video video = new Video();
 
+	
+	/**
+	 * When the user clicks the browse button the method opens a window for the user
+	 * to select a video. 
+	 */
 	@FXML
 	public void handleBrowse()  {
 		FileChooser fileChooser = new FileChooser();

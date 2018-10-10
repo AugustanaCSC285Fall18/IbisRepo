@@ -7,7 +7,6 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import org.opencv.core.Mat;
-import org.opencv.videoio.VideoCapture;
 
 import edu.augustana.csc285.Ibis.datamodel.ProjectData;
 import edu.augustana.csc285.Ibis.datamodel.TimePoint;
@@ -25,7 +24,6 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.Labeled;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.Slider;
@@ -88,11 +86,6 @@ public class MainWindowController implements AutoTrackListener {
 	
 	@FXML
 	public void initialize() {
-		
-//		for (int i = 1; i <= ; i++) {
-//			
-//			chickButton.setToggleGroup(buttonGroup);
-//		}
 		chickOneButton.setToggleGroup(buttonGroup);
 		chickTwoButton.setToggleGroup(buttonGroup);
 		chickThreeButton.setToggleGroup(buttonGroup);
@@ -101,12 +94,9 @@ public class MainWindowController implements AutoTrackListener {
 			@Override
 			//modify the location to reflect the actual location and not with the comparison to the whole GUI
 			public void handle(MouseEvent event) {
-				
 				timePoint= new TimePoint (event.getX(),event.getY(),(int)videoSlider.getValue());
-				
 				drawPoint(event);
 				addTimePointToAnimalTrack();
-	
 			}
 		});
 		
@@ -142,7 +132,6 @@ public class MainWindowController implements AutoTrackListener {
 		Runnable frameGrabber = new Runnable() {
 			@Override
 			public void run() {
-				//grabFrame();
 				// TODO: this playing approach doesn't work yet... may need a different approach...
 				showFrameAt(project.getVideo().getCurrentFrameNum()+1);
 			}

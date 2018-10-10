@@ -79,7 +79,7 @@ public class Video {
 	}
 	
 	public void setFilePath(String videoPath) {
-		this.videoPath = videoFile.getAbsolutePath();
+		this.videoPath=videoPath;
 	}
 	
 	public double getFrameRate() {
