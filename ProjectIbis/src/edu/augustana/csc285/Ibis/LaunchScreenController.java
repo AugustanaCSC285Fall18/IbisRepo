@@ -35,8 +35,8 @@ public class LaunchScreenController {
 		try {
 			video.setVideoFile(videoFile);
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.out.println("Please select a Video");
+//			e.printStackTrace();
 		}
 		
 		textField.setText(video.getVideoFile().getAbsolutePath());
