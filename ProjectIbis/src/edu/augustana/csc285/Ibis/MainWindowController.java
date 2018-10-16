@@ -42,7 +42,7 @@ public class MainWindowController implements AutoTrackListener {
 	@FXML
 	private Slider videoSlider;
 	@FXML
-	private Label messageScreen;
+	private Label messageLabel;
 	@FXML
 	private Label timeDisplayed;
 	@FXML
@@ -58,14 +58,13 @@ public class MainWindowController implements AutoTrackListener {
 	@FXML
 	private ProgressBar progressAutoTrack;
 	
-	ToggleGroup buttonGroup = new ToggleGroup();
-	
 	@FXML
 	private RadioButton chickOneButton;
 	@FXML
 	private RadioButton chickTwoButton;
 	@FXML
 	private RadioButton chickThreeButton;
+	ToggleGroup buttonGroup = new ToggleGroup();
 
 	
 	private ScheduledExecutorService timer;
@@ -208,8 +207,9 @@ public class MainWindowController implements AutoTrackListener {
 			// want to draw the correct dots that had been previously stored for this frame
 		}		
 	}
+	
 	@FXML
-	public void	handleAutoTrack (){
+	public void	handleAutoTrack(){
 		if (autoTracker == null || !autoTracker.isRunning()) {
 			Video video = project.getVideo();
 			video.setStartFrameNum(Integer.parseInt(textfieldStartFrame.getText())); 
