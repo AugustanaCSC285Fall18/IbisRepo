@@ -17,7 +17,6 @@ public class Video {
 	private File videoFile;   
 	private String videoPath;
 	
-	private double frameRate;
 	private double xPixelsPerCm;
 	private double yPixelsPerCm;
 	private int emptyFrameNum;

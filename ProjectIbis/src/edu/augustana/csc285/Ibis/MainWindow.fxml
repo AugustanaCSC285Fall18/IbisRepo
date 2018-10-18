@@ -27,7 +27,7 @@
          </children>
       </StackPane>
       <Slider fx:id="videoSlider" blockIncrement="1.0" layoutX="207.0" layoutY="299.0" prefHeight="14.0" prefWidth="413.0" />
-      <Label fx:id="messageScreen" layoutX="10.0" layoutY="123.0" prefHeight="95.0" prefWidth="145.0" text="This label will display messages according to the desired chick." wrapText="true">
+      <Label fx:id="messageLabel" layoutX="10.0" layoutY="123.0" prefHeight="95.0" prefWidth="145.0" text="This label will display messages according to the desired chick." wrapText="true">
          <padding>
             <Insets left="15.0" />
          </padding>

@@ -114,14 +114,11 @@ public class MainWindowController implements AutoTrackListener {
 	public void handleExport() {
 
 	}
-	
-	public void setVideo(Video video) throws FileNotFoundException {
-		project = new ProjectData(video);
-		project.getVideo().setXPixelsPerCm(6);
-		project.getVideo().setYPixelsPerCm(6);
-		videoSlider.setMax(project.getVideo().getTotalNumFrames()-1); // need the minus one to not go off the video and resolve the errors.
-		showFrameAt(0);
+	public void setProject(ProjectData project){
+		this.project = project;
 	}
+
+	
 	
 	public Slider getSlider() {
 		return this.videoSlider;

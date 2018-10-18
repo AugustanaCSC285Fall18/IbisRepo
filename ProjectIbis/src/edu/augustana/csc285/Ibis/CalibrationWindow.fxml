@@ -26,12 +26,12 @@
       <Slider fx:id="videoSlider" layoutX="207.0" layoutY="299.0" prefHeight="14.0" prefWidth="413.0" />
       <Label fx:id="timeDisplayed" layoutX="620.0" layoutY="296.0" prefHeight="21.0" prefWidth="68.0" text="00:00" />
       <Label contentDisplay="CENTER" layoutX="15.0" layoutY="322.0" prefHeight="43.0" prefWidth="188.0" text="How many chicks will you track in this video?" textAlignment="CENTER" wrapText="true" />
-      <Button fx:id="addBtn" layoutX="43.0" layoutY="378.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="35.0" text="+" />
-      <Button fx:id="removeBtn" layoutX="129.0" layoutY="378.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="35.0" text="-" />
+      <Button fx:id="addButton" layoutX="43.0" layoutY="378.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="35.0" text="+" />
+      <Button fx:id="removeButton" layoutX="129.0" layoutY="378.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="35.0" text="-" />
       <TextField layoutX="10.0" layoutY="60.0" prefHeight="25.0" prefWidth="68.0" text="100" />
       <TextField layoutX="120.0" layoutY="60.0" prefHeight="25.0" prefWidth="68.0" text="5000" />
       <Label fx:id="messageLabel" layoutX="14.0" layoutY="31.0" prefHeight="17.0" prefWidth="175.0" text="Start time           End time" />
       <TextField alignment="CENTER" layoutX="84.0" layoutY="378.0" prefHeight="31.0" prefWidth="35.0" text="0" />
-      <Button fx:id="finishBtn" layoutX="347.0" layoutY="363.0" mnemonicParsing="false" text="Finish Calibration" />
+      <Button fx:id="finishButton" layoutX="347.0" layoutY="363.0" mnemonicParsing="false" text="Finish Calibration" />
    </children>
 </AnchorPane>
