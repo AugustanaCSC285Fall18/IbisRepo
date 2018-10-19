@@ -31,13 +31,14 @@ public class LaunchScreenController {
 
 		fileChooser.setTitle("Open Video File");
 		File videoFile = fileChooser.showOpenDialog(browseButton.getScene().getWindow());
-		try {
+		if(videoFile !=null){
+			try {
 			video.setVideoFile(videoFile);
 		} catch (FileNotFoundException e) {
 			System.out.println("Please select a Video");
 //			e.printStackTrace();
 		}
-		
+		}
 		textField.setText(video.getVideoFile().getAbsolutePath());
 	}
 
