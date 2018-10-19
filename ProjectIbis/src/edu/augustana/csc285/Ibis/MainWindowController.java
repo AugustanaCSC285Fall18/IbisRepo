@@ -79,7 +79,7 @@ public class MainWindowController implements AutoTrackListener {
 
 	private AutoTracker autoTracker = new AutoTracker();
 	
-	private ProjectData project = autoTracker.getChickData();
+	private ProjectData project;
 
 	
 	
@@ -116,6 +116,8 @@ public class MainWindowController implements AutoTrackListener {
 	}
 	public void setProject(ProjectData project){
 		this.project = project;
+		videoSlider.setMax(project.getVideo().getTotalNumFrames()-1); // need the minus one to not go off the video and resolve the errors.
+		showFrameAt(0); //this should show the frame that the user selected as starter in calibration window
 	}
 
 	
@@ -158,10 +160,8 @@ public class MainWindowController implements AutoTrackListener {
 		int timeInSecs = (int)Math.round(project.getVideo().convertFrameNumsToSeconds((int) videoSlider.getValue()));
 		String timeString = String.format("%d:%02d", timeInSecs / 60, timeInSecs % 60);
 		timeDisplayed.setText(timeString);
-		
+	
 		textFieldCurFrameNum.setText(String.format("%05d",(int)videoSlider.getValue()));
-
-		
 	}
 	
 	//adds a timepoint to the correct animaltrack

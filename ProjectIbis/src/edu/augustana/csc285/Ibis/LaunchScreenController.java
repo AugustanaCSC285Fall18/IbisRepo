@@ -13,7 +13,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import javafx.stage.Window;
 
 public class LaunchScreenController {
 	@FXML private Button browseButton;
@@ -45,17 +44,17 @@ public class LaunchScreenController {
 	@FXML
 	public void handleOK() throws IOException {
 		if (video.getVideoFile() != null) {
-				FXMLLoader loader = new FXMLLoader(getClass().getResource("MainWindow.fxml"));
+				FXMLLoader loader = new FXMLLoader(getClass().getResource("CalibrationWindow.fxml"));
 				AnchorPane root = (AnchorPane) loader.load();
 				
-				MainWindowController nextController = loader.getController();
+				CalibrationWindowController nextController = loader.getController();
 				nextController.setVideo(video);
 				
 				Scene nextScene = new Scene(root, root.getPrefWidth(), root.getPrefHeight());
 				nextScene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 				Stage primary = (Stage) okButton.getScene().getWindow();
 				primary.setScene(nextScene);
-				primary.setTitle("Chick Tracker 1.0");
+				primary.setTitle("Calibration Window");
 		}
 	}
 }
