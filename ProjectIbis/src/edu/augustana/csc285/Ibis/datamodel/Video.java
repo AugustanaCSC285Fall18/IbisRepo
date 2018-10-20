@@ -1,7 +1,6 @@
 package edu.augustana.csc285.Ibis.datamodel;
 
 import java.awt.Rectangle;
-import java.io.File;
 import java.io.FileNotFoundException;
 
 import org.opencv.videoio.VideoCapture;
@@ -11,11 +10,9 @@ import org.opencv.videoio.Videoio;
 
 public class Video {
 
-	public VideoCapture vidCap = new VideoCapture();
+	private transient VideoCapture vidCap;
 	
-		
-	private File videoFile;   
-	private String videoPath;
+	private String filePath;
 	
 	private double xPixelsPerCm;
 	private double yPixelsPerCm;
@@ -26,21 +23,9 @@ public class Video {
 	
 	
 	
-	public Video() {
-
-	}
-	
-	public File getVideoFile() {
-		return this.videoFile;
-	}
-	
-	public void setVideoFile(File vidFile) throws FileNotFoundException {
-		this.videoFile = vidFile;
-		vidCap.open(vidFile.getAbsolutePath());
-		if (!vidCap.isOpened()) {
-			throw new FileNotFoundException("Unable to open video file: " + videoPath);
-		}
-
+	public Video(String filePath) throws FileNotFoundException {
+		this.filePath= filePath;
+		connectVideoCapture();
 		this.emptyFrameNum = 0;
 		this.startFrameNum = 0;
 		this.endFrameNum = this.getTotalNumFrames()-1;
@@ -48,11 +33,13 @@ public class Video {
 		int frameWidth = (int)vidCap.get(Videoio.CAP_PROP_FRAME_WIDTH);
 		int frameHeight = (int)vidCap.get(Videoio.CAP_PROP_FRAME_HEIGHT);
 		this.arenaBounds = new Rectangle(0,0,frameWidth,frameHeight);
-
 	}
 	
-	public VideoCapture returnVidCap() {
-		return this.vidCap;
+	public void connectVideoCapture() throws FileNotFoundException {
+		this.vidCap = new VideoCapture(this.filePath);
+		if (!vidCap.isOpened()) {
+			throw new FileNotFoundException("Unable to open video file: " + this.filePath);
+		} 
 	}
 	
 	public Mat readFrame() {
@@ -74,7 +61,7 @@ public class Video {
 	}
 	
 	public String getFilePath() {
-		return this.videoFile.getPath();
+		return filePath;
 	}
 	
 	public double getFrameRate() {

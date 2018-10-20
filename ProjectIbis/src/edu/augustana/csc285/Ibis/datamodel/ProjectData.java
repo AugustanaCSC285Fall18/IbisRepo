@@ -5,12 +5,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ProjectData {
-	private Video video = new Video();
+	private Video video;
 	private List<AnimalTrack> tracks;
 	private List<AnimalTrack> unassignedSegments;
 	
-	public ProjectData(Video video) throws FileNotFoundException {
-		this.video = video;
+	public ProjectData(String filePath) throws FileNotFoundException {
+		this.video = new Video(filePath);
 		tracks = new ArrayList<>();
 		unassignedSegments = new ArrayList<>();
 	}

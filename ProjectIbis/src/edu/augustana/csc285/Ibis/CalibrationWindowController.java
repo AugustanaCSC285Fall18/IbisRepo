@@ -4,10 +4,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Optional;
 
-import edu.augustana.csc285.Ibis.datamodel.AnimalTrack;
 import edu.augustana.csc285.Ibis.datamodel.ProjectData;
-import edu.augustana.csc285.Ibis.datamodel.TimePoint;
-import edu.augustana.csc285.Ibis.datamodel.Video;
+
 import edu.augustana.csc285.Ibis.utils.UtilsForOpenCV;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -44,7 +42,6 @@ public class CalibrationWindowController {
 	private Button finishButton;
 	
 	private ProjectData project;
-	private AnimalTrack animalTrack = new AnimalTrack(null);
 	
 	@FXML
 	public void initialize() {
@@ -74,8 +71,8 @@ public class CalibrationWindowController {
 		primary.setScene(nextScene);
 		primary.setTitle("Chick Tracker 1.0");		
 	}
-	public void setVideo(Video video) throws FileNotFoundException {
-		project = new ProjectData(video);
+	public void setVideo(String filePath) throws FileNotFoundException {
+		project = new ProjectData(filePath);
 		project.getVideo().setXPixelsPerCm(6);
 		project.getVideo().setYPixelsPerCm(6);
 		videoSlider.setMax(project.getVideo().getTotalNumFrames()-1); // need the minus one to not go off the video and resolve the errors.

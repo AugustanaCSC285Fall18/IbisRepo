@@ -2,7 +2,7 @@ package edu.augustana.csc285.Ibis.test;
 
 import static org.junit.Assert.assertNotNull;
 
-import java.io.File;
+
 import java.io.FileNotFoundException;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -10,11 +10,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeAll;
 import org.opencv.core.Core;
 
-import edu.augustana.csc285.Ibis.autotracking.AutoTracker;
 import edu.augustana.csc285.Ibis.datamodel.AnimalTrack;
 import edu.augustana.csc285.Ibis.datamodel.ProjectData;
 import edu.augustana.csc285.Ibis.datamodel.TimePoint;
-import edu.augustana.csc285.Ibis.datamodel.Video;
 
 class ProjectDataTest {
 	
@@ -24,9 +22,7 @@ class ProjectDataTest {
 	}
 
 		ProjectData createVideo() throws FileNotFoundException {
-			Video video =new Video();
-			video.setVideoFile(new File("testVideos/CircleTest1_no_overlap.mp4"));
-			ProjectData project = new ProjectData(video);
+			ProjectData project =new ProjectData("testVideos/CircleTest1_no_overlap.mp4");
 			AnimalTrack track1 = new AnimalTrack("chicken1");
 			AnimalTrack track2 = new AnimalTrack("chicken2");
 			project.getTracks().add(track1);

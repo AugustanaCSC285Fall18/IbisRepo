@@ -18,7 +18,7 @@ public class LaunchScreenController {
 	@FXML private Button browseButton;
 	@FXML private Button okButton;
 	@FXML private TextField textField;
-	private Video video = new Video();
+	private Video video;
 
 	
 	/**
@@ -33,23 +33,22 @@ public class LaunchScreenController {
 		File videoFile = fileChooser.showOpenDialog(browseButton.getScene().getWindow());
 		if(videoFile !=null){
 			try {
-			video.setVideoFile(videoFile);
-		} catch (FileNotFoundException e) {
-			System.out.println("Please select a Video");
-//			e.printStackTrace();
+				video= new Video(videoFile.getPath());
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			}
 		}
-		}
-		textField.setText(video.getVideoFile().getAbsolutePath());
+		textField.setText(video.getFilePath());
 	}
 
 	@FXML
 	public void handleOK() throws IOException {
-		if (video.getVideoFile() != null) {
+		if (video.getFilePath() != null) {
 				FXMLLoader loader = new FXMLLoader(getClass().getResource("CalibrationWindow.fxml"));
 				AnchorPane root = (AnchorPane) loader.load();
 				
 				CalibrationWindowController nextController = loader.getController();
-				nextController.setVideo(video);
+				nextController.setVideo(video.getFilePath());
 				
 				Scene nextScene = new Scene(root, root.getPrefWidth(), root.getPrefHeight());
 				nextScene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
