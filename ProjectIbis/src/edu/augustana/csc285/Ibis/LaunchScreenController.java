@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
+import edu.augustana.csc285.Ibis.datamodel.ProjectData;
 import edu.augustana.csc285.Ibis.datamodel.Video;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -15,10 +16,14 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 public class LaunchScreenController {
-	@FXML private Button browseButton;
+	@FXML private Button newProjectButton;
+	@FXML private Button loadProjectButton;
+
 	@FXML private Button okButton;
-	@FXML private TextField textField;
+	@FXML private TextField newProjectTextField;
+	@FXML private TextField loadProjectTextField;
 	private Video video;
+	private ProjectData project;
 
 	
 	/**
@@ -26,19 +31,36 @@ public class LaunchScreenController {
 	 * to select a video. 
 	 */
 	@FXML
-	public void handleBrowse()  {
+	public void handleNewProject()  {
 		FileChooser fileChooser = new FileChooser();
 
 		fileChooser.setTitle("Open Video File");
-		File videoFile = fileChooser.showOpenDialog(browseButton.getScene().getWindow());
+		File videoFile = fileChooser.showOpenDialog(newProjectButton.getScene().getWindow());
 		if(videoFile !=null){
 			try {
 				video= new Video(videoFile.getPath());
+				newProjectTextField.setText(video.getFilePath());
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
 			}
 		}
-		textField.setText(video.getFilePath());
+	}
+	
+	@FXML
+	public void handleloadProjectButton() {
+		FileChooser fileChooser = new FileChooser();
+		fileChooser.setTitle("Select an existing project");
+		File videoFile = fileChooser.showOpenDialog(newProjectButton.getScene().getWindow());
+		if(videoFile !=null){
+			try {
+				project=project.fromJSON(videoFile.getPath());
+				loadProjectTextField.setText(project.getVideo().getFilePath());
+				this.newProjectButton.disableProperty(); //does this set it to null? 
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			}
+		}
+		
 	}
 
 	@FXML
@@ -48,6 +70,7 @@ public class LaunchScreenController {
 				AnchorPane root = (AnchorPane) loader.load();
 				
 				CalibrationWindowController nextController = loader.getController();
+			
 				nextController.setVideo(video.getFilePath());
 				
 				Scene nextScene = new Scene(root, root.getPrefWidth(), root.getPrefHeight());

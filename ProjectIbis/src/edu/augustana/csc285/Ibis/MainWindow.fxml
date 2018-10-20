@@ -5,6 +5,9 @@
 <?import javafx.scene.canvas.Canvas?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.ProgressBar?>
 <?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.Slider?>
@@ -14,7 +17,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.StackPane?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="477.0" prefWidth="711.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.augustana.csc285.Ibis.MainWindowController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="477.0" prefWidth="711.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.augustana.csc285.Ibis.MainWindowController">
    <children>
       <StackPane layoutX="207.0" layoutY="14.0">
          <children>
@@ -32,15 +35,27 @@
             <Insets left="15.0" />
          </padding>
       </Label>
-      <Button fx:id="exportToCSV" layoutX="10.0" layoutY="58.0" mnemonicParsing="false" onAction="#handleExport" prefHeight="37.0" prefWidth="178.0" text="Export Data to CSV File" />
       <Label fx:id="timeDisplayed" layoutX="620.0" layoutY="296.0" prefHeight="21.0" prefWidth="68.0" text="00:00" />
-      <TextField fx:id="textFieldCurFrameNum" editable="false" layoutX="14.0" layoutY="14.0" prefHeight="25.0" prefWidth="68.0" text="0" />
+      <TextField fx:id="textFieldCurFrameNum" editable="false" layoutX="15.0" layoutY="104.0" prefHeight="25.0" prefWidth="68.0" text="0" />
       <Button fx:id="btnTrack" layoutX="10.0" layoutY="386.0" mnemonicParsing="false" onAction="#handleAutoTrack" prefHeight="31.0" prefWidth="178.0" text="Start auto-tracking" />
       <TextField fx:id="textfieldStartFrame" layoutX="10.0" layoutY="344.0" prefHeight="25.0" prefWidth="68.0" text="100" />
       <TextField fx:id="textfieldEndFrame" layoutX="120.0" layoutY="344.0" prefHeight="25.0" prefWidth="68.0" text="5000" />
       <ProgressBar fx:id="progressAutoTrack" layoutX="10.0" layoutY="425.0" prefHeight="23.0" prefWidth="178.0" progress="0.0" />
-      <RadioButton fx:id="chickOneButton" layoutX="262.0" layoutY="349.0" mnemonicParsing="false" selected="true" text="Chick #1" toggleGroup="$buttonGroup" />
+      <RadioButton fx:id="chickOneButton" layoutX="262.0" layoutY="349.0" mnemonicParsing="false" selected="true" text="Chick #1">
+         <toggleGroup>
+            <ToggleGroup fx:id="buttonGroup" />
+         </toggleGroup></RadioButton>
       <RadioButton fx:id="chickTwoButton" layoutX="372.0" layoutY="349.0" mnemonicParsing="false" text="Chick #2" toggleGroup="$buttonGroup" />
       <RadioButton fx:id="chickThreeButton" layoutX="484.0" layoutY="349.0" mnemonicParsing="false" text="Chick #3" toggleGroup="$buttonGroup" />
+      <MenuBar layoutX="24.0" layoutY="14.0">
+        <menus>
+          <Menu mnemonicParsing="false" text="File">
+            <items>
+              <MenuItem mnemonicParsing="false" onAction="#SaveProjectItem" text="Save Project" />
+                  <MenuItem mnemonicParsing="false" onAction="#ExportToCSVItem" text="Export data to CSV file" />
+            </items>
+          </Menu>
+        </menus>
+      </MenuBar>
    </children>
 </AnchorPane>

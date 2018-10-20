@@ -1,5 +1,6 @@
 package edu.augustana.csc285.Ibis;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.List;
 import java.util.concurrent.Executors;
@@ -18,12 +19,14 @@ import edu.augustana.csc285.Ibis.utils.UtilsForOpenCV;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.Slider;
@@ -33,6 +36,8 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 
 public class MainWindowController implements AutoTrackListener {
 	@FXML
@@ -45,8 +50,10 @@ public class MainWindowController implements AutoTrackListener {
 	private Label messageLabel;
 	@FXML
 	private Label timeDisplayed;
+	
+
 	@FXML
-	private Button exportToCSV;
+	private MenuItem exportToCSVItem;
 	@FXML
 	private TextField textFieldCurFrameNum;
 	@FXML
@@ -110,18 +117,28 @@ public class MainWindowController implements AutoTrackListener {
 		
 	}
 	
-	@FXML
-	public void handleExport() {
-
-	}
+	
+	
 	public void setProject(ProjectData project){
 		this.project = project;
 		videoSlider.setMax(project.getVideo().getTotalNumFrames()-1); // need the minus one to not go off the video and resolve the errors.
 		showFrameAt(0); //this should show the frame that the user selected as starter in calibration window
 	}
 
+	@FXML
+	public void SaveProjectItem (ActionEvent e) {
+		System.out.print("it works");
+
+		FileChooser fileChooser = new FileChooser();
+		fileChooser.setTitle("Saving the project");
+		File project = fileChooser.showSaveDialog(this.btnTrack.getScene().getWindow());
+		
+	}
 	
-	
+	@FXML
+	public void ExportToCSVItem (ActionEvent e) {
+		
+	}
 	public Slider getSlider() {
 		return this.videoSlider;
 	}

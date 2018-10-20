@@ -4,6 +4,9 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 public class ProjectData {
 	private Video video;
 	private List<AnimalTrack> tracks;
@@ -36,6 +39,16 @@ public class ProjectData {
 		this.tracks.add(track);
 	}
 	
-
+	public String toJSON() {
+		Gson gson = new GsonBuilder().setPrettyPrinting().create();		
+		return gson.toJson(this);
+	}
+	
+	public static ProjectData fromJSON(String jsonText) throws FileNotFoundException {
+		Gson gson = new Gson();
+		ProjectData data = gson.fromJson(jsonText, ProjectData.class);
+		data.getVideo().connectVideoCapture();
+		return data;
+	}
 	
 }
