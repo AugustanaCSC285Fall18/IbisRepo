@@ -2,7 +2,9 @@ package edu.augustana.csc285.Ibis;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Optional;
 
+import edu.augustana.csc285.Ibis.datamodel.AnimalTrack;
 import edu.augustana.csc285.Ibis.datamodel.ProjectData;
 import edu.augustana.csc285.Ibis.datamodel.TimePoint;
 import edu.augustana.csc285.Ibis.datamodel.Video;
@@ -18,6 +20,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
+import javafx.scene.control.TextInputDialog;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -41,6 +44,7 @@ public class CalibrationWindowController {
 	private Button finishButton;
 	
 	private ProjectData project;
+	private AnimalTrack animalTrack = new AnimalTrack(null);
 	
 	@FXML
 	public void initialize() {
@@ -93,5 +97,24 @@ public class CalibrationWindowController {
 		int timeInSecs = (int)Math.round(project.getVideo().convertFrameNumsToSeconds((int) videoSlider.getValue()));
 		String timeString = String.format("%d:%02d", timeInSecs / 60, timeInSecs % 60);
 		timeDisplayed.setText(timeString);
+	}
+	
+	@FXML
+	public void handleAddbutton() {
+		TextInputDialog dialog = new TextInputDialog("");
+		dialog.setTitle("Id selector");
+		dialog.setHeaderText("Id Assigner");
+		dialog.setContentText("Please enter the name of this chick: ");
+
+		// Traditional way to get the response value.
+		Optional<String> result = dialog.showAndWait();
+		if (result.isPresent()){
+		    System.out.println("Your name: " + result.get());
+		}
+	}
+	
+	@FXML
+	public void handleRemoveButton() {
+		
 	}
 }

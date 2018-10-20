@@ -69,11 +69,11 @@ public class MainWindowController implements AutoTrackListener {
 	
 	private ScheduledExecutorService timer;
 	
-	private TimePoint timePoint;
+//	private TimePoint timePoint;
 	
-	private AnimalTrack animalTrack1 = new AnimalTrack("Chick manual 1");
-	private AnimalTrack animalTrack2 = new AnimalTrack("Chick manual 2");
-	private AnimalTrack animalTrack3 = new AnimalTrack("Chick manual 3");
+//	private AnimalTrack animalTrack1 = new AnimalTrack("Chick manual 1");
+//	private AnimalTrack animalTrack2 = new AnimalTrack("Chick manual 2");
+//	private AnimalTrack animalTrack3 = new AnimalTrack("Chick manual 3");
 	
 	
 
@@ -93,9 +93,9 @@ public class MainWindowController implements AutoTrackListener {
 			@Override
 			//modify the location to reflect the actual location and not with the comparison to the whole GUI
 			public void handle(MouseEvent event) {
-				timePoint= new TimePoint (event.getX(),event.getY(),(int)videoSlider.getValue());
+//				timePoint= new TimePoint (event.getX(),event.getY(),(int)videoSlider.getValue());
 				drawPoint(event);
-				addTimePointToAnimalTrack();
+//				addTimePointToAnimalTrack();
 			}
 		});
 		
@@ -165,26 +165,24 @@ public class MainWindowController implements AutoTrackListener {
 	}
 	
 	//adds a timepoint to the correct animaltrack
-	public void addTimePointToAnimalTrack(){ 
-		if (buttonGroup.getSelectedToggle()==chickOneButton) {
-			animalTrack1.add(timePoint);
-			System.out.println(animalTrack1.toString());
-		} else if (buttonGroup.getSelectedToggle()==chickTwoButton) {
-			animalTrack2.add(timePoint);
-			System.out.println(animalTrack2.toString());
-		} else if (buttonGroup.getSelectedToggle()==chickThreeButton){
-			animalTrack3.add(timePoint);
-			System.out.println(animalTrack3.toString());
-			System.out.println(animalTrack3.getTimePointAtTime((int)videoSlider.getValue()));
-			
-			for (int i = 0; i < animalTrack3.size(); i++) {
-				System.out.println(i + ": " + animalTrack3.getTimePointAtIndex(i));
-			}
-			
-			
-		}
-		System.out.println("Point that's being stored " + timePoint.toString());
-	}
+//	public void addTimePointToAnimalTrack(){ 
+//		if (buttonGroup.getSelectedToggle()==chickOneButton) {
+//			animalTrack1.add(timePoint);
+//			System.out.println(animalTrack1.toString());
+//		} else if (buttonGroup.getSelectedToggle()==chickTwoButton) {
+//			animalTrack2.add(timePoint);
+//			System.out.println(animalTrack2.toString());
+//		} else if (buttonGroup.getSelectedToggle()==chickThreeButton){
+//			animalTrack3.add(timePoint);
+//			System.out.println(animalTrack3.toString());
+//			System.out.println(animalTrack3.getTimePointAtTime((int)videoSlider.getValue()));
+//			
+//			for (int i = 0; i < animalTrack3.size(); i++) {
+//				System.out.println(i + ": " + animalTrack3.getTimePointAtIndex(i));
+//			}
+//		}
+//		System.out.println("Point that's being stored " + timePoint.toString());
+//	}
 
 	public void drawPoint(MouseEvent event) {
 		GraphicsContext drawingPen = canvasView.getGraphicsContext2D();
