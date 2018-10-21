@@ -1,5 +1,6 @@
 package edu.augustana.csc285.Ibis;
 
+import java.awt.Point;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Optional;
@@ -7,6 +8,7 @@ import java.util.Optional;
 import edu.augustana.csc285.Ibis.datamodel.ProjectData;
 
 import edu.augustana.csc285.Ibis.utils.UtilsForOpenCV;
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
@@ -23,6 +25,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 public class CalibrationWindowController {
@@ -43,6 +46,8 @@ public class CalibrationWindowController {
 	
 	private ProjectData project;
 	
+	private Point pointToCalibrate;
+	
 	@FXML
 	public void initialize() {
 		videoSlider.valueProperty().addListener(new ChangeListener<Number>() {
@@ -52,8 +57,38 @@ public class CalibrationWindowController {
 					showFrameAt(finalVal.intValue());
 			}
 		});
+		canvasView.setOnMouseClicked(new EventHandler<MouseEvent>() {
+			@Override
+			// modify the location to reflect the actual location and not with the
+			// comparison to the whole GUI
+			public void handle(MouseEvent event) {
+				drawPoint(event);
+			//	System.out.println(pointToCalibrate.getLocation());
+			}
+		});
 		
 	}
+	
+	public void addPoint(MouseEvent event) {
+				  System.out.println(event.getX());
+				  System.out.println(event.getY());
+				  double xVal = event.getX();
+				  double yVal = event.getY();
+				  System.out.println(xVal);
+				  System.out.println(yVal);
+				  pointToCalibrate.setLocation(xVal, yVal);
+	}
+	
+	public void drawPoint(MouseEvent event) {
+		GraphicsContext drawingPen = canvasView.getGraphicsContext2D();
+		drawingPen.setFill(Color.FUCHSIA);
+		drawingPen.fillOval(event.getX(), event.getY(), 5, 5);
+		System.out.println(event.getX());
+		System.out.println(event.getY());
+		
+		addPoint(event);
+	}
+	
 	
 	@FXML
 	public void handleFinishButton() throws IOException {
@@ -73,7 +108,7 @@ public class CalibrationWindowController {
 	}
 	public void setVideo(String filePath) throws FileNotFoundException {
 		project = new ProjectData(filePath);
-		project.getVideo().setXPixelsPerCm(6);
+		project.getVideo().setXPixelsPerCm(6); //i think should happen elsewhere
 		project.getVideo().setYPixelsPerCm(6);
 		videoSlider.setMax(project.getVideo().getTotalNumFrames()-1); // need the minus one to not go off the video and resolve the errors.
 		showFrameAt(0);
@@ -84,7 +119,7 @@ public class CalibrationWindowController {
 			Image curFrame = UtilsForOpenCV.matToJavaFXImage(project.getVideo().readFrame());
 			videoView.setImage(curFrame);
 			
-			GraphicsContext drawingPen = canvasView.getGraphicsContext2D();
+			GraphicsContext drawingPen = canvasView.getGraphicsContext2D(); // not needed?
 			drawingPen.clearRect(0, 0, canvasView.getWidth(), canvasView.getHeight());
 			// want to draw the correct dots that had been previously stored for this frame
 		}		
