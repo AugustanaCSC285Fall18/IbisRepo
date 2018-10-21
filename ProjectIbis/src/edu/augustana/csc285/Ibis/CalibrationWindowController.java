@@ -3,6 +3,8 @@ package edu.augustana.csc285.Ibis;
 import java.awt.Point;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import edu.augustana.csc285.Ibis.datamodel.ProjectData;
@@ -20,6 +22,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
+import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -43,6 +46,11 @@ public class CalibrationWindowController {
 	private Button removeButton;
 	@FXML
 	private Button finishButton;
+	@FXML
+	private TextField numberOfChicksLabel;
+	private ArrayList<String> names = new ArrayList<String>();
+	
+	private int numberOfChicks = 0;
 	
 	private ProjectData project;
 	
@@ -92,20 +100,25 @@ public class CalibrationWindowController {
 	
 	@FXML
 	public void handleFinishButton() throws IOException {
-		
-		System.out.println("handle Finish!");
-		FXMLLoader loader = new FXMLLoader(getClass().getResource("MainWindow.fxml"));
-		AnchorPane root = (AnchorPane) loader.load();
-		
-		MainWindowController nextController = loader.getController();
-		nextController.setProject(project);
-		
-		Scene nextScene = new Scene(root, root.getPrefWidth(), root.getPrefHeight());
-		nextScene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
-		Stage primary = (Stage) finishButton.getScene().getWindow();
-		primary.setScene(nextScene);
-		primary.setTitle("Chick Tracker 1.0");		
+		System.out.println("names" + names.size());
+		if (numberOfChicks>0) {
+
+			System.out.println("handle Finish!");
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("MainWindow.fxml"));
+			AnchorPane root = (AnchorPane) loader.load();
+			
+			MainWindowController nextController = loader.getController();
+			nextController.setProject(project);
+//			nextController.animalTrackModifier(numberOfChicks, names); //this is breaking the code, someone fix it
+			
+			Scene nextScene = new Scene(root, root.getPrefWidth(), root.getPrefHeight());
+			nextScene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+			Stage primary = (Stage) finishButton.getScene().getWindow();
+			primary.setScene(nextScene);
+			primary.setTitle("Chick Tracker 1.0");					
+		}
 	}
+	
 	public void setVideo(String filePath) throws FileNotFoundException {
 		project = new ProjectData(filePath);
 		project.getVideo().setXPixelsPerCm(6); //i think should happen elsewhere
@@ -141,12 +154,20 @@ public class CalibrationWindowController {
 		// Traditional way to get the response value.
 		Optional<String> result = dialog.showAndWait();
 		if (result.isPresent()){
-		    System.out.println("Your name: " + result.get());
+			numberOfChicks++;
+			numberOfChicksLabel.setText("" + numberOfChicks);
 		}
+		names.add(result.get());
+		System.out.println(names.size());
 	}
 	
 	@FXML
 	public void handleRemoveButton() {
-		
+		if (numberOfChicks>0) {
+			numberOfChicks--;
+			numberOfChicksLabel.setText("" + numberOfChicks);
+			names.remove(names.size()-1);
+			System.out.println(names.size());
+		}
 	}
 }
