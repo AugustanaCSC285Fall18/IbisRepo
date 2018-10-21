@@ -34,7 +34,8 @@ public class LaunchScreenController {
 	public void handleNewProject()  {
 		FileChooser fileChooser = new FileChooser();
 
-		fileChooser.setTitle("Open Video File");
+		fileChooser.setTitle("Select a file");
+		fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Video", "*.mp4", "*.mp3", "*.avi"));
 		File videoFile = fileChooser.showOpenDialog(newProjectButton.getScene().getWindow());
 		if(videoFile !=null){
 			try {
@@ -50,6 +51,7 @@ public class LaunchScreenController {
 	public void handleloadProjectButton() {
 		FileChooser fileChooser = new FileChooser();
 		fileChooser.setTitle("Select an existing project");
+		fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JSON file", "*.json"));
 		File videoFile = fileChooser.showOpenDialog(newProjectButton.getScene().getWindow());
 		if(videoFile !=null){
 			try {

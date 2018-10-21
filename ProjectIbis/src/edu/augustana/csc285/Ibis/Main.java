@@ -20,7 +20,7 @@ public class Main extends Application {
 			primaryStage.setScene(scene);
 			primaryStage.show();
 			primaryStage.getIcons().add(new Image("icon.jpg"));
-			primaryStage.setTitle("Choose a file");
+			primaryStage.setTitle("Welcome to Chick Tracker 1.0");
 			
 		} catch(Exception e) {
 			e.printStackTrace();

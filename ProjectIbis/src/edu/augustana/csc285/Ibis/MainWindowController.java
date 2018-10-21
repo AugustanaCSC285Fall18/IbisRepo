@@ -2,12 +2,15 @@ package edu.augustana.csc285.Ibis;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import org.opencv.core.Mat;
+
+import com.google.gson.stream.JsonWriter;
 
 import edu.augustana.csc285.Ibis.datamodel.ProjectData;
 import edu.augustana.csc285.Ibis.datamodel.TimePoint;
@@ -37,7 +40,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
-import javafx.stage.Stage;
 
 public class MainWindowController implements AutoTrackListener {
 	@FXML
@@ -126,13 +128,20 @@ public class MainWindowController implements AutoTrackListener {
 	}
 
 	@FXML
-	public void SaveProjectItem (ActionEvent e) {
+	public void SaveProjectItem (ActionEvent e) throws IOException {
 		System.out.print("it works");
 
 		FileChooser fileChooser = new FileChooser();
 		fileChooser.setTitle("Saving the project");
-		File project = fileChooser.showSaveDialog(this.btnTrack.getScene().getWindow());
-		
+		fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(" JSON file", "*.json"));
+		File file = fileChooser.showSaveDialog(this.btnTrack.getScene().getWindow());
+		if(file !=null) {
+			/**
+			 * need more knowledge about the writer in order to be able to save it. 
+			JsonWriter writer = new JsonWriter(null);
+			writer.jsonValue(project.toJSON());
+			*/
+		}
 	}
 	
 	@FXML
