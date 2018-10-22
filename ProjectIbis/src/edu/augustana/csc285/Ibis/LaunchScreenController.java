@@ -35,7 +35,7 @@ public class LaunchScreenController {
 		FileChooser fileChooser = new FileChooser();
 
 		fileChooser.setTitle("Select a file");
-		fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Video", "*.mp4", "*.mp3", "*.avi"));
+		fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Video", "*.mp4", "*.avi"));
 		File videoFile = fileChooser.showOpenDialog(newProjectButton.getScene().getWindow());
 		if(videoFile !=null){
 			try {
@@ -52,34 +52,52 @@ public class LaunchScreenController {
 		FileChooser fileChooser = new FileChooser();
 		fileChooser.setTitle("Select an existing project");
 		fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JSON file", "*.json"));
-		File videoFile = fileChooser.showOpenDialog(newProjectButton.getScene().getWindow());
-		if(videoFile !=null){
+		File projectFile = fileChooser.showOpenDialog(newProjectButton.getScene().getWindow());
+		if(projectFile !=null){
 			try {
-				project=project.fromJSON(videoFile.getPath());
-				loadProjectTextField.setText(project.getVideo().getFilePath());
-				this.newProjectButton.disableProperty(); //does this set it to null? 
+				project=ProjectData.loadFromFile(projectFile);
+				loadProjectTextField.setText(projectFile.getPath());
+				this.newProjectButton.disableProperty(); 
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
-			}
+			}			
 		}
 		
 	}
 
 	@FXML
 	public void handleOK() throws IOException {
-		if (video.getFilePath() != null) {
-				FXMLLoader loader = new FXMLLoader(getClass().getResource("CalibrationWindow.fxml"));
-				AnchorPane root = (AnchorPane) loader.load();
-				
-				CalibrationWindowController nextController = loader.getController();
-			
-				nextController.setVideo(video.getFilePath());
-				
-				Scene nextScene = new Scene(root, root.getPrefWidth(), root.getPrefHeight());
-				nextScene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
-				Stage primary = (Stage) okButton.getScene().getWindow();
-				primary.setScene(nextScene);
-				primary.setTitle("Calibration Window");
+		if (!newProjectTextField.getText().equals("") && this.loadProjectTextField.getText().equals("")) {
+			proceedToCalibration();
+		}else if(newProjectTextField.getText().equals("") && !this.loadProjectTextField.getText().equals("")) {
+			proceedToMainWindow();
 		}
+		
+	}
+
+	public void proceedToCalibration() throws IOException {
+		FXMLLoader loader = new FXMLLoader(getClass().getResource("CalibrationWindow.fxml"));
+		AnchorPane root = (AnchorPane) loader.load();
+		CalibrationWindowController nextController = loader.getController();
+		nextController.setVideo(video.getFilePath());
+		Scene nextScene = new Scene(root, root.getPrefWidth(), root.getPrefHeight());
+		nextScene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+		Stage primary = (Stage) okButton.getScene().getWindow();
+		primary.setScene(nextScene);
+		primary.setTitle("Calibration Window");
+	}
+	
+	public void proceedToMainWindow() throws IOException {
+		FXMLLoader loader = new FXMLLoader(getClass().getResource("MainWindow.fxml"));
+		AnchorPane root = (AnchorPane) loader.load();
+		
+		MainWindowController nextController = loader.getController();
+		nextController.setProject(project);
+		
+		Scene nextScene = new Scene(root, root.getPrefWidth(), root.getPrefHeight());
+		nextScene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+		Stage primary = (Stage) okButton.getScene().getWindow();
+		primary.setScene(nextScene);
+		primary.setTitle("Chick Tracker 1.0");		
 	}
 }

@@ -129,18 +129,12 @@ public class MainWindowController implements AutoTrackListener {
 
 	@FXML
 	public void SaveProjectItem (ActionEvent e) throws IOException {
-		System.out.print("it works");
-
 		FileChooser fileChooser = new FileChooser();
 		fileChooser.setTitle("Saving the project");
 		fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(" JSON file", "*.json"));
 		File file = fileChooser.showSaveDialog(this.btnTrack.getScene().getWindow());
 		if(file !=null) {
-			/**
-			 * need more knowledge about the writer in order to be able to save it. 
-			JsonWriter writer = new JsonWriter(null);
-			writer.jsonValue(project.toJSON());
-			*/
+			project.saveToFile(file);	
 		}
 	}
 	

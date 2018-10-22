@@ -1,6 +1,7 @@
 package edu.augustana.csc285.Ibis.datamodel;
 
 
+
 public class TimePoint implements Comparable<TimePoint> {
 	private double x;     // location
 	private double y;      
@@ -57,5 +58,15 @@ public class TimePoint implements Comparable<TimePoint> {
 	@Override
 	public int compareTo(TimePoint other) {		
 		return this.frameNum - other.frameNum;
+	}
+	
+	public boolean equals(Object other) {
+		if (other instanceof TimePoint) {
+			TimePoint otherPt = (TimePoint) other;
+			return x == otherPt.x && y == otherPt.y 
+					&& frameNum == otherPt.frameNum;
+		} else {
+			return false;
+		}
 	}
 }
