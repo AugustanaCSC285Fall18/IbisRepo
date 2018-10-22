@@ -100,7 +100,11 @@ public class CalibrationWindowController {
 	
 	@FXML
 	public void handleFinishButton() throws IOException {
-		System.out.println("names" + names.size());
+		/**
+		 * Kevin please add a warning to let the user now to add a chick other wise they don't know why it's not working. 
+		 * 
+		 * 
+		 */
 		if (numberOfChicks>0) {
 
 			System.out.println("handle Finish!");

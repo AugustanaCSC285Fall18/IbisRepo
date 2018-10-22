@@ -72,6 +72,11 @@ public class LaunchScreenController {
 		}else if(newProjectTextField.getText().equals("") && !this.loadProjectTextField.getText().equals("")) {
 			proceedToMainWindow();
 		}
+		/**
+		 * 
+		 * Omid put a condition and warning when the two statements are true so the user can try again, instead of restarting the programm 
+		 * 
+		 */
 		
 	}
 
