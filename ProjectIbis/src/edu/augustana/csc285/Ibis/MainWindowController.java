@@ -3,6 +3,7 @@ package edu.augustana.csc285.Ibis;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -38,6 +39,7 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 
@@ -66,13 +68,10 @@ public class MainWindowController implements AutoTrackListener {
 	private TextField textfieldEndFrame;
 	@FXML
 	private ProgressBar progressAutoTrack;
-	
-	@FXML
-	private RadioButton chickOneButton;
-	@FXML
-	private RadioButton chickTwoButton;
-	@FXML
-	private RadioButton chickThreeButton;
+	@FXML 
+	private FlowPane flowPanel;
+	private List<AnimalTrack> animalTrackList;
+	private List<RadioButton> radioButtonList;
 	ToggleGroup buttonGroup = new ToggleGroup();
 
 	
@@ -86,7 +85,7 @@ public class MainWindowController implements AutoTrackListener {
 	
 	
 
-	private AutoTracker autoTracker = new AutoTracker();
+	private AutoTracker autoTracker;
 	
 	private ProjectData project;
 
@@ -94,9 +93,7 @@ public class MainWindowController implements AutoTrackListener {
 	
 	@FXML
 	public void initialize() {
-		chickOneButton.setToggleGroup(buttonGroup);
-		chickTwoButton.setToggleGroup(buttonGroup);
-		chickThreeButton.setToggleGroup(buttonGroup);
+	
 		
 		canvasView.setOnMouseClicked(new EventHandler<MouseEvent>() {
 			@Override
@@ -124,7 +121,7 @@ public class MainWindowController implements AutoTrackListener {
 	public void setProject(ProjectData project){
 		this.project = project;
 		videoSlider.setMax(project.getVideo().getTotalNumFrames()-1); // need the minus one to not go off the video and resolve the errors.
-		showFrameAt(0); //this should show the frame that the user selected as starter in calibration window
+		showFrameAt(this.project.getVideo().getStartFrameNum()); 
 	}
 
 	@FXML
@@ -183,26 +180,7 @@ public class MainWindowController implements AutoTrackListener {
 	
 		textFieldCurFrameNum.setText(String.format("%05d",(int)videoSlider.getValue()));
 	}
-	
-	//adds a timepoint to the correct animaltrack
-//	public void addTimePointToAnimalTrack(){ 
-//		if (buttonGroup.getSelectedToggle()==chickOneButton) {
-//			animalTrack1.add(timePoint);
-//			System.out.println(animalTrack1.toString());
-//		} else if (buttonGroup.getSelectedToggle()==chickTwoButton) {
-//			animalTrack2.add(timePoint);
-//			System.out.println(animalTrack2.toString());
-//		} else if (buttonGroup.getSelectedToggle()==chickThreeButton){
-//			animalTrack3.add(timePoint);
-//			System.out.println(animalTrack3.toString());
-//			System.out.println(animalTrack3.getTimePointAtTime((int)videoSlider.getValue()));
-//			
-//			for (int i = 0; i < animalTrack3.size(); i++) {
-//				System.out.println(i + ": " + animalTrack3.getTimePointAtIndex(i));
-//			}
-//		}
-//		System.out.println("Point that's being stored " + timePoint.toString());
-//	}
+
 
 	public void drawPoint(MouseEvent event) {
 		GraphicsContext drawingPen = canvasView.getGraphicsContext2D();
@@ -279,5 +257,14 @@ public class MainWindowController implements AutoTrackListener {
 		
 	}
 
+	public void animalTrackModifier(int numberOfChicks, ArrayList<String> names) {
+		for (int i = 0; i<numberOfChicks;i++) {
+			animalTrackList.add(new AnimalTrack (names.get(i)));
+			radioButtonList.add(new RadioButton());
+			radioButtonList.get(i).setText(names.get(i));
+			radioButtonList.get(i).setToggleGroup(buttonGroup);
+			flowPanel.getChildren().add(radioButtonList.get(i));
+		}
+	}
 	
 }
