@@ -21,7 +21,6 @@ public class Main extends Application {
 			primaryStage.show();
 			primaryStage.getIcons().add(new Image("icon.jpg"));
 			primaryStage.setTitle("Welcome to Chick Tracker 1.0");
-			
 		} catch(Exception e) {
 			e.printStackTrace();
 		}

@@ -9,6 +9,8 @@ import edu.augustana.csc285.Ibis.datamodel.Video;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
@@ -71,13 +73,23 @@ public class LaunchScreenController {
 			proceedToCalibration();
 		}else if(newProjectTextField.getText().equals("") && !this.loadProjectTextField.getText().equals("")) {
 			proceedToMainWindow();
+		}else if(!newProjectTextField.getText().equals("") &&!this.loadProjectTextField.getText().equals("")) {
+			informationalDialog("Only one file is allowed please try again");
+			this.newProjectTextField.setText("");
+			this.loadProjectTextField.setText("");
+		}else {
+			informationalDialog("Please select a file");
 		}
-		/**
-		 * 
-		 * Omid put a condition and warning when the two statements are true so the user can try again, instead of restarting the programm 
-		 * 
-		 */
-		
+
+	}
+
+	public static void informationalDialog(String message) {
+		Alert alert = new Alert(AlertType.INFORMATION);
+		alert.setResizable(false);
+		alert.setHeaderText(null);
+		alert.setTitle("Error");
+		alert.setContentText(message);
+		alert.showAndWait();
 	}
 
 	public void proceedToCalibration() throws IOException {

@@ -100,14 +100,7 @@ public class CalibrationWindowController {
 	
 	@FXML
 	public void handleFinishButton() throws IOException {
-		/**
-		 * Kevin please add a warning to let the user now to add a chick other wise they don't know why it's not working. 
-		 * 
-		 * 
-		 */
 		if (numberOfChicks>0) {
-
-			System.out.println("handle Finish!");
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("MainWindow.fxml"));
 			AnchorPane root = (AnchorPane) loader.load();
 			
@@ -120,6 +113,8 @@ public class CalibrationWindowController {
 			Stage primary = (Stage) finishButton.getScene().getWindow();
 			primary.setScene(nextScene);
 			primary.setTitle("Chick Tracker 1.0");					
+		}else {
+			LaunchScreenController.informationalDialog("Please add at least one chick to beging the traking");
 		}
 	}
 	
