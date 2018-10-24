@@ -48,6 +48,7 @@ public class CalibrationWindowController {
 	private Button finishButton;
 	@FXML
 	private TextField numberOfChicksLabel;
+	
 	private ArrayList<String> names = new ArrayList<String>();
 	
 	private int numberOfChicks = 0;
@@ -106,7 +107,7 @@ public class CalibrationWindowController {
 			
 			MainWindowController nextController = loader.getController();
 			nextController.setProject(project);
-//			nextController.animalTrackModifier(numberOfChicks, names); //this is breaking the code, someone fix it
+			nextController.animalTrackModifier(numberOfChicks, names); //this is breaking the code, someone fix it
 			
 			Scene nextScene = new Scene(root, root.getPrefWidth(), root.getPrefHeight());
 			nextScene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
@@ -145,9 +146,10 @@ public class CalibrationWindowController {
 	
 	@FXML
 	public void handleAddbutton() {
-		TextInputDialog dialog = new TextInputDialog("");
-		dialog.setTitle("Id selector");
-		dialog.setHeaderText("Id Assigner");
+		String suggestedInput = "Chick #" + (names.size() + 1);
+		TextInputDialog dialog = new TextInputDialog(suggestedInput);
+		dialog.setTitle("Id assigner");
+		dialog.setHeaderText(null);
 		dialog.setContentText("Please enter the name of this chick: ");
 
 		// Traditional way to get the response value.
@@ -155,8 +157,8 @@ public class CalibrationWindowController {
 		if (result.isPresent()){
 			numberOfChicks++;
 			numberOfChicksLabel.setText("" + numberOfChicks);
+			names.add(result.get());
 		}
-		names.add(result.get());
 		System.out.println(names.size());
 	}
 	

@@ -93,7 +93,8 @@ public class MainWindowController implements AutoTrackListener {
 	
 	@FXML
 	public void initialize() {
-	
+		this.animalTrackList = new ArrayList <AnimalTrack>();
+		this.radioButtonList = new ArrayList <RadioButton>();
 		
 		canvasView.setOnMouseClicked(new EventHandler<MouseEvent>() {
 			@Override
@@ -257,11 +258,11 @@ public class MainWindowController implements AutoTrackListener {
 		
 	}
 
-	public void animalTrackModifier(int numberOfChicks, ArrayList<String> names) {
+	public void animalTrackModifier(int numberOfChicks, List<String> names) {
 		for (int i = 0; i<numberOfChicks;i++) {
-			animalTrackList.add(new AnimalTrack (names.get(i)));
+			animalTrackList.add(i, names.get(i));
 			radioButtonList.add(new RadioButton());
-			radioButtonList.get(i).setText(names.get(i));
+			radioButtonList.get(i).setId(names.get(i));
 			radioButtonList.get(i).setToggleGroup(buttonGroup);
 			flowPanel.getChildren().add(radioButtonList.get(i));
 		}
