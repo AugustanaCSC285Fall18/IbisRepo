@@ -157,7 +157,7 @@ public class CalibrationWindowController {
 		if (result.isPresent()){
 			numberOfChicks++;
 			numberOfChicksLabel.setText("" + numberOfChicks);
-			names.add(result.get());
+			names.add(result.get()); // add animaltrack instead of the string 
 		}
 		System.out.println(names.size());
 	}

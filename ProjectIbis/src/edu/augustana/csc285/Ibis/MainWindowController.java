@@ -70,7 +70,6 @@ public class MainWindowController implements AutoTrackListener {
 	private ProgressBar progressAutoTrack;
 	@FXML 
 	private FlowPane flowPanel;
-	private List<AnimalTrack> animalTrackList;
 	private List<RadioButton> radioButtonList;
 	ToggleGroup buttonGroup = new ToggleGroup();
 
@@ -93,7 +92,6 @@ public class MainWindowController implements AutoTrackListener {
 	
 	@FXML
 	public void initialize() {
-		this.animalTrackList = new ArrayList <AnimalTrack>();
 		this.radioButtonList = new ArrayList <RadioButton>();
 		
 		canvasView.setOnMouseClicked(new EventHandler<MouseEvent>() {
@@ -266,9 +264,10 @@ public class MainWindowController implements AutoTrackListener {
 
 	public void animalTrackModifier(int numberOfChicks, List<String> names) {
 		for (int i = 0; i<numberOfChicks;i++) {
-			animalTrackList.add(i, names.get(i));
+			project.getTracks().add(new AnimalTrack(names.get(i)));
+			//animalTrackList.add(i, names.get(i));
 			radioButtonList.add(new RadioButton());
-			radioButtonList.get(i).setId(names.get(i));
+			radioButtonList.get(i).setText(names.get(i));
 			radioButtonList.get(i).setToggleGroup(buttonGroup);
 			flowPanel.getChildren().add(radioButtonList.get(i));
 		}
