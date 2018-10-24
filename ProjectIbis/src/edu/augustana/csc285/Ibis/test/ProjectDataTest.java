@@ -2,7 +2,7 @@ package edu.augustana.csc285.Ibis.test;
 
 import static org.junit.Assert.assertNotNull;
 
-
+import java.io.File;
 import java.io.FileNotFoundException;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -13,6 +13,8 @@ import org.opencv.core.Core;
 import edu.augustana.csc285.Ibis.datamodel.AnimalTrack;
 import edu.augustana.csc285.Ibis.datamodel.ProjectData;
 import edu.augustana.csc285.Ibis.datamodel.TimePoint;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 
 class ProjectDataTest {
 	
@@ -28,8 +30,10 @@ class ProjectDataTest {
 			project.getTracks().add(track1);
 			project.getTracks().add(track2);
 			track1.add(new TimePoint(100,200,0));
-			track1.add(new TimePoint(105,225,30));
-			track2.add(new TimePoint(300,400,90));
+			track1.add(new TimePoint(105,225,33));
+			track2.add(new TimePoint(300,400,1980)); 
+			track2.add(new TimePoint(300,400,2046)); 
+			track2.add(new TimePoint(300,400,1800)); // minute 
 			return project;
 		}
 		
@@ -44,8 +48,8 @@ class ProjectDataTest {
 		@Test
 		void testTracks() throws FileNotFoundException {
 			ProjectData project = makeFakeData();
-			assertEquals(90,project.getTracks().get(1).getTimePointAtTime(90).getFrameNum());
-			assertEquals(30,project.getTracks().get(0).getTimePointAtIndex(1).getFrameNum());
+			assertEquals(1980,project.getTracks().get(1).getTimePointAtTime(1980).getFrameNum());
+			assertEquals(33,project.getTracks().get(0).getTimePointAtIndex(1).getFrameNum());
 
 			/**
 			 * 	this is not a test but will help in future how to access data. 
@@ -67,7 +71,13 @@ class ProjectDataTest {
 					reconstructedFake.getTracks().get(0).getTimePointAtIndex(1));	//need to check this with Stonedahl	
 			
 		}
-
+		@Test
+		void testExportToCSV() throws FileNotFoundException {
+			ProjectData fake = makeFakeData();
+            File saveFile = new File("testExport.csv");;
+     
+			fake.exportToCSV(saveFile);
+		}
 	}
 
 

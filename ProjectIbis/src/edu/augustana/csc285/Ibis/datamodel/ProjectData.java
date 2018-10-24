@@ -50,6 +50,22 @@ public class ProjectData {
 		out.close();
 	}
 	
+	
+	public void exportToCSV(File saveFile) throws FileNotFoundException {
+		PrintWriter out = new PrintWriter(saveFile);
+		out.print("Name, Time (in seconds), X-location, Y-location");
+		out.println();
+		for (AnimalTrack trackToSave: tracks) {
+			for(TimePoint point: trackToSave) {
+			 out.print(trackToSave.getAnimalId()+", "+ String.format("%.2f", (point.getFrameNum()/video.getFrameRate())));
+			 out.print(", "+ point.getX());
+			 out.print(", "+ point.getY());
+			 out.println();
+			}
+		}
+		out.close();
+	}
+	
 	public String toJSON() {
 		Gson gson = new GsonBuilder().setPrettyPrinting().create();		
 		return gson.toJson(this);

@@ -1,9 +1,12 @@
 package edu.augustana.csc285.Ibis.datamodel;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
-public class AnimalTrack {
+
+
+public class AnimalTrack implements Iterable<TimePoint>{
 	private String animalID;
 	private List<TimePoint> positions;
 	
@@ -63,5 +66,9 @@ public class AnimalTrack {
 		int startFrame = positions.get(0).getFrameNum();
 		int endFrame = getFinalTimePoint().getFrameNum();
 		return "AnimalTrack[id="+ animalID + ",numPts=" + positions.size()+" start=" + startFrame + " end=" + endFrame +"]"; 
+	}
+	@Override
+	public Iterator<TimePoint> iterator() {
+		return positions.iterator();
 	}
 }
