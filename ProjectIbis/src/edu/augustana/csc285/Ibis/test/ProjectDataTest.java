@@ -74,9 +74,7 @@ class ProjectDataTest {
 		@Test
 		void testExportToCSV() throws FileNotFoundException {
 			ProjectData fake = makeFakeData();
-			FileChooser fileChooser = new FileChooser();
-			fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("CSV","*.csv"));
-            File saveFile = new File("\\scr");;
+            File saveFile = new File("testExport.csv");;
      
 			fake.exportToCSV(saveFile);
 		}
