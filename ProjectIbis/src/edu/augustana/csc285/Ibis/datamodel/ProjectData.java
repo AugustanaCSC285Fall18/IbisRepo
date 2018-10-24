@@ -53,7 +53,7 @@ public class ProjectData {
 	
 	public void exportToCSV(File saveFile) throws FileNotFoundException {
 		PrintWriter out = new PrintWriter(saveFile);
-		out.print("Name, Time, X-location, Y-location");
+		out.print("Name, Time (in seconds), X-location, Y-location");
 		out.println();
 		for (AnimalTrack trackToSave: tracks) {
 			for(TimePoint point: trackToSave) {
@@ -62,7 +62,6 @@ public class ProjectData {
 			 out.print(", "+ point.getY());
 			 out.println();
 			}
-			out.println();
 		}
 		out.close();
 	}
