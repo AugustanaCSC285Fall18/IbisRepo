@@ -29,6 +29,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
 public class CalibrationWindowController {
@@ -49,100 +50,122 @@ public class CalibrationWindowController {
 	@FXML
 	private TextField numberOfChicksLabel;
 	private ArrayList<String> names = new ArrayList<String>();
-	
+
 	private int numberOfChicks = 0;
-	
+
 	private ProjectData project;
+
+	private List<Point> pointsToCalibrate = new ArrayList<Point>();
+
+	private int place = 0;
+
+	private double verticleDist;
+	private double horizontalDist;
 	
-	private Point pointToCalibrate;
-	
+	private Rectangle rect = new Rectangle();
+
 	@FXML
 	public void initialize() {
 		videoSlider.valueProperty().addListener(new ChangeListener<Number>() {
 			@Override
 			public void changed(ObservableValue<? extends Number> observable, Number initalVal, Number finalVal) {
-					updateTimeLabel();
-					showFrameAt(finalVal.intValue());
+				updateTimeLabel();
+				showFrameAt(finalVal.intValue());
 			}
 		});
+		for (int i = 0; i < 4; i++) {
+			pointsToCalibrate.add(new Point());
+		}
+		System.out.println("Enter two verticle points then two horizontal points at corners of the box.");
 		canvasView.setOnMouseClicked(new EventHandler<MouseEvent>() {
 			@Override
 			// modify the location to reflect the actual location and not with the
 			// comparison to the whole GUI
 			public void handle(MouseEvent event) {
-				drawPoint(event);
-			//	System.out.println(pointToCalibrate.getLocation());
+				if (place < 4) {
+					drawPoint(event, place);
+					place++;
+				}
 			}
 		});
-		
+
 	}
-	
-	public void addPoint(MouseEvent event) {
-				  System.out.println(event.getX());
-				  System.out.println(event.getY());
-				  double xVal = event.getX();
-				  double yVal = event.getY();
-				  System.out.println(xVal);
-				  System.out.println(yVal);
-				  pointToCalibrate.setLocation(xVal, yVal);
+
+	public void addPoint(MouseEvent event, int place) {
+		pointsToCalibrate.get(place).setLocation(event.getX(), event.getY());
 	}
-	
-	public void drawPoint(MouseEvent event) {
+
+	public void drawPoint(MouseEvent event, int place) {
 		GraphicsContext drawingPen = canvasView.getGraphicsContext2D();
 		drawingPen.setFill(Color.FUCHSIA);
 		drawingPen.fillOval(event.getX(), event.getY(), 5, 5);
-		System.out.println(event.getX());
-		System.out.println(event.getY());
-		
-		addPoint(event);
+
+		addPoint(event, place);
 	}
-	
-	
+
 	@FXML
 	public void handleFinishButton() throws IOException {
-		if (numberOfChicks>0) {
+		calculateDist();
+		setWidthHeight();
+		System.out.println("vert" + verticleDist);
+		System.out.println("horizon" + horizontalDist);
+		System.out.println("rect " + rect.toString());
+		if (numberOfChicks > 0) {
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("MainWindow.fxml"));
 			AnchorPane root = (AnchorPane) loader.load();
-			
+
 			MainWindowController nextController = loader.getController();
 			nextController.setProject(project);
 //			nextController.animalTrackModifier(numberOfChicks, names); //this is breaking the code, someone fix it
-			
+
 			Scene nextScene = new Scene(root, root.getPrefWidth(), root.getPrefHeight());
 			nextScene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 			Stage primary = (Stage) finishButton.getScene().getWindow();
 			primary.setScene(nextScene);
-			primary.setTitle("Chick Tracker 1.0");					
-		}else {
+			primary.setTitle("Chick Tracker 1.0");
+		} else {
 			LaunchScreenController.informationalDialog("Please add at least one chick to beging the traking");
 		}
 	}
-	
+
+	private void setWidthHeight() {
+		rect.setX(pointsToCalibrate.get(0).getX());
+		rect.setY(pointsToCalibrate.get(0).getY());
+		rect.setHeight(verticleDist);
+		rect.setWidth(horizontalDist);
+	}
+
+	private void calculateDist() {
+		verticleDist = pointsToCalibrate.get(0).distance(pointsToCalibrate.get(1));
+		horizontalDist = pointsToCalibrate.get(2).distance(pointsToCalibrate.get(3));
+	}
+
 	public void setVideo(String filePath) throws FileNotFoundException {
 		project = new ProjectData(filePath);
-		project.getVideo().setXPixelsPerCm(6); //i think should happen elsewhere
+		project.getVideo().setXPixelsPerCm(6); // i think should happen elsewhere
 		project.getVideo().setYPixelsPerCm(6);
-		videoSlider.setMax(project.getVideo().getTotalNumFrames()-1); // need the minus one to not go off the video and resolve the errors.
+		videoSlider.setMax(project.getVideo().getTotalNumFrames() - 1); // need the minus one to not go off the video
+																		// and resolve the errors.
 		showFrameAt(0);
 	}
-	
-	public void showFrameAt(int frameNum) {
-			project.getVideo().setCurrentFrameNum(frameNum);
-			Image curFrame = UtilsForOpenCV.matToJavaFXImage(project.getVideo().readFrame());
-			videoView.setImage(curFrame);
-			
-			GraphicsContext drawingPen = canvasView.getGraphicsContext2D(); // not needed?
-			drawingPen.clearRect(0, 0, canvasView.getWidth(), canvasView.getHeight());
-			// want to draw the correct dots that had been previously stored for this frame
-		}		
 
-	//timeLabel updates as slider moves	
-	public void updateTimeLabel() {			
-		int timeInSecs = (int)Math.round(project.getVideo().convertFrameNumsToSeconds((int) videoSlider.getValue()));
+	public void showFrameAt(int frameNum) {
+		project.getVideo().setCurrentFrameNum(frameNum);
+		Image curFrame = UtilsForOpenCV.matToJavaFXImage(project.getVideo().readFrame());
+		videoView.setImage(curFrame);
+
+		GraphicsContext drawingPen = canvasView.getGraphicsContext2D(); // not needed?
+		drawingPen.clearRect(0, 0, canvasView.getWidth(), canvasView.getHeight());
+		// want to draw the correct dots that had been previously stored for this frame
+	}
+
+	// timeLabel updates as slider moves
+	public void updateTimeLabel() {
+		int timeInSecs = (int) Math.round(project.getVideo().convertFrameNumsToSeconds((int) videoSlider.getValue()));
 		String timeString = String.format("%d:%02d", timeInSecs / 60, timeInSecs % 60);
 		timeDisplayed.setText(timeString);
 	}
-	
+
 	@FXML
 	public void handleAddbutton() {
 		TextInputDialog dialog = new TextInputDialog("");
@@ -152,21 +175,33 @@ public class CalibrationWindowController {
 
 		// Traditional way to get the response value.
 		Optional<String> result = dialog.showAndWait();
-		if (result.isPresent()){
+		if (result.isPresent()) {
 			numberOfChicks++;
 			numberOfChicksLabel.setText("" + numberOfChicks);
 		}
 		names.add(result.get());
 		System.out.println(names.size());
 	}
-	
+
 	@FXML
 	public void handleRemoveButton() {
-		if (numberOfChicks>0) {
+		if (numberOfChicks > 0) {
 			numberOfChicks--;
 			numberOfChicksLabel.setText("" + numberOfChicks);
-			names.remove(names.size()-1);
+			names.remove(names.size() - 1);
 			System.out.println(names.size());
 		}
+	}
+
+	public double getHorizontalDist() {
+		return horizontalDist;
+	}
+
+	public double getVerticleDist() {
+		return verticleDist;
+	}
+	
+	public Rectangle getRect() {
+		return rect;
 	}
 }
