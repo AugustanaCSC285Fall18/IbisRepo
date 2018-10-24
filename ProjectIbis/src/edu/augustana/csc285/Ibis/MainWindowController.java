@@ -137,8 +137,14 @@ public class MainWindowController implements AutoTrackListener {
 	}
 	
 	@FXML
-	public void ExportToCSVItem (ActionEvent e) {
-		
+	public void ExportToCSVItem (ActionEvent e) throws IOException {
+		FileChooser fileChooser = new FileChooser();
+		fileChooser.setTitle("Exporting to CSV file");
+		fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("CSV","*.csv"));
+		File file = fileChooser.showSaveDialog(this.btnTrack.getScene().getWindow());
+		if(file !=null) {
+			project.exportToCSV(file);
+		}
 	}
 	public Slider getSlider() {
 		return this.videoSlider;
