@@ -42,11 +42,23 @@ public class CalibrationWindowController {
 	@FXML
 	private Label timeDisplayed;
 	@FXML
+	private TextField startTimeTextField;
+	@FXML
+	private TextField endTimeTextField;
+	@FXML
+	private TextField emptyFrameTextField;
+	@FXML
 	private Button addButton;
 	@FXML
 	private Button removeButton;
 	@FXML
+	private Button startTimeButton;
+	@FXML
+	private Button endTimeButton;
+	@FXML
 	private Button finishButton;
+	@FXML
+	private Button setEmptyFrameButton;
 	@FXML
 	private TextField numberOfChicksLabel;
 	
@@ -60,14 +72,14 @@ public class CalibrationWindowController {
 
 	private double verticleDist;
 	private double horizontalDist;
-	private boolean fishiedAllCalibration=false;
+	private boolean fishiedAllCalibration=true;
 	
 	@FXML
 	public void initialize() {
 		videoSlider.valueProperty().addListener(new ChangeListener<Number>() {
 			@Override
 			public void changed(ObservableValue<? extends Number> observable, Number initalVal, Number finalVal) {
-				updateTimeLabel();
+				timeDisplayed.setText(getTimeString());
 				showFrameAt(finalVal.intValue());
 			}
 		});
@@ -143,11 +155,11 @@ public class CalibrationWindowController {
 		// want to draw the correct dots that had been previously stored for this frame
 	}
 
-	// timeLabel updates as slider moves
-	public void updateTimeLabel() {
+	// returns the time in seconds as a formatted string
+	public String getTimeString() {
 		int timeInSecs = (int) Math.round(project.getVideo().convertFrameNumsToSeconds((int) videoSlider.getValue()));
-		String timeString = String.format("%d:%02d", timeInSecs / 60, timeInSecs % 60);
-		timeDisplayed.setText(timeString);
+		String timeString = String.format("%02d:%02d", timeInSecs / 60, timeInSecs % 60);
+		return timeString;
 	}
 
 	@FXML
@@ -177,5 +189,23 @@ public class CalibrationWindowController {
 			System.out.println(names.size());
 		}
 	}
+	
+	@FXML
+	public void handleSetStartTimeButton() {
+		startTimeTextField.setText(getTimeString());
+		project.getVideo().setStartFrameNum((int)videoSlider.getValue());
+	}
+	
+	@FXML
+	public void handleSetEndTimeButton() {
+		endTimeTextField.setText(getTimeString());
+		project.getVideo().setEndFrameNum((int)videoSlider.getValue());
+	}
 
+	@FXML
+	public void handleSetEmptyFrame() {
+		emptyFrameTextField.setText(getTimeString());
+		project.getVideo().setEmptyFrameNum((int)videoSlider.getValue());
+	}
+	
 }
