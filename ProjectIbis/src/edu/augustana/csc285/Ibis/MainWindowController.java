@@ -215,8 +215,8 @@ public class MainWindowController implements AutoTrackListener {
 	public void	handleAutoTrack(){
 		if (autoTracker == null || !autoTracker.isRunning()) {
 			Video video = project.getVideo();
-			video.setStartFrameNum(Integer.parseInt(textfieldStartFrame.getText())); 
-			video.setEndFrameNum(Integer.parseInt(textfieldEndFrame.getText()));
+			video.setStartFrameNum(project.getVideo().getStartFrameNum()); 
+			video.setEndFrameNum(project.getVideo().getEndFrameNum());
 			autoTracker = new AutoTracker();
 			// Use Observer Pattern to give autotracker a reference to this object, 
 			// and call back to methods in this class to update progress.

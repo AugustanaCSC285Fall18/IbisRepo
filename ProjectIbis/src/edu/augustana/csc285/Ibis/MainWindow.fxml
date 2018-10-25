@@ -16,7 +16,8 @@
 <?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.StackPane?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="477.0" prefWidth="711.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.augustana.csc285.Ibis.MainWindowController">
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="477.0" prefWidth="711.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.augustana.csc285.Ibis.MainWindowController">
    <children>
       <StackPane layoutX="207.0" layoutY="14.0">
          <children>
@@ -37,8 +38,6 @@
       <Label fx:id="timeDisplayed" layoutX="620.0" layoutY="296.0" prefHeight="21.0" prefWidth="68.0" text="00:00" />
       <TextField fx:id="textFieldCurFrameNum" editable="false" layoutX="15.0" layoutY="104.0" prefHeight="25.0" prefWidth="68.0" text="0" />
       <Button fx:id="btnTrack" layoutX="10.0" layoutY="386.0" mnemonicParsing="false" onAction="#handleAutoTrack" prefHeight="31.0" prefWidth="178.0" text="Start auto-tracking" />
-      <TextField fx:id="textfieldStartFrame" layoutX="10.0" layoutY="344.0" prefHeight="25.0" prefWidth="68.0" text="100" />
-      <TextField fx:id="textfieldEndFrame" layoutX="120.0" layoutY="344.0" prefHeight="25.0" prefWidth="68.0" text="5000" />
       <ProgressBar fx:id="progressAutoTrack" layoutX="10.0" layoutY="425.0" prefHeight="23.0" prefWidth="178.0" progress="0.0" />
       <MenuBar layoutX="24.0" layoutY="14.0">
         <menus>

@@ -42,11 +42,23 @@ public class CalibrationWindowController {
 	@FXML
 	private Label timeDisplayed;
 	@FXML
+	private TextField startTimeTextField;
+	@FXML
+	private TextField endTimeTextField;
+	@FXML
+	private TextField emptyFrameTextField;
+	@FXML
 	private Button addButton;
 	@FXML
 	private Button removeButton;
 	@FXML
+	private Button startTimeButton;
+	@FXML
+	private Button endTimeButton;
+	@FXML
 	private Button finishButton;
+	@FXML
+	private Button setEmptyFrameButton;
 	@FXML
 	private TextField numberOfChicksLabel;
 	
@@ -58,102 +70,79 @@ public class CalibrationWindowController {
 
 	private List<Point> pointsToCalibrate = new ArrayList<Point>();
 
-	private int place = 0;
-
 	private double verticleDist;
 	private double horizontalDist;
+	private boolean fishiedAllCalibration=true;
 	
-	private Rectangle rect = new Rectangle();
-
 	@FXML
 	public void initialize() {
 		videoSlider.valueProperty().addListener(new ChangeListener<Number>() {
 			@Override
 			public void changed(ObservableValue<? extends Number> observable, Number initalVal, Number finalVal) {
-				updateTimeLabel();
+				timeDisplayed.setText(getTimeString());
 				showFrameAt(finalVal.intValue());
 			}
 		});
-		for (int i = 0; i < 4; i++) {
-			pointsToCalibrate.add(new Point());
-		}
-		System.out.println("Enter two verticle points then two horizontal points at corners of the box.");
-		canvasView.setOnMouseClicked(new EventHandler<MouseEvent>() {
-			@Override
-			// modify the location to reflect the actual location and not with the
-			// comparison to the whole GUI
-			public void handle(MouseEvent event) {
-				if (place < 4) {
-					drawPoint(event, place);
-					place++;
-				}
-			}
-		});
-
 	}
 
-	public void addPoint(MouseEvent event, int place) {
-		pointsToCalibrate.get(place).setLocation(event.getX(), event.getY());
-	}
-
-	public void drawPoint(MouseEvent event, int place) {
+	public void drawPoint(Point pt) {
 		GraphicsContext drawingPen = canvasView.getGraphicsContext2D();
 		drawingPen.setFill(Color.FUCHSIA);
-		drawingPen.fillOval(event.getX(), event.getY(), 5, 5);
+		drawingPen.fillOval(pt.getX()-2, pt.getY()-2, 5, 5);
 
-		addPoint(event, place);
 	}
 
 	@FXML
 	public void handleFinishButton() throws IOException {
-		calculateDist();
-		setWidthHeight();
-		System.out.println("vert" + verticleDist);
-		System.out.println("horizon" + horizontalDist);
-		System.out.println("rect " + rect.toString());
-		project.getVideo().setXPixelsPerCm(verticleDist);
-		project.getVideo().setYPixelsPerCm(horizontalDist);
-		if (numberOfChicks > 0) {
+		if (numberOfChicks > 0 && fishiedAllCalibration) {
+			//project.getVideo().getArenaBounds().setBounds((int)pointsToCalibrate.get(0).getX(), (int)pointsToCalibrate.get(0).getY(), horizontalDist, verticleDist);
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("MainWindow.fxml"));
 			AnchorPane root = (AnchorPane) loader.load();
 
 			MainWindowController nextController = loader.getController();
 			nextController.setProject(project);
 
-
-
-
 			nextController.animalTrackModifier(numberOfChicks, names); //this is breaking the code, someone fix it
-			
-
+		
 			Scene nextScene = new Scene(root, root.getPrefWidth(), root.getPrefHeight());
 			nextScene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 			Stage primary = (Stage) finishButton.getScene().getWindow();
 			primary.setScene(nextScene);
 			primary.setTitle("Chick Tracker 1.0");
-		} else {
-			LaunchScreenController.informationalDialog("Please add at least one chick to beging the traking");
+		} else if (numberOfChicks==0) {
+			LaunchScreenController.informationalDialog("Please add at least one chick to begin the traking");
+		}else if(!fishiedAllCalibration) {
+			LaunchScreenController.informationalDialog("Please finish the calibration before proceeding");
 		}
 	}
-
-	private void setWidthHeight() {
-		rect.setX(pointsToCalibrate.get(0).getX());
-		rect.setY(pointsToCalibrate.get(0).getY());
-		rect.setHeight(verticleDist);
-		rect.setWidth(horizontalDist);
+	
+	@FXML
+	public void handleCalibrateRatio() {
+		LaunchScreenController.informationalDialog("Place two vertical points First, then two horizontal points");
+		canvasView.setOnMouseClicked(new EventHandler<MouseEvent>() {
+			public void handle(MouseEvent event) {
+					if (pointsToCalibrate.size() < 4) {
+						Point newPoint =new Point((int)event.getX(), (int)event.getY()); 
+						pointsToCalibrate.add(newPoint);
+						drawPoint(newPoint);
+					}if(pointsToCalibrate.size()==4) {
+						calculateDist();
+					}
+			}
+		});
+		
 	}
-
+	
 	private void calculateDist() {
 		verticleDist = pointsToCalibrate.get(0).distance(pointsToCalibrate.get(1));
 		horizontalDist = pointsToCalibrate.get(2).distance(pointsToCalibrate.get(3));
+	//	project.getVideo().setXPixelsPerCm(horizontalDist/userHorizantal); 
+	//	project.getVideo().setYPixelsPerCm(verticleDist/userVertical);
 	}
 
 	public void setVideo(String filePath) throws FileNotFoundException {
 		project = new ProjectData(filePath);
-		project.getVideo().setXPixelsPerCm(6); // i think should happen elsewhere
-		project.getVideo().setYPixelsPerCm(6);
-		videoSlider.setMax(project.getVideo().getTotalNumFrames() - 1); // need the minus one to not go off the video
-																		// and resolve the errors.
+		videoSlider.setMax(project.getVideo().getTotalNumFrames() - 1); 
 		showFrameAt(0);
 	}
 
@@ -161,17 +150,16 @@ public class CalibrationWindowController {
 		project.getVideo().setCurrentFrameNum(frameNum);
 		Image curFrame = UtilsForOpenCV.matToJavaFXImage(project.getVideo().readFrame());
 		videoView.setImage(curFrame);
-
-		GraphicsContext drawingPen = canvasView.getGraphicsContext2D(); // not needed?
-		drawingPen.clearRect(0, 0, canvasView.getWidth(), canvasView.getHeight());
+		//GraphicsContext drawingPen = canvasView.getGraphicsContext2D(); // not needed?
+	//	drawingPen.clearRect(0, 0, canvasView.getWidth(), canvasView.getHeight());
 		// want to draw the correct dots that had been previously stored for this frame
 	}
 
-	// timeLabel updates as slider moves
-	public void updateTimeLabel() {
+	// returns the time in seconds as a formatted string
+	public String getTimeString() {
 		int timeInSecs = (int) Math.round(project.getVideo().convertFrameNumsToSeconds((int) videoSlider.getValue()));
-		String timeString = String.format("%d:%02d", timeInSecs / 60, timeInSecs % 60);
-		timeDisplayed.setText(timeString);
+		String timeString = String.format("%02d:%02d", timeInSecs / 60, timeInSecs % 60);
+		return timeString;
 	}
 
 	@FXML
@@ -201,16 +189,23 @@ public class CalibrationWindowController {
 			System.out.println(names.size());
 		}
 	}
-
-	public double getHorizontalDist() {
-		return horizontalDist;
-	}
-
-	public double getVerticleDist() {
-		return verticleDist;
+	
+	@FXML
+	public void handleSetStartTimeButton() {
+		startTimeTextField.setText(getTimeString());
+		project.getVideo().setStartFrameNum((int)videoSlider.getValue());
 	}
 	
-	public Rectangle getRect() {
-		return rect;
+	@FXML
+	public void handleSetEndTimeButton() {
+		endTimeTextField.setText(getTimeString());
+		project.getVideo().setEndFrameNum((int)videoSlider.getValue());
 	}
+
+	@FXML
+	public void handleSetEmptyFrame() {
+		emptyFrameTextField.setText(getTimeString());
+		project.getVideo().setEmptyFrameNum((int)videoSlider.getValue());
+	}
+	
 }
