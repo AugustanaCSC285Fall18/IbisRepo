@@ -74,7 +74,9 @@ public class CalibrationWindowController {
 	private double verticleDist;
 	private double horizontalDist;
 	private boolean fishiedAllCalibration=true;
-	
+	/**
+	 * initializes a listener that calls showFrameAt(int frameNum) to update imageView.
+	 */
 	@FXML
 	public void initialize() {
 		videoSlider.valueProperty().addListener(new ChangeListener<Number>() {
@@ -85,18 +87,27 @@ public class CalibrationWindowController {
 			}
 		});
 	}
-
+	/**
+	 * @param pt
+	 * 
+	 * takes in point from mouse click and draws a visual point centered on the x and y coordinates.
+	 */
 	public void drawPoint(Point pt) {
 		GraphicsContext drawingPen = canvasView.getGraphicsContext2D();
 		drawingPen.setFill(Color.FUCHSIA);
 		drawingPen.fillOval(pt.getX()-2, pt.getY()-2, 5, 5);
 
 	}
-
+	/**
+	 * @throws IOException
+	 * 
+	 * Handles button that takes user to mainWindowController. If no chicks have been registered with handleAddButton()
+	 * or the window has not been calibrated prompts user to go back and complete these steps.
+	 */
 	@FXML
 	public void handleFinishButton() throws IOException {
 		if (numberOfChicks > 0 && fishiedAllCalibration) {
-			//project.getVideo().getArenaBounds().setBounds((int)pointsToCalibrate.get(0).getX(), (int)pointsToCalibrate.get(0).getY(), horizontalDist, verticleDist);
+			project.getVideo().getArenaBounds().setBounds((int)pointsToCalibrate.get(0).getX(), (int)pointsToCalibrate.get(0).getY(), (int) horizontalDist, (int) verticleDist);
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("MainWindow.fxml"));
 			AnchorPane root = (AnchorPane) loader.load();
 
@@ -119,7 +130,10 @@ public class CalibrationWindowController {
 			LaunchScreenController.informationalDialog("Please finish the calibration before proceeding");
 		}
 	}
-	
+	/**
+	 * Handles button that initiates calibration process. Displays message prompting user to select points for List pointsToCalibrate.
+	 * creates each point with mouse click and when four points are selected calls calculateDist() method.
+	 */
 	@FXML
 	public void handleCalibrateRatio() {
 		LaunchScreenController.informationalDialog("Place two vertical points First, then two horizontal points");
@@ -136,20 +150,34 @@ public class CalibrationWindowController {
 		});
 		
 	}
-	
+	/**
+	 * Calculates the distance between the two vertical and horizontal points from pointToCalibrate
+	 * measures point 0 and 1 as vertical distance and point 2 and 3 as horizontal distance.
+	 */
 	private void calculateDist() {
 		verticleDist = pointsToCalibrate.get(0).distance(pointsToCalibrate.get(1));
 		horizontalDist = pointsToCalibrate.get(2).distance(pointsToCalibrate.get(3));
 	//	project.getVideo().setXPixelsPerCm(horizontalDist/userHorizantal); 
 	//	project.getVideo().setYPixelsPerCm(verticleDist/userVertical);
 	}
-
+	/**
+	 * @param filePath
+	 * @throws FileNotFoundException
+	 * 
+	 * Takes in filepath of a video and sets the current project to the 0th frame.
+	 * Also sets videoSlider bar to proper amount of frame numbers.
+	 */
 	public void setVideo(String filePath) throws FileNotFoundException {
 		project = new ProjectData(filePath);
 		videoSlider.setMax(project.getVideo().getTotalNumFrames() - 1); 
 		showFrameAt(0);
 	}
-
+	/**
+	 * @param frameNum
+	 * 
+	 * sets the project to the proper frame number and displays the proper image for that frame
+	 * in the videoView.
+	 */
 	public void showFrameAt(int frameNum) {
 		project.getVideo().setCurrentFrameNum(frameNum);
 		Image curFrame = UtilsForOpenCV.matToJavaFXImage(project.getVideo().readFrame());
@@ -159,12 +187,18 @@ public class CalibrationWindowController {
 		// want to draw the correct dots that had been previously stored for this frame
 	}
 
-	// returns the time in seconds as a formatted string
+	/**
+	 * @return String of formatted time in seconds
+	 */
 	public String getTimeString() {
 		int timeInSecs = (int) Math.round(project.getVideo().convertFrameNumsToSeconds((int) videoSlider.getValue()));
 		return String.format("%02d:%02d", timeInSecs / 60, timeInSecs % 60);
 	}
 
+	/**
+	 * Handles FXML button, prompts user to enter name for new chick and updates
+	 * label to display current size of List numberOfChicks.
+	 */
 	@FXML
 	public void handleAddbutton() {
 		String suggestedInput = "Chick #" + (names.size() + 1);
@@ -183,6 +217,9 @@ public class CalibrationWindowController {
 		System.out.println(names.size());
 	}
 
+	/**
+	 * Handles FXML button, removes last chick in the List numberOfChicks
+	 */
 	@FXML
 	public void handleRemoveButton() {
 		if (numberOfChicks > 0) {
@@ -192,19 +229,26 @@ public class CalibrationWindowController {
 			System.out.println(names.size());
 		}
 	}
-	
+	/**
+	 * Handles button that sets startFrameNum to the current frame displayed in imageView
+	 */
 	@FXML
 	public void handleSetStartTimeButton() {
 		startTimeTextField.setText(getTimeString());
 		project.getVideo().setStartFrameNum((int)videoSlider.getValue());
 	}
-	
+	/**
+	 * Handles button that sets endFrameNum to the current frame displayed in imageView
+	 */
 	@FXML
 	public void handleSetEndTimeButton() {
 		endTimeTextField.setText(getTimeString());
 		project.getVideo().setEndFrameNum((int)videoSlider.getValue());
 	}
-
+	/**
+	 * Handles button that sets emptyFrameNum to the current frame displayed in imageView.
+	 * Used for autoTracking methods as blank screen to compare.
+	 */
 	@FXML
 	public void handleSetEmptyFrame() {
 		emptyFrameTextField.setText(getTimeString());
