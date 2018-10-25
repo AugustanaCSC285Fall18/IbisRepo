@@ -112,7 +112,7 @@ public class MainWindowController implements AutoTrackListener {
 		videoSlider.valueProperty().addListener(new ChangeListener<Number>() {
 			@Override
 			public void changed(ObservableValue<? extends Number> observable, Number initalVal, Number finalVal) {
-					updateTimeLabel();
+				timeDisplayed.setText(getTimeString());
 					showFrameAt(finalVal.intValue());
 			}
 		});
@@ -182,12 +182,13 @@ public class MainWindowController implements AutoTrackListener {
 	}
 	
 	//timeLabel updates as slider moves	
-	public void updateTimeLabel() {			
+	public String getTimeString() {			
 		int timeInSecs = (int)Math.round(project.getVideo().convertFrameNumsToSeconds((int) videoSlider.getValue()));
 		String timeString = String.format("%d:%02d", timeInSecs / 60, timeInSecs % 60);
-		timeDisplayed.setText(timeString);
 	
 		textFieldCurFrameNum.setText(String.format("%05d",(int)videoSlider.getValue()));
+		
+		return timeString;
 	}
 
 
@@ -228,7 +229,7 @@ public class MainWindowController implements AutoTrackListener {
 		} else {
 			autoTracker.cancelAnalysis();
 			btnTrack.setText("Start auto-tracking");
-			updateTimeLabel();
+			timeDisplayed.setText(getTimeString());
 		}
 	}
 	@Override
@@ -237,7 +238,7 @@ public class MainWindowController implements AutoTrackListener {
 		// this method is being run by the AutoTracker's thread, so we must
 		// ask the JavaFX UI thread to update some visual properties
 		Platform.runLater(() -> { 
-			updateTimeLabel();
+			timeDisplayed.setText(getTimeString());
 			videoView.setImage(imgFrame);
 			progressAutoTrack.setProgress(fractionComplete);
 			videoSlider.setValue(frameNumber);
@@ -278,22 +279,11 @@ public class MainWindowController implements AutoTrackListener {
 	}
 	
 	public void handleBtnForward() {
-		 int newFrameNum = this.project.getVideo().getCurrentFrameNum() + 30;
-		showFrameAt(newFrameNum);
-		this.project.getVideo().setCurrentFrameNum(newFrameNum);
-		updateTimeLabel();
-		System.out.println(newFrameNum);
-		System.out.println(this.project.getVideo().getCurrentFrameNum());
-		
+		this.videoSlider.setValue(this.videoSlider.getValue() + 30);		
 	}
 	
 	public void handleBtnBackward() {
-		 int newFrameNum = this.project.getVideo().getCurrentFrameNum() - 30;
-		showFrameAt(newFrameNum);
-		this.project.getVideo().setCurrentFrameNum(newFrameNum);
-		updateTimeLabel();
-		System.out.println(newFrameNum);
-		System.out.println(this.project.getVideo().getCurrentFrameNum());
+		this.videoSlider.setValue(this.videoSlider.getValue() - 30);
 		}
 	
 }

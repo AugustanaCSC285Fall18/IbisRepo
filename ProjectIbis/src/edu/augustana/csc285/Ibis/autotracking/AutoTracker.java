@@ -81,6 +81,7 @@ public class AutoTracker {
 			
 			Mat matFrame = vid.readFrame();			
 			List<DetectedShape> candidateShapes = frameAnalyzer.findShapes(matFrame);
+			matFrame.release();
 			
 			Mat visualizationFrame = frameAnalyzer.getVisualizationFrame();
 
@@ -116,6 +117,7 @@ public class AutoTracker {
 			listener.trackingComplete(archivedTrackedSegments);
 			System.out.println(this.chickData.getUnassignedSegments().toString());
 		}
+		execService.shutdown();
 	}
 	
 	private AnimalTrack getMatchOrCreateAnimalTrackForPoint(TimePoint pt, List<AnimalTrack> currentSegments, double maxPixelMovementPerFrame) {
