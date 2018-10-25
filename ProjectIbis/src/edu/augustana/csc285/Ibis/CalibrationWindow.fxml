@@ -1,10 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import javafx.scene.canvas.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.image.*?>
-<?import javafx.scene.layout.*?>
 <?import javafx.scene.canvas.Canvas?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
@@ -14,7 +9,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.StackPane?>
 
-<AnchorPane prefHeight="477.0" prefWidth="711.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.augustana.csc285.Ibis.CalibrationWindowController">
+<AnchorPane prefHeight="477.0" prefWidth="711.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.augustana.csc285.Ibis.CalibrationWindowController">
    <children>
       <StackPane layoutX="207.0" layoutY="14.0">
          <children>
@@ -27,11 +22,13 @@
       <Label contentDisplay="CENTER" layoutX="15.0" layoutY="322.0" prefHeight="43.0" prefWidth="188.0" text="How many chicks will you track in this video?" textAlignment="CENTER" wrapText="true" />
       <Button fx:id="addButton" layoutX="127.0" layoutY="378.0" mnemonicParsing="false" onAction="#handleAddbutton" prefHeight="31.0" prefWidth="35.0" text="+" />
       <Button fx:id="removeButton" layoutX="44.0" layoutY="378.0" mnemonicParsing="false" onAction="#handleRemoveButton" prefHeight="31.0" prefWidth="35.0" text="-" />
-      <TextField layoutX="10.0" layoutY="60.0" prefHeight="25.0" prefWidth="68.0" text="100" />
-      <TextField layoutX="120.0" layoutY="60.0" prefHeight="25.0" prefWidth="68.0" text="5000" />
-      <Label layoutX="14.0" layoutY="31.0" prefHeight="17.0" prefWidth="60.0" text="Start time" />
+      <TextField fx:id="startTimeTextField" alignment="CENTER" disable="true" layoutX="128.0" layoutY="71.0" opacity="0.99" prefHeight="25.0" prefWidth="68.0" text="00:00" />
+      <TextField fx:id="endTimeTextField" alignment="CENTER" disable="true" layoutX="128.0" layoutY="102.0" opacity="0.99" prefHeight="25.0" prefWidth="68.0" text="00:00" />
       <TextField fx:id="numberOfChicksLabel" alignment="CENTER" editable="false" layoutX="84.0" layoutY="378.0" prefHeight="31.0" prefWidth="35.0" text="0" />
       <Button fx:id="finishButton" layoutX="388.0" layoutY="366.0" mnemonicParsing="false" onAction="#handleFinishButton" text="Finish Calibration" />
-      <Label layoutX="120.0" layoutY="31.0" prefHeight="17.0" prefWidth="68.0" text="End time" />
+      <Button fx:id="startTimeButton" layoutX="9.0" layoutY="71.0" mnemonicParsing="false" onAction="#handleSetStartTimeButton" prefHeight="25.0" prefWidth="106.0" text="Set start time" />
+      <Button fx:id="endTimeButton" layoutX="9.0" layoutY="102.0" mnemonicParsing="false" onAction="#handleSetEndTimeButton" prefHeight="25.0" prefWidth="106.0" text="Set end time" />
+      <Button fx:id="setEmptyFrameButton" layoutX="9.0" layoutY="41.0" mnemonicParsing="false" onAction="#handleSetEmptyFrame" text="Set Empty Frame" />
+      <TextField fx:id="emptyFrameTextField" alignment="CENTER" disable="true" layoutX="128.0" layoutY="41.0" opacity="0.99" prefHeight="25.0" prefWidth="68.0" text="00:00" />
    </children>
 </AnchorPane>

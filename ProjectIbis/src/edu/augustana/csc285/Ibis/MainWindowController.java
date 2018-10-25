@@ -63,10 +63,6 @@ public class MainWindowController implements AutoTrackListener {
 	@FXML
 	private Button btnTrack;
 	@FXML
-	private TextField textfieldStartFrame;
-	@FXML
-	private TextField textfieldEndFrame;
-	@FXML
 	private ProgressBar progressAutoTrack;
 	@FXML 
 	private FlowPane flowPanel;
@@ -75,14 +71,6 @@ public class MainWindowController implements AutoTrackListener {
 
 	
 	private ScheduledExecutorService timer;
-	
-//	private TimePoint timePoint;
-	
-//	private AnimalTrack animalTrack1 = new AnimalTrack("Chick manual 1");
-//	private AnimalTrack animalTrack2 = new AnimalTrack("Chick manual 2");
-//	private AnimalTrack animalTrack3 = new AnimalTrack("Chick manual 3");
-	
-	
 
 	private AutoTracker autoTracker;
 	
@@ -98,9 +86,7 @@ public class MainWindowController implements AutoTrackListener {
 			@Override
 			//modify the location to reflect the actual location and not with the comparison to the whole GUI
 			public void handle(MouseEvent event) {
-//				timePoint= new TimePoint (event.getX(),event.getY(),(int)videoSlider.getValue());
 				drawPoint(event);
-//				addTimePointToAnimalTrack();
 			}
 		});
 		
@@ -119,8 +105,9 @@ public class MainWindowController implements AutoTrackListener {
 	
 	public void setProject(ProjectData project){
 		this.project = project;
-		videoSlider.setMax(project.getVideo().getTotalNumFrames()-1); // need the minus one to not go off the video and resolve the errors.
-		showFrameAt(this.project.getVideo().getStartFrameNum()); 
+		videoSlider.setMax(project.getVideo().getEndFrameNum()-1); // need the minus one to not go off the video and resolve the errors.
+		videoSlider.setMin(project.getVideo().getStartFrameNum());
+		showFrameAt(project.getVideo().getStartFrameNum()); 
 	}
 
 	@FXML
@@ -210,8 +197,8 @@ public class MainWindowController implements AutoTrackListener {
 	public void	handleAutoTrack(){
 		if (autoTracker == null || !autoTracker.isRunning()) {
 			Video video = project.getVideo();
-			video.setStartFrameNum(Integer.parseInt(textfieldStartFrame.getText())); 
-			video.setEndFrameNum(Integer.parseInt(textfieldEndFrame.getText()));
+			video.setStartFrameNum(project.getVideo().getStartFrameNum()); 
+			video.setEndFrameNum(project.getVideo().getEndFrameNum());
 			autoTracker = new AutoTracker();
 			// Use Observer Pattern to give autotracker a reference to this object, 
 			// and call back to methods in this class to update progress.
