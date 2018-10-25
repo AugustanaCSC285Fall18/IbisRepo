@@ -88,9 +88,8 @@ public class CalibrationWindowController {
 		});
 	}
 	/**
-	 * @param pt
-	 * 
 	 * takes in point from mouse click and draws a visual point centered on the x and y coordinates.
+	 * @param pt
 	 */
 	public void drawPoint(Point pt) {
 		GraphicsContext drawingPen = canvasView.getGraphicsContext2D();
@@ -99,10 +98,9 @@ public class CalibrationWindowController {
 
 	}
 	/**
-	 * @throws IOException
-	 * 
 	 * Handles button that takes user to mainWindowController. If no chicks have been registered with handleAddButton()
 	 * or the window has not been calibrated prompts user to go back and complete these steps.
+	 * @throws IOException
 	 */
 	@FXML
 	public void handleFinishButton() throws IOException {
@@ -161,11 +159,10 @@ public class CalibrationWindowController {
 	//	project.getVideo().setYPixelsPerCm(verticleDist/userVertical);
 	}
 	/**
-	 * @param filePath
-	 * @throws FileNotFoundException
-	 * 
 	 * Takes in filepath of a video and sets the current project to the 0th frame.
 	 * Also sets videoSlider bar to proper amount of frame numbers.
+	 * @param filePath
+	 * @throws FileNotFoundException
 	 */
 	public void setVideo(String filePath) throws FileNotFoundException {
 		project = new ProjectData(filePath);
@@ -173,10 +170,9 @@ public class CalibrationWindowController {
 		showFrameAt(0);
 	}
 	/**
-	 * @param frameNum
-	 * 
 	 * sets the project to the proper frame number and displays the proper image for that frame
 	 * in the videoView.
+	 * @param frameNum
 	 */
 	public void showFrameAt(int frameNum) {
 		project.getVideo().setCurrentFrameNum(frameNum);

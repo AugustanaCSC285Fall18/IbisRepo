@@ -48,9 +48,12 @@ public class LaunchScreenController {
 			}
 		}
 	}
-	
+	/**
+	 * Handles button that prompts user to open existing json project.
+	 * Used for resuming work on a previously saved project.
+	 */
 	@FXML
-	public void handleloadProjectButton() {
+	public void handleLoadProjectButton() {
 		FileChooser fileChooser = new FileChooser();
 		fileChooser.setTitle("Select an existing project");
 		fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JSON file", "*.json"));
@@ -66,7 +69,13 @@ public class LaunchScreenController {
 		}
 		
 	}
-
+	/**
+	 * Handles button that takes user to next window.
+	 * if newProjectTextField is filled and loadProjectTextField is empty takes user to calibration.
+	 * if loadProjectTextField is filled and newProjectTextField is empty takes user to main window.
+	 * 
+	 * @throws IOException
+	 */
 	@FXML
 	public void handleOK() throws IOException {
 		if (!newProjectTextField.getText().equals("") && this.loadProjectTextField.getText().equals("")) {
@@ -82,7 +91,12 @@ public class LaunchScreenController {
 		}
 
 	}
-
+	/**
+	 * Helper method for when warning messages or prompts are to be displayed to the user.
+	 * creates alert popup with proper information displayed.
+	 * 
+	 * @param message
+	 */
 	public static void informationalDialog(String message) {
 		Alert alert = new Alert(AlertType.INFORMATION);
 		alert.setResizable(false);
@@ -91,7 +105,10 @@ public class LaunchScreenController {
 		alert.setContentText(message);
 		alert.showAndWait();
 	}
-
+	/**
+	 * Helper method that takes the user to calibration screen.
+	 * @throws IOException
+	 */
 	public void proceedToCalibration() throws IOException {
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("CalibrationWindow.fxml"));
 		AnchorPane root = (AnchorPane) loader.load();
@@ -103,7 +120,10 @@ public class LaunchScreenController {
 		primary.setScene(nextScene);
 		primary.setTitle("Calibration Window");
 	}
-	
+	/**
+	 * Helper method that takes the user to main window screen.
+	 * @throws IOException
+	 */
 	public void proceedToMainWindow() throws IOException {
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("MainWindow.fxml"));
 		AnchorPane root = (AnchorPane) loader.load();
