@@ -109,6 +109,7 @@ public class LaunchScreenController {
 		AnchorPane root = (AnchorPane) loader.load();
 		
 		MainWindowController nextController = loader.getController();
+				
 		nextController.setProject(project);
 		
 		Scene nextScene = new Scene(root, root.getPrefWidth(), root.getPrefHeight());

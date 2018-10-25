@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import edu.augustana.csc285.Ibis.datamodel.AnimalTrack;
 import edu.augustana.csc285.Ibis.datamodel.ProjectData;
 
 import edu.augustana.csc285.Ibis.utils.UtilsForOpenCV;
@@ -100,9 +101,12 @@ public class CalibrationWindowController {
 			AnchorPane root = (AnchorPane) loader.load();
 
 			MainWindowController nextController = loader.getController();
-			nextController.setProject(project);
 
-			nextController.animalTrackModifier(numberOfChicks, names); //this is breaking the code, someone fix it
+			for (int i = 0; i < names.size();i++) {
+				project.getTracks().add(new AnimalTrack(names.get(i)));
+			}
+			
+			nextController.setProject(project);
 		
 			Scene nextScene = new Scene(root, root.getPrefWidth(), root.getPrefHeight());
 			nextScene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
@@ -158,8 +162,7 @@ public class CalibrationWindowController {
 	// returns the time in seconds as a formatted string
 	public String getTimeString() {
 		int timeInSecs = (int) Math.round(project.getVideo().convertFrameNumsToSeconds((int) videoSlider.getValue()));
-		String timeString = String.format("%02d:%02d", timeInSecs / 60, timeInSecs % 60);
-		return timeString;
+		return String.format("%02d:%02d", timeInSecs / 60, timeInSecs % 60);
 	}
 
 	@FXML

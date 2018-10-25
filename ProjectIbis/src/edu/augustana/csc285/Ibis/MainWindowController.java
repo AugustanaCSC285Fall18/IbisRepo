@@ -113,9 +113,10 @@ public class MainWindowController implements AutoTrackListener {
 	
 	public void setProject(ProjectData project){
 		this.project = project;
+		createRadioButtonsForChicks();
 		videoSlider.setMax(project.getVideo().getEndFrameNum()-1); // need the minus one to not go off the video and resolve the errors.
 		videoSlider.setMin(project.getVideo().getStartFrameNum());
-		showFrameAt(this.project.getVideo().getStartFrameNum()); 
+		showFrameAt(this.project.getVideo().getStartFrameNum());		
 	}
 
 	@FXML
@@ -175,11 +176,8 @@ public class MainWindowController implements AutoTrackListener {
 	//timeLabel updates as slider moves	
 	public String getTimeString() {			
 		int timeInSecs = (int)Math.round(project.getVideo().convertFrameNumsToSeconds((int) videoSlider.getValue()));
-		String timeString = String.format("%d:%02d", timeInSecs / 60, timeInSecs % 60);
-	
 		textFieldCurFrameNum.setText(String.format("%05d",(int)videoSlider.getValue()));
-		
-		return timeString;
+		return String.format("%02d:%02d", timeInSecs / 60, timeInSecs % 60);
 	}
 
 
@@ -258,12 +256,10 @@ public class MainWindowController implements AutoTrackListener {
 		
 	}
 
-	public void animalTrackModifier(int numberOfChicks, List<String> names) {
-		for (int i = 0; i<numberOfChicks;i++) {
-			project.getTracks().add(new AnimalTrack(names.get(i)));
-			//animalTrackList.add(i, names.get(i));
+	public void createRadioButtonsForChicks() {
+		for (int i = 0; i < project.getTracks().size();i++) {
 			radioButtonList.add(new RadioButton());
-			radioButtonList.get(i).setText(names.get(i));
+			radioButtonList.get(i).setText(project.getTracks().get(i).getAnimalId());
 			radioButtonList.get(i).setToggleGroup(buttonGroup);
 			flowPanel.getChildren().add(radioButtonList.get(i));
 		}
