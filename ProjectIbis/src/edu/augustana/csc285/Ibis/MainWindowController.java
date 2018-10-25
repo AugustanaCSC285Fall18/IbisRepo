@@ -54,6 +54,10 @@ public class MainWindowController implements AutoTrackListener {
 	private Label messageLabel;
 	@FXML
 	private Label timeDisplayed;
+	@FXML
+	private Button btnForward;
+	@FXML
+	private Button btnBackward;
 	
 
 	@FXML
@@ -266,5 +270,24 @@ public class MainWindowController implements AutoTrackListener {
 			flowPanel.getChildren().add(radioButtonList.get(i));
 		}
 	}
+	
+	public void handleBtnForward() {
+		 int newFrameNum = this.project.getVideo().getCurrentFrameNum() + 30;
+		showFrameAt(newFrameNum);
+		this.project.getVideo().setCurrentFrameNum(newFrameNum);
+		updateTimeLabel();
+		System.out.println(newFrameNum);
+		System.out.println(this.project.getVideo().getCurrentFrameNum());
+		
+	}
+	
+	public void handleBtnBackward() {
+		 int newFrameNum = this.project.getVideo().getCurrentFrameNum() - 30;
+		showFrameAt(newFrameNum);
+		this.project.getVideo().setCurrentFrameNum(newFrameNum);
+		updateTimeLabel();
+		System.out.println(newFrameNum);
+		System.out.println(this.project.getVideo().getCurrentFrameNum());
+		}
 	
 }
