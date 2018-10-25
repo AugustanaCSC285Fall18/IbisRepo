@@ -158,21 +158,6 @@ public class MainWindowController implements AutoTrackListener {
 		this.timer.scheduleAtFixedRate(frameGrabber, 0, 33, TimeUnit.MILLISECONDS);
 	}
 
-
-	
-	public void findRealImageSize(Image image) {
-		//thanks johnniegf on StackExchange. You the real G
-		double aspectRatio = image.getWidth() / image.getHeight();
-		double realWidth = Math.min(videoView.getFitWidth(), videoView.getFitHeight() * aspectRatio);
-		double realHeight = Math.min(videoView.getFitHeight(), videoView.getFitWidth() / aspectRatio);
-		
-		videoView.setFitHeight(realHeight);
-		videoView.setFitWidth(realWidth);
-		
-		canvasView.setHeight(videoView.getFitHeight());
-		canvasView.setWidth(videoView.getFitWidth());
-	}
-	
 	//timeLabel updates as slider moves	
 	public String getTimeString() {			
 		int timeInSecs = (int)Math.round(project.getVideo().convertFrameNumsToSeconds((int) videoSlider.getValue()));

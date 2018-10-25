@@ -71,9 +71,8 @@ public class CalibrationWindowController {
 
 	private List<Point> pointsToCalibrate = new ArrayList<Point>();
 
-	private double verticleDist;
-	private double horizontalDist;
-	private boolean fishiedAllCalibration=true;
+	private boolean fishiedAllCalibration=false;
+	private boolean specifideTheRectengel=false;
 	
 	@FXML
 	public void initialize() {
@@ -95,8 +94,7 @@ public class CalibrationWindowController {
 
 	@FXML
 	public void handleFinishButton() throws IOException {
-		if (numberOfChicks > 0 && fishiedAllCalibration) {
-			//project.getVideo().getArenaBounds().setBounds((int)pointsToCalibrate.get(0).getX(), (int)pointsToCalibrate.get(0).getY(), horizontalDist, verticleDist);
+		if (numberOfChicks > 0 && fishiedAllCalibration) { // specifideTheRectengel
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("MainWindow.fxml"));
 			AnchorPane root = (AnchorPane) loader.load();
 
@@ -117,6 +115,8 @@ public class CalibrationWindowController {
 			LaunchScreenController.informationalDialog("Please add at least one chick to begin the traking");
 		}else if(!fishiedAllCalibration) {
 			LaunchScreenController.informationalDialog("Please finish the calibration before proceeding");
+		}else if(!specifideTheRectengel) {
+			LaunchScreenController.informationalDialog("Please specifie the areana bounds");
 		}
 	}
 	
@@ -129,21 +129,64 @@ public class CalibrationWindowController {
 						Point newPoint =new Point((int)event.getX(), (int)event.getY()); 
 						pointsToCalibrate.add(newPoint);
 						drawPoint(newPoint);
-					}if(pointsToCalibrate.size()==4) {
-						calculateDist();
+
+						if(pointsToCalibrate.size() == 2) {
+					
+							double distanceInCm = getDoubleFromUser("Vertical Distance");
+							Point ptStart = pointsToCalibrate.get(0);
+							Point ptEnd = pointsToCalibrate.get(1);
+							double verticalDistInCanvas = ptStart.distance(ptEnd);
+							double verticalDistInVideo = verticalDistInCanvas * getVideoToCanvasRatio();
+							
+							project.getVideo().setYPixelsPerCm(verticalDistInVideo / distanceInCm);
+						} else if (pointsToCalibrate.size() == 4) {
+							
+							double distanceInCm = getDoubleFromUser("Horizantal Distance");
+							Point ptStart = pointsToCalibrate.get(2);
+							Point ptEnd = pointsToCalibrate.get(3);
+							double horizantalDistInCanvas = ptStart.distance(ptEnd);
+							double horizantalDistInVideo = horizantalDistInCanvas * getVideoToCanvasRatio();
+							
+							project.getVideo().setXPixelsPerCm(horizantalDistInVideo / distanceInCm);
+							fishiedAllCalibration=true;
+						}
 					}
+					
 			}
 		});
 		
 	}
-	
-	private void calculateDist() {
-		verticleDist = pointsToCalibrate.get(0).distance(pointsToCalibrate.get(1));
-		horizontalDist = pointsToCalibrate.get(2).distance(pointsToCalibrate.get(3));
-	//	project.getVideo().setXPixelsPerCm(horizontalDist/userHorizantal); 
-	//	project.getVideo().setYPixelsPerCm(verticleDist/userVertical);
+	// how many times bigger is the video than the canvas?  return that ratio
+	public double getVideoToCanvasRatio() {
+		double aspectRatio = project.getVideo().getFrameWidth() / project.getVideo().getFrameHeight();
+		double displayWidth = Math.min(videoView.getFitWidth(), videoView.getFitHeight() * aspectRatio);
+		return project.getVideo().getFrameWidth() / displayWidth;
 	}
 
+	public double getDoubleFromUser(String msg) {
+		TextInputDialog dialog = new TextInputDialog();
+		dialog.setTitle(msg);
+		dialog.setHeaderText(null);
+		dialog.setContentText("Please enter the " + msg +" in (cm): ");
+		Optional<String> result = dialog.showAndWait();
+		if (result.isPresent()) {
+			String userNumText = result.get();
+			try {
+				double userNum = Double.parseDouble(userNumText);
+				return userNum;
+			} catch (NumberFormatException ex) {
+				LaunchScreenController.informationalDialog("Please type a number");
+				return getDoubleFromUser(msg);
+			}			
+		} else {
+			//TODO: handle user errors 
+			// if they clicked cancel -- they probably want to start all over
+			// (remove all the points?)
+		return 0;
+		}		
+		
+	}
+	
 	public void setVideo(String filePath) throws FileNotFoundException {
 		project = new ProjectData(filePath);
 		videoSlider.setMax(project.getVideo().getTotalNumFrames() - 1); 
@@ -155,7 +198,7 @@ public class CalibrationWindowController {
 		Image curFrame = UtilsForOpenCV.matToJavaFXImage(project.getVideo().readFrame());
 		videoView.setImage(curFrame);
 		//GraphicsContext drawingPen = canvasView.getGraphicsContext2D(); // not needed?
-	//	drawingPen.clearRect(0, 0, canvasView.getWidth(), canvasView.getHeight());
+		//	drawingPen.clearRect(0, 0, canvasView.getWidth(), canvasView.getHeight());
 		// want to draw the correct dots that had been previously stored for this frame
 	}
 
