@@ -111,6 +111,8 @@ public class CalibrationWindowController {
 		System.out.println("vert" + verticleDist);
 		System.out.println("horizon" + horizontalDist);
 		System.out.println("rect " + rect.toString());
+		project.getVideo().setXPixelsPerCm(verticleDist);
+		project.getVideo().setYPixelsPerCm(horizontalDist);
 		if (numberOfChicks > 0) {
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("MainWindow.fxml"));
 			AnchorPane root = (AnchorPane) loader.load();
