@@ -11,6 +11,6 @@
       </Button>
       <TextField fx:id="newProjectTextField" editable="false" layoutX="27.0" layoutY="28.0" prefHeight="25.0" prefWidth="296.0">
       </TextField>
-   <Button fx:id="loadProjectButton" layoutX="347.0" layoutY="83.0" mnemonicParsing="false" onAction="#handleloadProjectButton" prefHeight="25.0" prefWidth="132.0" text="Load existing Project" />
+   <Button fx:id="loadProjectButton" layoutX="347.0" layoutY="83.0" mnemonicParsing="false" onAction="#handleLoadProjectButton" prefHeight="25.0" prefWidth="132.0" text="Load existing Project" />
    <TextField fx:id="loadProjectTextField" editable="false" layoutX="27.0" layoutY="83.0" prefHeight="25.0" prefWidth="296.0" />
 </AnchorPane>
