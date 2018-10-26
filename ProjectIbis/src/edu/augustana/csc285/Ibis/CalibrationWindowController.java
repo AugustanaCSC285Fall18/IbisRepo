@@ -137,7 +137,7 @@ public class CalibrationWindowController {
 	 */
 	@FXML
 	public void handleCalibrateRatio() {
-		LaunchScreenController.informationalDialog("Place two vertical points First, then two horizontal points");
+		LaunchScreenController.informationalDialog("Place two vertical points first, then two horizontal points");
 		canvasView.setOnMouseClicked(new EventHandler<MouseEvent>() {
 			public void handle(MouseEvent event) {
 					if (pointsToCalibrate.size() < 4) {
@@ -148,15 +148,18 @@ public class CalibrationWindowController {
 						if(pointsToCalibrate.size() == 2) {
 					
 							double distanceInCm = getDoubleFromUser("Vertical Distance");
+							if(distanceInCm !=0) {
 							Point ptStart = pointsToCalibrate.get(0);
 							Point ptEnd = pointsToCalibrate.get(1);
 							double verticalDistInCanvas = ptStart.distance(ptEnd);
 							double verticalDistInVideo = verticalDistInCanvas * getVideoToCanvasRatio();
-							
+				
 							project.getVideo().setYPixelsPerCm(verticalDistInVideo / distanceInCm);
+							}
 						} else if (pointsToCalibrate.size() == 4) {
 							
 							double distanceInCm = getDoubleFromUser("Horizantal Distance");
+							if(distanceInCm !=0) {
 							Point ptStart = pointsToCalibrate.get(2);
 							Point ptEnd = pointsToCalibrate.get(3);
 							double horizantalDistInCanvas = ptStart.distance(ptEnd);
@@ -164,6 +167,7 @@ public class CalibrationWindowController {
 							
 							project.getVideo().setXPixelsPerCm(horizantalDistInVideo / distanceInCm);
 							fishiedAllCalibration=true;
+							}
 						}
 					}
 					
@@ -171,6 +175,27 @@ public class CalibrationWindowController {
 		});
 		
 	}
+	
+	@FXML
+	public void handleArenaBounds() {
+		LaunchScreenController.informationalDialog("Place two points in the each conner of the arena bound that should be used");
+		List<Point> areanaPoints = new ArrayList<Point>();
+		canvasView.setOnMouseClicked(new EventHandler<MouseEvent>() {
+			public void handle(MouseEvent event) {
+				if(areanaPoints.isEmpty()) {
+					GraphicsContext drawingPen = canvasView.getGraphicsContext2D(); 
+					drawingPen.clearRect(0, 0, canvasView.getWidth(), canvasView.getHeight());
+				}
+				if(areanaPoints.size()<2) {
+				Point newPoint =new Point((int)event.getX(), (int)event.getY()); 
+				areanaPoints.add(newPoint);
+				drawPoint(newPoint);
+				}
+			}
+		});
+	}
+	
+	
 	public double getVideoToCanvasRatio() {
 		double aspectRatio = project.getVideo().getFrameWidth() / project.getVideo().getFrameHeight();
 		double displayWidth = Math.min(videoView.getFitWidth(), videoView.getFitHeight() * aspectRatio);
@@ -193,9 +218,10 @@ public class CalibrationWindowController {
 				return getDoubleFromUser(msg);
 			}			
 		} else {
-			//TODO: handle user errors 
-			// if they clicked cancel -- they probably want to start all over
-			// (remove all the points?)
+			LaunchScreenController.informationalDialog("Please draw the points agian");
+			pointsToCalibrate.clear();
+			GraphicsContext drawingPen = canvasView.getGraphicsContext2D(); 
+			drawingPen.clearRect(0, 0, canvasView.getWidth(), canvasView.getHeight());
 		return 0;
 		}		
 		

@@ -26,10 +26,11 @@
       <TextField fx:id="endTimeTextField" alignment="CENTER" disable="true" layoutX="128.0" layoutY="102.0" opacity="0.99" prefHeight="25.0" prefWidth="68.0" text="00:00" />
       <TextField fx:id="numberOfChicksLabel" alignment="CENTER" editable="false" layoutX="84.0" layoutY="378.0" prefHeight="31.0" prefWidth="35.0" text="0" />
       <Button fx:id="finishButton" layoutX="388.0" layoutY="366.0" mnemonicParsing="false" onAction="#handleFinishButton" text="Finish Calibration" />
-      <Button layoutX="19.0" layoutY="206.0" mnemonicParsing="false" onAction="#handleCalibrateRatio" text="Calibrate Ratio" />
+      <Button layoutX="9.0" layoutY="201.0" mnemonicParsing="false" onAction="#handleCalibrateRatio" text="Calibrate Ratio" />
       <Button fx:id="startTimeButton" layoutX="9.0" layoutY="71.0" mnemonicParsing="false" onAction="#handleSetStartTimeButton" prefHeight="25.0" prefWidth="106.0" text="Set start time" />
       <Button fx:id="endTimeButton" layoutX="9.0" layoutY="102.0" mnemonicParsing="false" onAction="#handleSetEndTimeButton" prefHeight="25.0" prefWidth="106.0" text="Set end time" />
       <Button fx:id="setEmptyFrameButton" layoutX="9.0" layoutY="41.0" mnemonicParsing="false" onAction="#handleSetEmptyFrame" text="Set Empty Frame" />
       <TextField fx:id="emptyFrameTextField" alignment="CENTER" disable="true" layoutX="128.0" layoutY="41.0" opacity="0.99" prefHeight="25.0" prefWidth="68.0" text="00:00" />
+      <Button layoutX="115.0" layoutY="201.0" mnemonicParsing="false" onAction="#handleArenaBounds" text="Arena Bounds" />
    </children>
 </AnchorPane>
