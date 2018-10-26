@@ -19,6 +19,7 @@ import edu.augustana.csc285.Ibis.autotracking.AutoTrackListener;
 import edu.augustana.csc285.Ibis.autotracking.AutoTracker;
 import edu.augustana.csc285.Ibis.datamodel.AnimalTrack;
 import edu.augustana.csc285.Ibis.datamodel.Video;
+import edu.augustana.csc285.Ibis.utils.SizingUtilities;
 import edu.augustana.csc285.Ibis.utils.UtilsForOpenCV;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
@@ -120,8 +121,8 @@ public class MainWindowController implements AutoTrackListener {
 	public void setProject(ProjectData project) {
 		this.project = project;
 		createRadioButtonsForChicks();
+		SizingUtilities.setCanvasSizeToMatchVideo(this.project.getVideo(), this.videoView, this.canvasView);
 		videoSlider.setMax(project.getVideo().getEndFrameNum() - 1); // need the minus one to not go off the video and
-																		// resolve the errors.
 		videoSlider.setMin(project.getVideo().getStartFrameNum());
 		showFrameAt(this.project.getVideo().getStartFrameNum());
 	}
@@ -191,24 +192,6 @@ public class MainWindowController implements AutoTrackListener {
 	}
 
 
-	/**
-	 * Takes in an image and sets videoView and canvasView equal to its width and
-	 * height. A METHOD LIKELY TO HELP WITH CALIBRATION.
-	 * 
-	 * @param image
-	 */
-	public void findRealImageSize(Image image) {
-		// thanks johnniegf on StackExchange. You the real G
-		double aspectRatio = image.getWidth() / image.getHeight();
-		double realWidth = Math.min(videoView.getFitWidth(), videoView.getFitHeight() * aspectRatio);
-		double realHeight = Math.min(videoView.getFitHeight(), videoView.getFitWidth() / aspectRatio);
-
-		videoView.setFitHeight(realHeight);
-		videoView.setFitWidth(realWidth);
-
-		canvasView.setHeight(videoView.getFitHeight());
-		canvasView.setWidth(videoView.getFitWidth());
-	}
 
 	/**
 	 * updates and formats timeLabel as slider moves
@@ -250,6 +233,7 @@ public class MainWindowController implements AutoTrackListener {
 			drawingPen.clearRect(0, 0, canvasView.getWidth(), canvasView.getHeight());
 			// want to draw the correct dots that had been previously stored for this frame
 		}
+		
 	}
 
 	/**
