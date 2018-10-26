@@ -72,8 +72,8 @@ public class CalibrationWindowController {
 	private List<Point> pointsToCalibrate = new ArrayList<Point>();
 
 
-	private boolean fishiedAllCalibration=true;
-	private boolean specifideTheRectengel=false;
+	private boolean finishedAllCalibration=true;
+	private boolean specifiedTheRectangle=false;
 	/**
 	 * initializes a listener that calls showFrameAt(int frameNum) to update imageView.
 	 */
@@ -108,7 +108,7 @@ public class CalibrationWindowController {
 	@FXML
 	public void handleFinishButton() throws IOException {
 
-		if (numberOfChicks > 0 && fishiedAllCalibration) { // specifideTheRectengel
+		if (numberOfChicks > 0 && finishedAllCalibration) { // specifideTheRectengel
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("MainWindow.fxml"));
 			AnchorPane root = (AnchorPane) loader.load();
 
@@ -127,9 +127,9 @@ public class CalibrationWindowController {
 			primary.setTitle("Chick Tracker 1.0");
 		} else if (numberOfChicks==0) {
 			LaunchScreenController.informationalDialog("Please add at least one chick to begin the traking");
-		}else if(!fishiedAllCalibration) {
+		}else if(!finishedAllCalibration) {
 			LaunchScreenController.informationalDialog("Please finish the calibration before proceeding");
-		}else if(!specifideTheRectengel) {
+		}else if(!specifiedTheRectangle) {
 			LaunchScreenController.informationalDialog("Please specifie the areana bounds");
 		}
 	}
@@ -169,7 +169,7 @@ public class CalibrationWindowController {
 							double horizantalDistInVideo = horizantalDistInCanvas * getVideoToCanvasRatio();
 							
 							project.getVideo().setXPixelsPerCm(horizantalDistInVideo / distanceInCm);
-							fishiedAllCalibration=true;
+							finishedAllCalibration=true;
 							}
 						}
 					}
@@ -182,20 +182,29 @@ public class CalibrationWindowController {
 	@FXML
 	public void handleArenaBounds() {
 		LaunchScreenController.informationalDialog("Place two points in the each conner of the arena bound that should be used");
-		List<Point> areanaPoints = new ArrayList<Point>();
+		List<Point> arenaPoints = new ArrayList<Point>();
 		canvasView.setOnMouseClicked(new EventHandler<MouseEvent>() {
 			public void handle(MouseEvent event) {
-				if(areanaPoints.isEmpty()) {
+				if(arenaPoints.isEmpty()) {
 					GraphicsContext drawingPen = canvasView.getGraphicsContext2D(); 
 					drawingPen.clearRect(0, 0, canvasView.getWidth(), canvasView.getHeight());
 				}
-				if(areanaPoints.size()<2) {
+				if(arenaPoints.size()<2) {
 				Point newPoint =new Point((int)event.getX(), (int)event.getY()); 
-				areanaPoints.add(newPoint);
+				arenaPoints.add(newPoint);
 				drawPoint(newPoint);
 				}
 			}
 		});
+		double arenaWidth = Math.abs(arenaPoints.get(1).getX() - arenaPoints.get(0).getX());
+		double arenaHeight = Math.abs(arenaPoints.get(1).getY() - arenaPoints.get(0).getY());
+		canvasView.setHeight(arenaHeight);
+		canvasView.setWidth(arenaWidth);
+		canvasView.setLayoutX(arenaPoints.get(0).getX());
+		canvasView.setLayoutY(arenaPoints.get(0).getY());
+		canvasView.setTranslateX(videoView.getX() + canvasView.getLayoutX());
+		canvasView.setTranslateY(videoView.getY() + canvasView.getLayoutY());
+
 	}
 	
 	
