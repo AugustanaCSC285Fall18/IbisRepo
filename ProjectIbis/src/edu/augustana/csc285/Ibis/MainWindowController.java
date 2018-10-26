@@ -190,6 +190,7 @@ public class MainWindowController implements AutoTrackListener {
 		this.timer.scheduleAtFixedRate(frameGrabber, 0, 33, TimeUnit.MILLISECONDS);
 	}
 
+
 	/**
 	 * Takes in an image and sets videoView and canvasView equal to its width and
 	 * height. A METHOD LIKELY TO HELP WITH CALIBRATION.
