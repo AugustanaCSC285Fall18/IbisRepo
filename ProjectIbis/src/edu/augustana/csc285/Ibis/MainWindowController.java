@@ -122,7 +122,7 @@ public class MainWindowController implements AutoTrackListener {
 	public void setProject(ProjectData project) {
 		this.project = project;
 		createRadioButtonsForChicks();
-		SizingUtilities.setCanvasSizeToMatchVideo(this.project.getVideo(), this.videoView, this.canvasView);
+		//SizingUtilities.setCanvasSizeToMatchVideo(this.project.getVideo(), this.videoView, this.canvasView);
 		videoSlider.setMax(project.getVideo().getEndFrameNum() - 1); // need the minus one to not go off the video and
 		videoSlider.setMin(project.getVideo().getStartFrameNum());
 		showFrameAt(this.project.getVideo().getStartFrameNum());
