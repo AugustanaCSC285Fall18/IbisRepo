@@ -89,6 +89,7 @@ public class CalibrationWindowController {
 	}
 	/**
 	 * takes in point from mouse click and draws a visual point centered on the x and y coordinates.
+	 * DUPLICATE CODE IN MAIN WINDOW CONTROLLER.
 	 * @param pt
 	 */
 	public void drawPoint(Point pt) {
