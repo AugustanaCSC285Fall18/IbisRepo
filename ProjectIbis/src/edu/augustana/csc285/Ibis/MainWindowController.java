@@ -99,6 +99,8 @@ public class MainWindowController implements AutoTrackListener {
 			// comparison to the whole GUI
 			public void handle(MouseEvent event) {
 				drawPoint(event);
+				TimePoint point = new TimePoint(event.getX(),event.getY(), project.getVideo().getCurrentFrameNum());
+//				addPointToTrack(point); //TODO: polish this line and the respective method
 			}
 		});
 
@@ -111,6 +113,18 @@ public class MainWindowController implements AutoTrackListener {
 		});
 
 	}
+
+//	protected void addPointToTrack(TimePoint point) {
+//		for (RadioButton radioButton: radioButtonList) {
+//		for (int i = 0 ; i < radioButtonList.size(); i++) {
+//			System.out.println(radioButtonList.size());
+//			System.out.println(project.getTracks().size());
+//		}
+//			if (radioButton.getText()== project.getTracks().iterator().next().getAnimalId()) {
+//				
+//			}
+//		}
+//	}
 
 	/**
 	 * Sets current project to param passed in. Sets videoSlider bounds to maximum
@@ -324,6 +338,7 @@ public class MainWindowController implements AutoTrackListener {
 			radioButtonList.get(i).setToggleGroup(buttonGroup);
 			flowPanel.getChildren().add(radioButtonList.get(i));
 		}
+		radioButtonList.get(0).setSelected(true);
 	}
 
 	/**
