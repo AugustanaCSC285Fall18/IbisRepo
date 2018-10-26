@@ -87,6 +87,7 @@ public class MainWindowController implements AutoTrackListener {
 	 * for mouseClick that draws points. Adds observer for slideBar that updates
 	 * imageView with new frame.
 	 */
+	
 	@FXML
 	public void initialize() {
 		this.radioButtonList = new ArrayList<RadioButton>();
@@ -133,6 +134,7 @@ public class MainWindowController implements AutoTrackListener {
 	 * @param e
 	 * @throws IOException
 	 */
+	
 	@FXML
 	public void SaveProjectItem(ActionEvent e) throws IOException {
 		FileChooser fileChooser = new FileChooser();
@@ -151,6 +153,7 @@ public class MainWindowController implements AutoTrackListener {
 	 * @param e
 	 * @throws IOException
 	 */
+	
 	@FXML
 	public void ExportToCSVItem(ActionEvent e) throws IOException {
 		FileChooser fileChooser = new FileChooser();
@@ -257,6 +260,7 @@ public class MainWindowController implements AutoTrackListener {
 	 * project.getVideo().getStartFrameNum() and
 	 * project.getVideo().getEndFrameNum().
 	 */
+	
 	@FXML
 	public void handleAutoTrack() {
 		if (autoTracker == null || !autoTracker.isRunning()) {
@@ -283,6 +287,7 @@ public class MainWindowController implements AutoTrackListener {
 	 * Helper method that videoView, timeDisplayed, progressAutoTrack, videoSlider,
 	 * and textFieldCurFrameNum. used but AutoTracker in its Thread.
 	 */
+	
 	@Override
 	public void handleTrackedFrame(Mat frame, int frameNumber, double fractionComplete) {
 		Image imgFrame = UtilsForOpenCV.matToJavaFXImage(frame);
@@ -305,6 +310,7 @@ public class MainWindowController implements AutoTrackListener {
 	 * 
 	 * @param List<AnimalTrack>
 	 */
+	
 	@Override
 	public void trackingComplete(List<AnimalTrack> trackedSegments) {
 		System.out.println("TRACKING COMPLETE");

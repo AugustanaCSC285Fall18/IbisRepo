@@ -77,6 +77,7 @@ public class CalibrationWindowController {
 	/**
 	 * initializes a listener that calls showFrameAt(int frameNum) to update imageView.
 	 */
+	
 	@FXML
 	public void initialize() {
 		videoSlider.valueProperty().addListener(new ChangeListener<Number>() {
@@ -103,6 +104,7 @@ public class CalibrationWindowController {
 	 * or the window has not been calibrated prompts user to go back and complete these steps.
 	 * @throws IOException
 	 */
+	
 	@FXML
 	public void handleFinishButton() throws IOException {
 
@@ -135,6 +137,7 @@ public class CalibrationWindowController {
 	 * Handles button that initiates calibration process. Displays message prompting user to select points for List pointsToCalibrate.
 	 * creates each point with mouse click and when four points are selected calls calculateDist() method.
 	 */
+	
 	@FXML
 	public void handleCalibrateRatio() {
 		LaunchScreenController.informationalDialog("Place two vertical points first, then two horizontal points");
@@ -264,6 +267,7 @@ public class CalibrationWindowController {
 	 * Handles FXML button, prompts user to enter name for new chick and updates
 	 * label to display current size of List numberOfChicks.
 	 */
+	
 	@FXML
 	public void handleAddbutton() {
 		String suggestedInput = "Chick #" + (names.size() + 1);
@@ -285,6 +289,7 @@ public class CalibrationWindowController {
 	/**
 	 * Handles FXML button, removes last chick in the List numberOfChicks
 	 */
+	
 	@FXML
 	public void handleRemoveButton() {
 		if (numberOfChicks > 0) {
@@ -297,6 +302,7 @@ public class CalibrationWindowController {
 	/**
 	 * Handles button that sets startFrameNum to the current frame displayed in imageView
 	 */
+	
 	@FXML
 	public void handleSetStartTimeButton() {
 		startTimeTextField.setText(getTimeString());
@@ -305,6 +311,7 @@ public class CalibrationWindowController {
 	/**
 	 * Handles button that sets endFrameNum to the current frame displayed in imageView
 	 */
+	
 	@FXML
 	public void handleSetEndTimeButton() {
 		endTimeTextField.setText(getTimeString());
@@ -314,6 +321,7 @@ public class CalibrationWindowController {
 	 * Handles button that sets emptyFrameNum to the current frame displayed in imageView.
 	 * Used for autoTracking methods as blank screen to compare.
 	 */
+	
 	@FXML
 	public void handleSetEmptyFrame() {
 		emptyFrameTextField.setText(getTimeString());

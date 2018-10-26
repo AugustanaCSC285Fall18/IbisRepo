@@ -32,6 +32,7 @@ public class LaunchScreenController {
 	 * When the user clicks the browse button the method opens a window for the user
 	 * to select a video. 
 	 */
+	
 	@FXML
 	public void handleNewProject()  {
 		FileChooser fileChooser = new FileChooser();
@@ -52,6 +53,7 @@ public class LaunchScreenController {
 	 * Handles button that prompts user to open existing json project.
 	 * Used for resuming work on a previously saved project.
 	 */
+	
 	@FXML
 	public void handleLoadProjectButton() {
 		FileChooser fileChooser = new FileChooser();
@@ -76,6 +78,7 @@ public class LaunchScreenController {
 	 * 
 	 * @throws IOException
 	 */
+	
 	@FXML
 	public void handleOK() throws IOException {
 		if (!newProjectTextField.getText().equals("") && this.loadProjectTextField.getText().equals("")) {
