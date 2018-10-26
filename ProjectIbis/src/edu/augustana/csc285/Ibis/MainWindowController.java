@@ -234,8 +234,8 @@ public class MainWindowController implements AutoTrackListener {
 	}
 
 	/**
-	 * Helper method for displaying correct image for the frame passed in. TODO want
-	 * to draw the correct dots that had been previously stored for this frame?
+	 * Helper method for displaying correct image for the frame passed in. 
+	 * TODO want to draw the correct dots previously stored for this frame?
 	 * 
 	 * @param frameNum
 	 */
