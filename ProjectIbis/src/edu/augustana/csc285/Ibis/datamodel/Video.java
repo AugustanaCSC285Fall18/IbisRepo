@@ -22,7 +22,13 @@ public class Video {
 	private Rectangle arenaBounds;
 	
 	
-	
+	/**
+	 * Constructor for Video object.
+	 * Uses String filePath to set frame width and height.
+	 * Sets arenaBounds to the same width and height.
+	 * @param filePath
+	 * @throws FileNotFoundException
+	 */
 	public Video(String filePath) throws FileNotFoundException {
 		this.filePath= filePath;
 		connectVideoCapture();
