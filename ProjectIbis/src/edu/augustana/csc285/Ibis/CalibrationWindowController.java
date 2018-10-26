@@ -9,7 +9,7 @@ import java.util.Optional;
 
 import edu.augustana.csc285.Ibis.datamodel.AnimalTrack;
 import edu.augustana.csc285.Ibis.datamodel.ProjectData;
-
+import edu.augustana.csc285.Ibis.utils.SizingUtilities;
 import edu.augustana.csc285.Ibis.utils.UtilsForOpenCV;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
@@ -72,7 +72,7 @@ public class CalibrationWindowController {
 	private List<Point> pointsToCalibrate = new ArrayList<Point>();
 
 
-	private boolean fishiedAllCalibration=false;
+	private boolean fishiedAllCalibration=true;
 	private boolean specifideTheRectengel=false;
 	/**
 	 * initializes a listener that calls showFrameAt(int frameNum) to update imageView.
@@ -238,6 +238,7 @@ public class CalibrationWindowController {
 	 */
 	public void setVideo(String filePath) throws FileNotFoundException {
 		project = new ProjectData(filePath);
+		SizingUtilities.setCanvasSizeToMatchVideo(project.getVideo(), this.videoView, this.canvasView);
 		videoSlider.setMax(project.getVideo().getTotalNumFrames() - 1); 
 		showFrameAt(0);
 	}
