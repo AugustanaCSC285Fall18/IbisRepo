@@ -286,19 +286,17 @@ public class MainWindowController implements AutoTrackListener {
 	@FXML
 	public void handleAssignButton() {
 		if (comboBoxSegment.getItems().size() > 0) {
-			for (AnimalTrack track : project.getTracks()) {
-				for (RadioButton button : radioButtonList) {
-					if (track.getAnimalId() == button.getText()) {
-						for(TimePoint unassignedPoint : project.getTracks().get(comboBoxSegment.getSelectionModel().getSelectedIndex())){
-							track.add(unassignedPoint);
-
-						}
+			for (int index = 0; index < radioButtonList.size(); index++) {
+				if(radioButtonList.get(index).getText() == project.getTracks().get(index).getAnimalId() && radioButtonList.get(index).isSelected()) {
+					
+					for(int i=0; i<project.getUnassignedSegments().get(comboBoxSegment.getSelectionModel().getSelectedIndex()).size(); i++) {;
+						project.getTracks().get(index).add(project.getUnassignedSegments().get(comboBoxSegment.getSelectionModel().getSelectedIndex()).getTimePointAtIndex(i));
 					}
-		}
+					
+				}
 	}}
-		System.out.println("track size "+ project.getTracks().size());
+		System.out.println("track size "+ project.getTracks().size() + " line 302");
 
-		System.out.println(""+project.getTracks().get(0).getAnimalId());
 		comboBoxSegment.getItems().remove(comboBoxSegment.getSelectionModel().getSelectedIndex());	
 	}
 	
@@ -334,16 +332,17 @@ public class MainWindowController implements AutoTrackListener {
 	@Override
 	public void trackingComplete(List<AnimalTrack> trackedSegments) {
 		System.out.println("TRACKING COMPLETE");
-		System.out.println("Size: " + trackedSegments.size());
+		System.out.println("Size of unassigned segments before removal: " + trackedSegments.size() + " line 340");
 		project.getUnassignedSegments().clear();
 		removeTrackWithLessThanFivePoints(trackedSegments);
 		project.getUnassignedSegments().addAll(trackedSegments);
 
-		System.out.println("track size"+ project.getTracks().size());
-		System.out.println("unassigned segments :" + project.getUnassignedSegments().size());
+		System.out.println("How many chicks are there in the project "+ project.getTracks().size() + " line 345");
+		System.out.println("size of unassigned segments after removal :" + project.getUnassignedSegments().size() + " line 346");
 		
 		for(int index=0; index<trackedSegments.size(); index++) {
 			comboBoxSegment.getItems().add(trackedSegments.get(index).getAnimalId());
+			System.out.println("number of points in autotracked segment " + trackedSegments.get(index) + " line 345");
 		}
 
 		Platform.runLater(() -> {
