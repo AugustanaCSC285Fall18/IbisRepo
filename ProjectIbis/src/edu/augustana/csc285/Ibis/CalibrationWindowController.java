@@ -314,7 +314,7 @@ public class CalibrationWindowController {
 		if (result.isPresent()) {
 			numberOfChicks++;
 			numberOfChicksLabel.setText("" + numberOfChicks);
-			names.add(result.get()); // add animaltrack instead of the string 
+			names.add(result.get());
 		}
 		System.out.println("Size of the strings adding for the chick names = "+names.size() +" in calibration line 307");
 	}
