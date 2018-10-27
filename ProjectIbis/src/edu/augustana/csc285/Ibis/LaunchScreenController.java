@@ -49,6 +49,7 @@ public class LaunchScreenController {
 			}
 		}
 	}
+	
 	/**
 	 * Handles button that prompts user to open existing json project.
 	 * Used for resuming work on a previously saved project.

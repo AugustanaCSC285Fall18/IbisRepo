@@ -74,6 +74,7 @@ public class CalibrationWindowController {
 
 	private boolean finishedAllCalibration=true;
 	private boolean specifiedTheRectangle=false;
+	
 	/**
 	 * initializes a listener that calls showFrameAt(int frameNum) to update imageView.
 	 */
@@ -88,17 +89,20 @@ public class CalibrationWindowController {
 			}
 		});
 	}
+	
 	/**
 	 * takes in point from mouse click and draws a visual point centered on the x and y coordinates.
 	 * DUPLICATE CODE IN MAIN WINDOW CONTROLLER.
 	 * @param pt
 	 */
+	
 	public void drawPoint(Point pt) {
 		GraphicsContext drawingPen = canvasView.getGraphicsContext2D();
 		drawingPen.setFill(Color.FUCHSIA);
 		drawingPen.fillOval(pt.getX()-2, pt.getY()-2, 5, 5);
 
 	}
+	
 	/**
 	 * Handles button that takes user to mainWindowController. If no chicks have been registered with handleAddButton()
 	 * or the window has not been calibrated prompts user to go back and complete these steps.
@@ -133,6 +137,7 @@ public class CalibrationWindowController {
 			LaunchScreenController.informationalDialog("Please specifie the areana bounds");
 		}
 	}
+	
 	/**
 	 * Handles button that initiates calibration process. Displays message prompting user to select points for List pointsToCalibrate.
 	 * creates each point with mouse click and when four points are selected calls calculateDist() method.
@@ -149,34 +154,48 @@ public class CalibrationWindowController {
 						drawPoint(newPoint);
 
 						if(pointsToCalibrate.size() == 2) {
-					
 							double distanceInCm = getDoubleFromUser("Vertical Distance");
 							if(distanceInCm !=0) {
-							Point ptStart = pointsToCalibrate.get(0);
-							Point ptEnd = pointsToCalibrate.get(1);
-							double verticalDistInCanvas = ptStart.distance(ptEnd);
-							double verticalDistInVideo = verticalDistInCanvas * getVideoToCanvasRatio();
-				
-							project.getVideo().setYPixelsPerCm(verticalDistInVideo / distanceInCm);
-							}
-						} else if (pointsToCalibrate.size() == 4) {
+							setYPerCm(distanceInCm);
+								}
 							
+						} else if (pointsToCalibrate.size() == 4) {						
 							double distanceInCm = getDoubleFromUser("Horizantal Distance");
 							if(distanceInCm !=0) {
-							Point ptStart = pointsToCalibrate.get(2);
-							Point ptEnd = pointsToCalibrate.get(3);
-							double horizantalDistInCanvas = ptStart.distance(ptEnd);
-							double horizantalDistInVideo = horizantalDistInCanvas * getVideoToCanvasRatio();
-							
-							project.getVideo().setXPixelsPerCm(horizantalDistInVideo / distanceInCm);
-							finishedAllCalibration=true;
-							}
+							setXPerCm(distanceInCm);
+								}
 						}
 					}
-					
 			}
 		});
 		
+	}
+	
+	/**
+	 * Set the Y pixels per cm for the video
+	 * @param distanceInCm - the input taken from the user
+	 */
+	public void setYPerCm(double distanceInCm) {
+		Point ptStart = pointsToCalibrate.get(0);
+		Point ptEnd = pointsToCalibrate.get(1);
+		double verticalDistInCanvas = ptStart.distance(ptEnd);
+		double verticalDistInVideo = verticalDistInCanvas * getVideoToCanvasRatio();
+
+		project.getVideo().setYPixelsPerCm(verticalDistInVideo / distanceInCm);
+	}
+
+	/**
+	 * Set the X pixels per cm for the video
+	 * @param distanceInCm - the input taken from the user
+	 */
+	public void setXPerCm(double distanceInCm) {
+		Point ptStart = pointsToCalibrate.get(2);
+		Point ptEnd = pointsToCalibrate.get(3);
+		double horizantalDistInCanvas = ptStart.distance(ptEnd);
+		double horizantalDistInVideo = horizantalDistInCanvas * getVideoToCanvasRatio();
+		
+		project.getVideo().setXPixelsPerCm(horizantalDistInVideo / distanceInCm);
+		finishedAllCalibration=true;
 	}
 	
 	@FXML
@@ -193,18 +212,22 @@ public class CalibrationWindowController {
 				Point newPoint =new Point((int)event.getX(), (int)event.getY()); 
 				arenaPoints.add(newPoint);
 				drawPoint(newPoint);
+				if(arenaPoints.size()==2) {
+					int arenaWidth = (int)Math.abs(arenaPoints.get(1).getX() - arenaPoints.get(0).getX());
+					int arenaHeight = (int)Math.abs(arenaPoints.get(1).getY() - arenaPoints.get(0).getY());
+					project.getVideo().getArenaBounds().setBounds((int)event.getX(),(int)event.getY(), (int)(arenaWidth * getVideoToCanvasRatio()), (int)(arenaHeight*getVideoToCanvasRatio()));
 				}
+				}
+// TODO why is this doing the similar thing as Sizing Utilities? instead of setting the arena bounds see example above
+//				canvasView.setHeight(arenaHeight);
+//				canvasView.setWidth(arenaWidth);
+//				canvasView.setLayoutX(arenaPoints.get(0).getX());
+//				canvasView.setLayoutY(arenaPoints.get(0).getY());
+//				canvasView.setTranslateX(videoView.getX() + canvasView.getLayoutX());
+//				canvasView.setTranslateY(videoView.getY() + canvasView.getLayoutY());
 			}
 		});
-		double arenaWidth = Math.abs(arenaPoints.get(1).getX() - arenaPoints.get(0).getX());
-		double arenaHeight = Math.abs(arenaPoints.get(1).getY() - arenaPoints.get(0).getY());
-		canvasView.setHeight(arenaHeight);
-		canvasView.setWidth(arenaWidth);
-		canvasView.setLayoutX(arenaPoints.get(0).getX());
-		canvasView.setLayoutY(arenaPoints.get(0).getY());
-		canvasView.setTranslateX(videoView.getX() + canvasView.getLayoutX());
-		canvasView.setTranslateY(videoView.getY() + canvasView.getLayoutY());
-
+		
 	}
 	
 	
@@ -260,9 +283,6 @@ public class CalibrationWindowController {
 		project.getVideo().setCurrentFrameNum(frameNum);
 		Image curFrame = UtilsForOpenCV.matToJavaFXImage(project.getVideo().readFrame());
 		videoView.setImage(curFrame);
-		//GraphicsContext drawingPen = canvasView.getGraphicsContext2D(); // not needed?
-		//	drawingPen.clearRect(0, 0, canvasView.getWidth(), canvasView.getHeight());
-		// want to draw the correct dots that had been previously stored for this frame
 	}
 
 	/**
@@ -293,7 +313,7 @@ public class CalibrationWindowController {
 			numberOfChicksLabel.setText("" + numberOfChicks);
 			names.add(result.get()); // add animaltrack instead of the string 
 		}
-		System.out.println(names.size());
+		System.out.println("Size of the strings adding for the chick names = "+names.size() +" in calibration line 307");
 	}
 
 	/**
@@ -306,7 +326,7 @@ public class CalibrationWindowController {
 			numberOfChicks--;
 			numberOfChicksLabel.setText("" + numberOfChicks);
 			names.remove(names.size() - 1);
-			System.out.println(names.size());
+			System.out.println("Size of the strings remove for the chick names = "+names.size() +" in calibration line 320");
 		}
 	}
 	/**
