@@ -81,6 +81,7 @@ public class CalibrationWindowController {
 	
 	@FXML
 	public void initialize() {
+		
 		videoSlider.valueProperty().addListener(new ChangeListener<Number>() {
 			@Override
 			public void changed(ObservableValue<? extends Number> observable, Number initalVal, Number finalVal) {
@@ -113,6 +114,8 @@ public class CalibrationWindowController {
 	public void handleFinishButton() throws IOException {
 
 		if (numberOfChicks > 0 && finishedAllCalibration) { // specifideTheRectengel
+	
+
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("MainWindow.fxml"));
 			AnchorPane root = (AnchorPane) loader.load();
 
@@ -156,7 +159,7 @@ public class CalibrationWindowController {
 						if(pointsToCalibrate.size() == 2) {
 							double distanceInCm = getDoubleFromUser("Vertical Distance");
 							if(distanceInCm !=0) {
-							setYPerCm(distanceInCm);
+								setYPerCm(distanceInCm);
 								}
 							
 						} else if (pointsToCalibrate.size() == 4) {						

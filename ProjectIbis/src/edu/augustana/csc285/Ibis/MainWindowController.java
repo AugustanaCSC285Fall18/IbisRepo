@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -272,7 +273,7 @@ public class MainWindowController implements AutoTrackListener {
 
 			// this method will start a new thread to run AutoTracker in the background
 			// so that we don't freeze up the main JavaFX UI thread.
-			autoTracker.startAnalysis(video);
+			autoTracker.startAnalysis(project.getVideo());
 			btnTrack.setText("CANCEL auto-tracking");
 		} else {
 			autoTracker.cancelAnalysis();
@@ -314,17 +315,32 @@ public class MainWindowController implements AutoTrackListener {
 		System.out.println("TRACKING COMPLETE");
 		System.out.println("Size: " + trackedSegments.size());
 		project.getUnassignedSegments().clear();
+		removeTrackWithLessThanFivePoints(trackedSegments);
 		project.getUnassignedSegments().addAll(trackedSegments);
 
+		System.out.println(project.getTracks().size());
+		System.out.println("unassigned segments :" + project.getUnassignedSegments().size());
+		
 		for (AnimalTrack track : trackedSegments) {
 			System.out.println(track);
 //			System.out.println("  " + track.getPositions());
 		}
+
 		Platform.runLater(() -> {
 			progressAutoTrack.setProgress(1.0);
 			btnTrack.setText("Start auto-tracking");
 		});
 
+	}
+	
+	public void removeTrackWithLessThanFivePoints(List<AnimalTrack> trackedSegments) {
+		List<AnimalTrack> newlist = new ArrayList<AnimalTrack>();
+		for(int index =0; index< trackedSegments.size(); index++) {
+			if(trackedSegments.get(index).size()<5) {
+				newlist.add(trackedSegments.get(index));
+			}
+		}
+		trackedSegments.removeAll(newlist);
 	}
 
 	/**
