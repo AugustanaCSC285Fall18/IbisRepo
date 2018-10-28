@@ -1,6 +1,7 @@
 package edu.augustana.csc285.Ibis.datamodel;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -17,6 +18,7 @@ public class AnimalTrack implements Iterable<TimePoint>{
 	
 	public void add(TimePoint pt) {
 			positions.add(pt);
+			Collections.sort(positions);
 	}
 	
 	public TimePoint getTimePointAtIndex(int index) {
