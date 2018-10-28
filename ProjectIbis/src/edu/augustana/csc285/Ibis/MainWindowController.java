@@ -118,6 +118,11 @@ public class MainWindowController implements AutoTrackListener {
 	public void setProject(ProjectData project) {
 		this.project = project;
 		createRadioButtonsForChicks();
+		System.out.println("width " + this.project.getVideo().getArenaBounds().getWidth());
+		System.out.println("height " + this.project.getVideo().getArenaBounds().getHeight());
+		System.out.println("X "+ this.project.getVideo().getArenaBounds().getX());
+		System.out.println("y "+ this.project.getVideo().getArenaBounds().getY());
+
 		SizingUtilities.setCanvasSizeToMatchVideo(this.project.getVideo(), this.videoView, this.canvasView);
 		videoSlider.setMax(project.getVideo().getEndFrameNum() - 1); // need the minus one to not go off the video and
 		videoSlider.setMin(project.getVideo().getStartFrameNum());
@@ -127,7 +132,7 @@ public class MainWindowController implements AutoTrackListener {
 
 	private void drawArenaBound() {
 		GraphicsContext drawingPen = canvasView.getGraphicsContext2D();
-		drawingPen.setStroke(Color.GOLD);
+		drawingPen.setStroke(Color.RED);
 		drawingPen.strokeRect(project.getVideo().getArenaBounds().getX(), project.getVideo().getArenaBounds().getY(), project.getVideo().getArenaBounds().getWidth(), project.getVideo().getArenaBounds().getHeight());
 	}
 
@@ -288,16 +293,18 @@ public class MainWindowController implements AutoTrackListener {
 		if (comboBoxSegment.getItems().size() > 0) {
 			for (int index = 0; index < radioButtonList.size(); index++) {
 				if(radioButtonList.get(index).getText() == project.getTracks().get(index).getAnimalId() && radioButtonList.get(index).isSelected()) {
-					
+				if(comboBoxSegment.getSelectionModel().getSelectedIndex() !=-1) {	
 					for(int i=0; i<project.getUnassignedSegments().get(comboBoxSegment.getSelectionModel().getSelectedIndex()).size(); i++) {;
 						project.getTracks().get(index).add(project.getUnassignedSegments().get(comboBoxSegment.getSelectionModel().getSelectedIndex()).getTimePointAtIndex(i));
+						comboBoxSegment.getItems().remove(comboBoxSegment.getSelectionModel().getSelectedIndex());	
 					}
+				}
 					
 				}
-	}}
-		System.out.println("track size "+ project.getTracks().size() + " line 302");
+				
+	}
 
-		comboBoxSegment.getItems().remove(comboBoxSegment.getSelectionModel().getSelectedIndex());	
+}
 	}
 	
 
@@ -401,16 +408,16 @@ public class MainWindowController implements AutoTrackListener {
 		this.videoSlider.setValue(this.videoSlider.getValue() - 30);
 	}
 	
+	@FXML
 	public void showSelectedAutoTrack() {
 		AnimalTrack track = project.getUnassignedSegments().get(comboBoxSegment.getSelectionModel().getSelectedIndex());
 		System.out.println(track);
+		GraphicsContext drawingPen = canvasView.getGraphicsContext2D();
+		drawingPen.setFill(Color.TOMATO);
 		for(int i = 0; i < track.size(); i++) {
-			videoSlider.setValue(track.getTimePointAtIndex(i).getFrameNum());
-			GraphicsContext drawingPen = canvasView.getGraphicsContext2D();
-			drawingPen.setFill(Color.TOMATO);
 			drawingPen.fillOval(track.getTimePointAtIndex(i).getX(), track.getTimePointAtIndex(i).getY(), 5, 5);
-			System.out.println(track.getTimePointAtIndex(i));
 		}
+		videoSlider.setValue(track.getFinalTimePoint().getFrameNum());
 	}
 
 }

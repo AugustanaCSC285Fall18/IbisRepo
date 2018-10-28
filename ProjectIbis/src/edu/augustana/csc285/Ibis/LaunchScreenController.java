@@ -117,7 +117,7 @@ public class LaunchScreenController {
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("CalibrationWindow.fxml"));
 		AnchorPane root = (AnchorPane) loader.load();
 		CalibrationWindowController nextController = loader.getController();
-		nextController.setVideo(video.getFilePath());
+		nextController.setNewProject(video.getFilePath());
 		Scene nextScene = new Scene(root, root.getPrefWidth(), root.getPrefHeight());
 		nextScene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 		Stage primary = (Stage) okButton.getScene().getWindow();

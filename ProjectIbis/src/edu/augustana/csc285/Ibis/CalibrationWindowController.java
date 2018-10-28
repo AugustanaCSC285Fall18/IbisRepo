@@ -64,7 +64,7 @@ public class CalibrationWindowController {
 	private TextField numberOfChicksLabel;
 	
 	private ArrayList<String> names = new ArrayList<String>();
-	List<Point> arenaPoints = new ArrayList<Point>();
+	private List<Point> arenaPoints = new ArrayList<Point>();
 
 	private int numberOfChicks = 0;
 
@@ -220,7 +220,7 @@ public class CalibrationWindowController {
 				if(arenaPoints.size()==2) {
 					int arenaWidth =(int) Math.abs(arenaPoints.get(1).getX() - arenaPoints.get(0).getX());
 					int arenaHeight = (int)Math.abs(arenaPoints.get(1).getY() - arenaPoints.get(0).getY());
-					Rectangle arenaBounds = new Rectangle((int)arenaPoints.get(0).getX(), (int)arenaPoints.get(0).getY(),arenaWidth, arenaHeight);
+					Rectangle arenaBounds = new Rectangle((int)(arenaPoints.get(0).getX()), (int)(arenaPoints.get(0).getY()),(arenaWidth), (arenaHeight));
 					project.getVideo().setArenaBounds(arenaBounds);
 					
 				}
@@ -273,7 +273,7 @@ public class CalibrationWindowController {
 	 * @param filePath
 	 * @throws FileNotFoundException
 	 */
-	public void setVideo(String filePath) throws FileNotFoundException {
+	public void setNewProject(String filePath) throws FileNotFoundException {
 		project = new ProjectData(filePath);
 		SizingUtilities.setCanvasSizeToMatchVideo(project.getVideo(), this.videoView, this.canvasView);
 		videoSlider.setMax(project.getVideo().getTotalNumFrames() - 1); 
