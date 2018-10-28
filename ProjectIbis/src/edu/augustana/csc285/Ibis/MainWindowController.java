@@ -346,7 +346,10 @@ public class MainWindowController implements AutoTrackListener {
 				// modify the location to reflect the actual location and not with the
 				// comparison to the whole GUI
 				public void handle(MouseEvent event) {
-					drawPoint(event);
+					if(!(project.getVideo().getCurrentFrameNum() == project.getVideo().getEndFrameNum())){
+						drawPoint(event);
+						handleBtnForward();
+					}
 				}
 			});
 		});
