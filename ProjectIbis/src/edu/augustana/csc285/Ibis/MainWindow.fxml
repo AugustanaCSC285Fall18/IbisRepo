@@ -16,7 +16,7 @@
 <?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.StackPane?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="477.0" prefWidth="711.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.augustana.csc285.Ibis.MainWindowController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="477.0" prefWidth="711.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.augustana.csc285.Ibis.MainWindowController">
    <children>
       <StackPane layoutX="207.0" layoutY="14.0">
          <children>
@@ -46,7 +46,8 @@
       <FlowPane fx:id="flowPanel" layoutX="239.0" layoutY="325.0" prefHeight="138.0" prefWidth="373.0" />
       <Button fx:id="btnForward" layoutX="620.0" layoutY="324.0" mnemonicParsing="false" onAction="#handleBtnForward" text="&gt;&gt;" />
       <Button fx:id="btnBackward" layoutX="204.0" layoutY="324.0" mnemonicParsing="false" onAction="#handleBtnBackward" text="&lt;&lt;" />
-      <ComboBox fx:id="comboBoxSegment" layoutX="17.0" layoutY="150.0" prefHeight="25.0" prefWidth="165.0" />
+      <ComboBox fx:id="comboBoxSegment" layoutX="17.0" layoutY="150.0" onAction="#showSelectedAutoTrack" prefHeight="25.0" prefWidth="165.0" />
       <Button layoutX="15.0" layoutY="114.0" mnemonicParsing="false" onAction="#handleAssignButton" text="Assign" />
+      <Button fx:id="showSelectedTrackBtn" layoutX="37.0" layoutY="226.0" mnemonicParsing="false" onAction="#showSelectedAutoTrack" text="Show Selected Track" />
    </children>
 </AnchorPane>
