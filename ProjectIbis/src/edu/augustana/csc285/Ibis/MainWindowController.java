@@ -379,12 +379,46 @@ public class MainWindowController implements AutoTrackListener {
 		}
 		radioButtonList.get(0).setSelected(true);
 	}
+	
+	public void drawLastPoints() {
+		List<AnimalTrack> toDraw = project.getUnassignedSegments();
+		System.out.println("tracks of project "+ toDraw.toString());
+		int bounds = 30;
+		int current = project.getVideo().getCurrentFrameNum();
+		System.out.println("current frame "+current);
+		List<TimePoint> pointsWithinBounds = findClosePoints(toDraw, current, bounds);
+		System.out.println("points within bound "+ pointsWithinBounds.toString());
+		System.out.println("points within bound "+ pointsWithinBounds.size());
+
+		for(int i = 0; i < pointsWithinBounds.size(); i++) {
+			//TimePoint last = toDraw.get(current - 5).getFinalTimePoint();
+			GraphicsContext drawingPen = canvasView.getGraphicsContext2D();
+			drawingPen.setFill(Color.DARKGREEN);
+			drawingPen.fillOval(pointsWithinBounds.get(i).getX(), pointsWithinBounds.get(i).getY(), 5, 5);
+		}
+	}
+	
+	public static List<TimePoint> findClosePoints(List<AnimalTrack> toCheck ,int currentFrame, int bounds){
+		List<TimePoint> close = new ArrayList<TimePoint>();
+		int indexToCheck = 0;
+		for(int i = 0; i < toCheck.size(); i++) {
+			for(int x = 0; x < toCheck.get(i).size(); x++) {
+				indexToCheck = toCheck.get(i).getTimePointAtIndex(x).getFrameNum();
+				if(indexToCheck - currentFrame <= bounds && !(indexToCheck - currentFrame < 0 - bounds)) {
+				//if(toCheck.get(i)) {
+					close.add(toCheck.get(i).getTimePointAtIndex(x));
+				}
+			}
+		}
+		return close;
+	}
 
 	/**
 	 * Handles button that causes videoSlider to jump forward 30 frames.
 	 */
 	public void handleBtnForward() {
 		this.videoSlider.setValue(this.videoSlider.getValue() + 30);
+		drawLastPoints();
 	}
 
 	/**
@@ -392,6 +426,7 @@ public class MainWindowController implements AutoTrackListener {
 	 */
 	public void handleBtnBackward() {
 		this.videoSlider.setValue(this.videoSlider.getValue() - 30);
+		drawLastPoints();
 	}
 
 }
