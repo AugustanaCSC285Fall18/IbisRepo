@@ -217,16 +217,18 @@ public class CalibrationWindowController {
 				drawPoint(newPoint);
 				
 				}
+				if(arenaPoints.size()==2) {
+					int arenaWidth =(int) Math.abs(arenaPoints.get(1).getX() - arenaPoints.get(0).getX());
+					int arenaHeight = (int)Math.abs(arenaPoints.get(1).getY() - arenaPoints.get(0).getY());
+					Rectangle arenaBounds = new Rectangle((int)arenaPoints.get(0).getX(), (int)arenaPoints.get(0).getY(),arenaWidth, arenaHeight);
+					project.getVideo().setArenaBounds(arenaBounds);
+					
+				}
 				
 			}
 			
 		});
-		if(arenaPoints.size()==2) {
-			int arenaWidth =(int) Math.abs(arenaPoints.get(1).getX() - arenaPoints.get(0).getX());
-			int arenaHeight = (int)Math.abs(arenaPoints.get(1).getY() - arenaPoints.get(0).getY());
-			Rectangle arenaBounds =new Rectangle(0,0, (arenaWidth ), (arenaHeight));
-			project.getVideo().setArenaBounds(arenaBounds);
-		}
+	
 		
 	}
 	

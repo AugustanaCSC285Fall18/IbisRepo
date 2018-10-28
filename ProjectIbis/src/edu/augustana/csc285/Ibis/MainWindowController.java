@@ -103,6 +103,7 @@ public class MainWindowController implements AutoTrackListener {
 			public void changed(ObservableValue<? extends Number> observable, Number initalVal, Number finalVal) {
 				timeDisplayed.setText(getTimeString());
 				showFrameAt(finalVal.intValue());
+				drawArenaBound();
 			}
 		});
 
@@ -122,6 +123,13 @@ public class MainWindowController implements AutoTrackListener {
 		videoSlider.setMax(project.getVideo().getEndFrameNum() - 1); // need the minus one to not go off the video and
 		videoSlider.setMin(project.getVideo().getStartFrameNum());
 		showFrameAt(this.project.getVideo().getStartFrameNum());
+		drawArenaBound();
+	}
+
+	private void drawArenaBound() {
+		GraphicsContext drawingPen = canvasView.getGraphicsContext2D();
+		drawingPen.setStroke(Color.GOLD);
+		drawingPen.strokeRect(project.getVideo().getArenaBounds().getX(), project.getVideo().getArenaBounds().getY(), project.getVideo().getArenaBounds().getWidth(), project.getVideo().getArenaBounds().getHeight());
 	}
 
 	/**
