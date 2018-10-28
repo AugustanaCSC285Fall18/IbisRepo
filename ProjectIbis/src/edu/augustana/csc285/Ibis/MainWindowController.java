@@ -408,7 +408,9 @@ public class MainWindowController implements AutoTrackListener {
 			//TimePoint last = toDraw.get(current - 5).getFinalTimePoint();
 			GraphicsContext drawingPen = canvasView.getGraphicsContext2D();
 			drawingPen.setFill(Color.DARKGREEN);
-			drawingPen.fillOval(pointsWithinBounds.get(i).getPointAWT().getX() - canvasView.getLayoutX(), pointsWithinBounds.get(i).getPointAWT().getY() - canvasView.getLayoutY(), 5, 5);
+			drawingPen.fillOval(pointsWithinBounds.get(i).getX(), pointsWithinBounds.get(i).getY(), 5, 5);
+			System.out.println("LINE 412 drawn point X" + pointsWithinBounds.get(i).getX());
+			System.out.println("LINE 413 drawn point Y" + pointsWithinBounds.get(i).getY());
 		}
 	}
 	
@@ -419,8 +421,8 @@ public class MainWindowController implements AutoTrackListener {
 			for(int x = 0; x < toCheck.get(i).size(); x++) {
 				indexToCheck = toCheck.get(i).getTimePointAtIndex(x).getFrameNum();
 				if(indexToCheck - currentFrame <= bounds && !(indexToCheck - currentFrame < 0 - bounds)) {
-				//if(toCheck.get(i)) {
 					close.add(toCheck.get(i).getTimePointAtIndex(x));
+					System.out.println("LINE 425 added timepoint " + toCheck.get(i).getTimePointAtIndex(x));
 				}
 			}
 		}
