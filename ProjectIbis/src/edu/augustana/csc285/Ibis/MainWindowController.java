@@ -96,14 +96,7 @@ public class MainWindowController implements AutoTrackListener {
 	public void initialize() {
 		this.radioButtonList = new ArrayList<RadioButton>();
 
-		canvasView.setOnMouseClicked(new EventHandler<MouseEvent>() {
-			@Override
-			// modify the location to reflect the actual location and not with the
-			// comparison to the whole GUI
-			public void handle(MouseEvent event) {
-				drawPoint(event);
-			}
-		});
+	
 
 		videoSlider.valueProperty().addListener(new ChangeListener<Number>() {
 			@Override
@@ -348,6 +341,14 @@ public class MainWindowController implements AutoTrackListener {
 		Platform.runLater(() -> {
 			progressAutoTrack.setProgress(1.0);
 			btnTrack.setText("Start auto-tracking");
+			canvasView.setOnMouseClicked(new EventHandler<MouseEvent>() {
+				@Override
+				// modify the location to reflect the actual location and not with the
+				// comparison to the whole GUI
+				public void handle(MouseEvent event) {
+					drawPoint(event);
+				}
+			});
 		});
 
 	}

@@ -149,6 +149,8 @@ public class CalibrationWindowController {
 	@FXML
 	public void handleCalibrateRatio() {
 		LaunchScreenController.informationalDialog("Place two vertical points first, then two horizontal points");
+		clearTheCanvasView();
+		pointsToCalibrate.clear();
 		canvasView.setOnMouseClicked(new EventHandler<MouseEvent>() {
 			public void handle(MouseEvent event) {
 					if (pointsToCalibrate.size() < 4) {
@@ -204,13 +206,10 @@ public class CalibrationWindowController {
 	@FXML
 	public void handleArenaBounds() {
 		LaunchScreenController.informationalDialog("Place two points in the each conner of the arena bound that should be used");
+		clearTheCanvasView();
 		List<Point> arenaPoints = new ArrayList<Point>();
 		canvasView.setOnMouseClicked(new EventHandler<MouseEvent>() {
 			public void handle(MouseEvent event) {
-				if(arenaPoints.isEmpty()) {
-					GraphicsContext drawingPen = canvasView.getGraphicsContext2D(); 
-					drawingPen.clearRect(0, 0, canvasView.getWidth(), canvasView.getHeight());
-				}
 				if(arenaPoints.size()<2) {
 				Point newPoint =new Point((int)event.getX(), (int)event.getY()); 
 				arenaPoints.add(newPoint);
@@ -218,7 +217,7 @@ public class CalibrationWindowController {
 				if(arenaPoints.size()==2) {
 					int arenaWidth = (int)Math.abs(arenaPoints.get(1).getX() - arenaPoints.get(0).getX());
 					int arenaHeight = (int)Math.abs(arenaPoints.get(1).getY() - arenaPoints.get(0).getY());
-					project.getVideo().getArenaBounds().setBounds((int)event.getX(),(int)event.getY(), (int)(arenaWidth * getVideoToCanvasRatio()), (int)(arenaHeight*getVideoToCanvasRatio()));
+					project.getVideo().getArenaBounds().setBounds((int)arenaPoints.get(0).getX(),(int)arenaPoints.get(0).getY(), (int)(arenaWidth * getVideoToCanvasRatio()), (int)(arenaHeight*getVideoToCanvasRatio()));
 				}
 				}
 // TODO why is this doing the similar thing as Sizing Utilities? instead of setting the arena bounds see example above
@@ -233,7 +232,10 @@ public class CalibrationWindowController {
 		
 	}
 	
-	
+	public void clearTheCanvasView() {
+		GraphicsContext drawingPen = canvasView.getGraphicsContext2D(); 
+		drawingPen.clearRect(0, 0, canvasView.getWidth(), canvasView.getHeight());
+	}
 	public double getVideoToCanvasRatio() {
 		double aspectRatio = project.getVideo().getFrameWidth() / project.getVideo().getFrameHeight();
 		double displayWidth = Math.min(videoView.getFitWidth(), videoView.getFitHeight() * aspectRatio);
