@@ -408,7 +408,7 @@ public class MainWindowController implements AutoTrackListener {
 			//TimePoint last = toDraw.get(current - 5).getFinalTimePoint();
 			GraphicsContext drawingPen = canvasView.getGraphicsContext2D();
 			drawingPen.setFill(Color.DARKGREEN);
-			drawingPen.fillOval(pointsWithinBounds.get(i).getX(), pointsWithinBounds.get(i).getY(), 5, 5);
+			drawingPen.fillOval(pointsWithinBounds.get(i).getPointAWT().getX() - canvasView.getLayoutX(), pointsWithinBounds.get(i).getPointAWT().getY() - canvasView.getLayoutY(), 5, 5);
 		}
 	}
 	
