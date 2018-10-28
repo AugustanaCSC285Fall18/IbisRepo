@@ -73,7 +73,7 @@ public class CalibrationWindowController {
 	private List<Point> pointsToCalibrate = new ArrayList<Point>();
 
 
-	private boolean finishedAllCalibration=true;
+	private boolean finishedAllCalibration=false;
 	private boolean specifiedTheRectangle=false;
 	
 	/**
@@ -114,7 +114,7 @@ public class CalibrationWindowController {
 	@FXML
 	public void handleFinishButton() throws IOException {
 
-		if (numberOfChicks > 0 && finishedAllCalibration) { // specifideTheRectengel
+		if (numberOfChicks > 0 && finishedAllCalibration && specifiedTheRectangle) {
 	
 
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("MainWindow.fxml"));
@@ -136,7 +136,7 @@ public class CalibrationWindowController {
 		} else if (numberOfChicks==0) {
 			LaunchScreenController.informationalDialog("Please add at least one chick to begin the traking");
 		}else if(!finishedAllCalibration) {
-			LaunchScreenController.informationalDialog("Please finish the calibration before proceeding");
+			LaunchScreenController.informationalDialog("Please specifie the calibration ration");
 		}else if(!specifiedTheRectangle) {
 			LaunchScreenController.informationalDialog("Please specifie the areana bounds");
 		}
@@ -152,6 +152,7 @@ public class CalibrationWindowController {
 		LaunchScreenController.informationalDialog("Place two vertical points first, then two horizontal points");
 		clearTheCanvasView();
 		pointsToCalibrate.clear();
+		finishedAllCalibration=false;
 		canvasView.setOnMouseClicked(new EventHandler<MouseEvent>() {
 			public void handle(MouseEvent event) {
 					if (pointsToCalibrate.size() < 4) {
@@ -207,8 +208,10 @@ public class CalibrationWindowController {
 	@FXML
 	public void handleArenaBounds() {
 		LaunchScreenController.informationalDialog("Place two points in the each corner of the arena bound that should be used");
+
 		clearTheCanvasView();
 		arenaPoints.clear();
+		specifiedTheRectangle=false;
 		canvasView.setOnMouseClicked(new EventHandler<MouseEvent>() {
 			public void handle(MouseEvent event) {
 				if(arenaPoints.size()<2) {
@@ -222,10 +225,7 @@ public class CalibrationWindowController {
 					int arenaHeight = (int)Math.abs(arenaPoints.get(1).getY() - arenaPoints.get(0).getY());
 					Rectangle arenaBounds = new Rectangle((int)(arenaPoints.get(0).getX()), (int)(arenaPoints.get(0).getY()),(arenaWidth), (arenaHeight));
 					project.getVideo().setArenaBounds(arenaBounds);
-//					canvasView.setHeight(arenaHeight);
-//					canvasView.setWidth(arenaWidth);
-//					canvasView.setLayoutX(arenaPoints.get(0).getX());
-//					canvasView.setLayoutY(arenaPoints.get(0).getY());
+					specifiedTheRectangle=true;
 
 					
 				}
@@ -241,6 +241,7 @@ public class CalibrationWindowController {
 		GraphicsContext drawingPen = canvasView.getGraphicsContext2D(); 
 		drawingPen.clearRect(0, 0, canvasView.getWidth(), canvasView.getHeight());
 	}
+	
 	public double getVideoToCanvasRatio() {
 		double aspectRatio = project.getVideo().getFrameWidth() / project.getVideo().getFrameHeight();
 		double displayWidth = Math.min(videoView.getFitWidth(), videoView.getFitHeight() * aspectRatio);
