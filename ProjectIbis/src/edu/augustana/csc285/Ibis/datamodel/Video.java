@@ -138,6 +138,10 @@ public class Video {
 	public Rectangle getArenaBounds() {
 		return arenaBounds;
 	}
+	
+	public void setArenaBounds(Rectangle arenaBounds) {
+		this.arenaBounds = arenaBounds;
+	}
 }
 
 
