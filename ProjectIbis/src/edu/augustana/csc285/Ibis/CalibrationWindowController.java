@@ -206,7 +206,8 @@ public class CalibrationWindowController {
 	
 	@FXML
 	public void handleArenaBounds() {
-		LaunchScreenController.informationalDialog("Place two points in the each conner of the arena bound that should be used");
+		LaunchScreenController.informationalDialog("Place a point in the upper left corner first then a point in the bottom right");
+
 		clearTheCanvasView();
 		arenaPoints.clear();
 		canvasView.setOnMouseClicked(new EventHandler<MouseEvent>() {
@@ -222,7 +223,9 @@ public class CalibrationWindowController {
 					int arenaHeight = (int)Math.abs(arenaPoints.get(1).getY() - arenaPoints.get(0).getY());
 					Rectangle arenaBounds = new Rectangle((int)(arenaPoints.get(0).getX()), (int)(arenaPoints.get(0).getY()),(arenaWidth), (arenaHeight));
 					project.getVideo().setArenaBounds(arenaBounds);
-					
+
+					specifiedTheRectangle=true;
+
 				}
 				
 			}
