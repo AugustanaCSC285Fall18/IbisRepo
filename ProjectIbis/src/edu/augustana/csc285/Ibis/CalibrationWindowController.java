@@ -30,7 +30,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
+import java.awt.Rectangle;
 import javafx.stage.Stage;
 
 public class CalibrationWindowController {
@@ -64,6 +64,7 @@ public class CalibrationWindowController {
 	private TextField numberOfChicksLabel;
 	
 	private ArrayList<String> names = new ArrayList<String>();
+	List<Point> arenaPoints = new ArrayList<Point>();
 
 	private int numberOfChicks = 0;
 
@@ -207,28 +208,25 @@ public class CalibrationWindowController {
 	public void handleArenaBounds() {
 		LaunchScreenController.informationalDialog("Place two points in the each conner of the arena bound that should be used");
 		clearTheCanvasView();
-		List<Point> arenaPoints = new ArrayList<Point>();
+		arenaPoints.clear();
 		canvasView.setOnMouseClicked(new EventHandler<MouseEvent>() {
 			public void handle(MouseEvent event) {
 				if(arenaPoints.size()<2) {
 				Point newPoint =new Point((int)event.getX(), (int)event.getY()); 
 				arenaPoints.add(newPoint);
 				drawPoint(newPoint);
-				if(arenaPoints.size()==2) {
-					int arenaWidth = (int)Math.abs(arenaPoints.get(1).getX() - arenaPoints.get(0).getX());
-					int arenaHeight = (int)Math.abs(arenaPoints.get(1).getY() - arenaPoints.get(0).getY());
-					project.getVideo().getArenaBounds().setBounds((int)arenaPoints.get(0).getX(),(int)arenaPoints.get(0).getY(), (int)(arenaWidth * getVideoToCanvasRatio()), (int)(arenaHeight*getVideoToCanvasRatio()));
+				
 				}
-				}
-// TODO why is this doing the similar thing as Sizing Utilities? instead of setting the arena bounds see example above
-//				canvasView.setHeight(arenaHeight);
-//				canvasView.setWidth(arenaWidth);
-//				canvasView.setLayoutX(arenaPoints.get(0).getX());
-//				canvasView.setLayoutY(arenaPoints.get(0).getY());
-//				canvasView.setTranslateX(videoView.getX() + canvasView.getLayoutX());
-//				canvasView.setTranslateY(videoView.getY() + canvasView.getLayoutY());
+				
 			}
+			
 		});
+		if(arenaPoints.size()==2) {
+			int arenaWidth =(int) Math.abs(arenaPoints.get(1).getX() - arenaPoints.get(0).getX());
+			int arenaHeight = (int)Math.abs(arenaPoints.get(1).getY() - arenaPoints.get(0).getY());
+			Rectangle arenaBounds =new Rectangle(0,0, (arenaWidth ), (arenaHeight));
+			project.getVideo().setArenaBounds(arenaBounds);
+		}
 		
 	}
 	

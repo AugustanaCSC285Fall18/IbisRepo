@@ -1,7 +1,6 @@
 package edu.augustana.csc285.Ibis;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -427,6 +426,18 @@ public class MainWindowController implements AutoTrackListener {
 	public void handleBtnBackward() {
 		this.videoSlider.setValue(this.videoSlider.getValue() - 30);
 		drawLastPoints();
+	}
+	
+	public void showSelectedAutoTrack() {
+		AnimalTrack track = project.getUnassignedSegments().get(comboBoxSegment.getSelectionModel().getSelectedIndex());
+		System.out.println(track);
+		for(int i = 0; i < track.size(); i++) {
+			videoSlider.setValue(track.getTimePointAtIndex(i).getFrameNum());
+			GraphicsContext drawingPen = canvasView.getGraphicsContext2D();
+			drawingPen.setFill(Color.TOMATO);
+			drawingPen.fillOval(track.getTimePointAtIndex(i).getX(), track.getTimePointAtIndex(i).getY(), 5, 5);
+			System.out.println(track.getTimePointAtIndex(i));
+		}
 	}
 
 }
