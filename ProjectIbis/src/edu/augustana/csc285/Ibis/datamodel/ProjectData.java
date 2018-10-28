@@ -88,8 +88,8 @@ public class ProjectData {
 		for (AnimalTrack trackToSave: tracks) {
 			for(TimePoint point: trackToSave) {
 			 out.print(trackToSave.getAnimalId()+", "+ String.format("%.2f", (point.getFrameNum()/video.getFrameRate())));
-			 out.print(", "+ point.getX());
-			 out.print(", "+ point.getY());
+			 out.print(", "+ point.getX()* video.getXPixelsPerCm());
+			 out.print(", "+ point.getY()* video.getYPixelsPerCm());
 			 out.println();
 			}
 		}

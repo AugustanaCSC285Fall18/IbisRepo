@@ -292,19 +292,16 @@ public class MainWindowController implements AutoTrackListener {
 	public void handleAssignButton() {
 		if (comboBoxSegment.getItems().size() > 0) {
 			for (int index = 0; index < radioButtonList.size(); index++) {
-				if(radioButtonList.get(index).getText() == project.getTracks().get(index).getAnimalId() && radioButtonList.get(index).isSelected()) {
-				if(comboBoxSegment.getSelectionModel().getSelectedIndex() !=-1) {	
-					for(int i=0; i<project.getUnassignedSegments().get(comboBoxSegment.getSelectionModel().getSelectedIndex()).size(); i++) {;
-						project.getTracks().get(index).add(project.getUnassignedSegments().get(comboBoxSegment.getSelectionModel().getSelectedIndex()).getTimePointAtIndex(i));
-						comboBoxSegment.getItems().remove(comboBoxSegment.getSelectionModel().getSelectedIndex());	
-					}
+				if(radioButtonList.get(index).getText() == project.getTracks().get(index).getAnimalId() && radioButtonList.get(index).isSelected()) {						
+						for(int i=0; i<project.getUnassignedSegments().get(comboBoxSegment.getSelectionModel().getSelectedIndex()).size(); i++) {;
+						project.getTracks().get(index).add(project.getUnassignedSegments().get(comboBoxSegment.getSelectionModel().getSelectedIndex()).getTimePointAtIndex(i));					}
 				}
-					
-				}
-				
-	}
-
-}
+			}
+			
+			
+				comboBoxSegment.getItems().remove(comboBoxSegment.getSelectionModel().getSelectedIndex());
+		} 
+		comboBoxSegment.getSelectionModel().select(0);
 	}
 	
 
@@ -353,6 +350,7 @@ public class MainWindowController implements AutoTrackListener {
 		}
 
 		Platform.runLater(() -> {
+			comboBoxSegment.getSelectionModel().select(0);
 			progressAutoTrack.setProgress(1.0);
 			btnTrack.setText("Start auto-tracking");
 			canvasView.setOnMouseClicked(new EventHandler<MouseEvent>() {
@@ -445,6 +443,7 @@ public class MainWindowController implements AutoTrackListener {
 	
 	@FXML
 	public void showSelectedAutoTrack() {
+		if(comboBoxSegment.getSelectionModel().getSelectedIndex() !=-1) {
 		AnimalTrack track = project.getUnassignedSegments().get(comboBoxSegment.getSelectionModel().getSelectedIndex());
 		System.out.println(track);
 		GraphicsContext drawingPen = canvasView.getGraphicsContext2D();
@@ -454,5 +453,5 @@ public class MainWindowController implements AutoTrackListener {
 		}
 		videoSlider.setValue(track.getFinalTimePoint().getFrameNum());
 	}
-
+	}
 }
