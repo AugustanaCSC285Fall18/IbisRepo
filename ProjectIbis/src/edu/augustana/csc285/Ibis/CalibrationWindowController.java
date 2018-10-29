@@ -71,9 +71,9 @@ public class CalibrationWindowController {
 	private ProjectData project;
 
 	private List<Point> pointsToCalibrate = new ArrayList<Point>();
+	private List<Color> colorChoice;
 
-
-	private boolean finishedAllCalibration=true;
+	private boolean finishedAllCalibration=false;
 	private boolean specifiedTheRectangle=false;
 	
 	/**
@@ -82,6 +82,10 @@ public class CalibrationWindowController {
 	
 	@FXML
 	public void initialize() {
+		colorChoice = new ArrayList<Color>();
+		colorChoice.add(Color.BLACK);
+		colorChoice.add(Color.BLUE);
+		colorChoice.add(Color.GREEN);
 		
 		videoSlider.valueProperty().addListener(new ChangeListener<Number>() {
 			@Override
@@ -114,7 +118,7 @@ public class CalibrationWindowController {
 	@FXML
 	public void handleFinishButton() throws IOException {
 
-		if (numberOfChicks > 0 && finishedAllCalibration) { // specifideTheRectengel
+		if (numberOfChicks > 0 && finishedAllCalibration && specifiedTheRectangle) { 
 	
 
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("MainWindow.fxml"));
@@ -124,6 +128,7 @@ public class CalibrationWindowController {
 
 			for (int i = 0; i < names.size();i++) {
 				project.getTracks().add(new AnimalTrack(names.get(i)));
+				project.getTracks().get(i).setColor(colorChoice.get(i % colorChoice.size()));
 			}
 			
 			nextController.setProject(project);
@@ -152,6 +157,7 @@ public class CalibrationWindowController {
 		LaunchScreenController.informationalDialog("Place two vertical points first, then two horizontal points");
 		clearTheCanvasView();
 		pointsToCalibrate.clear();
+		finishedAllCalibration=false;
 		canvasView.setOnMouseClicked(new EventHandler<MouseEvent>() {
 			public void handle(MouseEvent event) {
 					if (pointsToCalibrate.size() < 4) {
@@ -207,7 +213,7 @@ public class CalibrationWindowController {
 	@FXML
 	public void handleArenaBounds() {
 		LaunchScreenController.informationalDialog("Place a point in the upper left corner first then a point in the bottom right");
-
+		specifiedTheRectangle=false;
 		clearTheCanvasView();
 		arenaPoints.clear();
 		canvasView.setOnMouseClicked(new EventHandler<MouseEvent>() {

@@ -83,13 +83,13 @@ public class ProjectData {
 	 */
 	public void exportToCSV(File saveFile) throws FileNotFoundException {
 		PrintWriter out = new PrintWriter(saveFile);
-		out.print("Name, Time (in seconds), X-location, Y-location");
+		out.print("Name, Time (in seconds), X-location (cm), Y-location (cm)");
 		out.println();
 		for (AnimalTrack trackToSave: tracks) {
 			for(TimePoint point: trackToSave) {
 			 out.print(trackToSave.getAnimalId()+", "+ String.format("%.2f", (point.getFrameNum()/video.getFrameRate())));
-			 out.print(", "+ point.getX());
-			 out.print(", "+ point.getY());
+			 out.print(", "+ String.format("%.2f", (point.getX()/ video.getXPixelsPerCm())));
+			 out.print(", "+ String.format("%.2f", (point.getY()/ video.getYPixelsPerCm())));
 			 out.println();
 			}
 		}

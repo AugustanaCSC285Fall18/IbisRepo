@@ -5,12 +5,15 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
+import javafx.scene.paint.Color;
+
+
 
 
 public class AnimalTrack implements Iterable<TimePoint>{
 	private String animalID;
 	private List<TimePoint> positions;
-	
+	private Color color;
 	public AnimalTrack(String id) {
 		this.animalID = id;
 		positions = new ArrayList<TimePoint>();
@@ -19,6 +22,22 @@ public class AnimalTrack implements Iterable<TimePoint>{
 	public void add(TimePoint pt) {
 			positions.add(pt);
 			Collections.sort(positions);
+	}
+	
+	/**
+	 * 
+	 * @param startFrameNum - the starting time (inclusive)
+	 * @param endFrameNum   - the ending time (inclusive)
+	 * @return all time points in that time interval
+	 */
+	public List<TimePoint> getTimePointsWithinInterval(int startFrameNum, int endFrameNum) {
+		List<TimePoint> pointsInInterval = new ArrayList<>();
+		for (TimePoint pt : positions) {
+			if (pt.getFrameNum() >= startFrameNum && pt.getFrameNum() <= endFrameNum) {
+				pointsInInterval.add(pt);
+			}
+		}
+		return pointsInInterval;
 	}
 	
 	public TimePoint getTimePointAtIndex(int index) {
@@ -58,6 +77,13 @@ public class AnimalTrack implements Iterable<TimePoint>{
 		return positions.size();
 	}
 	
+	public void setColor(Color newColor) {
+		color = newColor;
+	}
+	
+	public Color getColor() {
+		return color;
+	}
 	public String getAnimalId() {
 		return this.animalID;
 	}

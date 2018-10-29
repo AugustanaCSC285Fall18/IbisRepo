@@ -84,6 +84,7 @@ public class MainWindowController implements AutoTrackListener {
 	private AutoTracker autoTracker;
 
 	private ProjectData project;
+	private GraphicsContext drawingPen;
 
 	/**
 	 * Initializes ArrayList of RadioButton for chick toggle group. Adds listener
@@ -94,12 +95,21 @@ public class MainWindowController implements AutoTrackListener {
 	@FXML
 	public void initialize() {
 		this.radioButtonList = new ArrayList<RadioButton>();
-
+		drawingPen= canvasView.getGraphicsContext2D();
 		videoSlider.valueProperty().addListener(new ChangeListener<Number>() {
 			@Override
 			public void changed(ObservableValue<? extends Number> observable, Number initalVal, Number finalVal) {
 				timeDisplayed.setText(getTimeString());
 				showFrameAt(finalVal.intValue());
+				for(AnimalTrack animal : project.getUnassignedSegments()) {
+					List<TimePoint> segment = animal.getTimePointsWithinInterval(project.getVideo().getCurrentFrameNum() - (int) (project.getVideo().getFrameRate() * 1.5), project.getVideo().getCurrentFrameNum() - (int) (project.getVideo().getFrameRate() * 3));
+					if(!segment.isEmpty()) {
+						
+						for(TimePoint point : segment) {
+							
+						}
+					}
+				}
 				drawArenaBound();
 			}
 		});
@@ -129,8 +139,7 @@ public class MainWindowController implements AutoTrackListener {
 	}
 
 	private void drawArenaBound() {
-		GraphicsContext drawingPen = canvasView.getGraphicsContext2D();
-		drawingPen.setStroke(Color.RED);
+		drawingPen.setStroke(Color.GOLD);
 		drawingPen.strokeRect(project.getVideo().getArenaBounds().getX(), project.getVideo().getArenaBounds().getY(),
 				project.getVideo().getArenaBounds().getWidth(), project.getVideo().getArenaBounds().getHeight());
 	}
@@ -220,7 +229,6 @@ public class MainWindowController implements AutoTrackListener {
 	 */
 	public void drawPoint(MouseEvent event) {
 		addPointToTrack(event);
-		GraphicsContext drawingPen = canvasView.getGraphicsContext2D();
 		drawingPen.setFill(Color.TOMATO);
 		drawingPen.fillOval(event.getX(), event.getY(), 5, 5);
 	}
@@ -249,10 +257,7 @@ public class MainWindowController implements AutoTrackListener {
 			Image curFrame = UtilsForOpenCV.matToJavaFXImage(project.getVideo().readFrame());
 			videoView.setImage(curFrame);
 			textFieldCurFrameNum.setText(String.format("%05d", frameNum));
-
-			GraphicsContext drawingPen = canvasView.getGraphicsContext2D();
 			drawingPen.clearRect(0, 0, canvasView.getWidth(), canvasView.getHeight());
-			// want to draw the correct dots that had been previously stored for this frame
 		}
 
 	}
@@ -290,20 +295,17 @@ public class MainWindowController implements AutoTrackListener {
 	public void handleAssignButton() {
 		if (comboBoxSegment.getItems().size() > 0) {
 			for (int index = 0; index < radioButtonList.size(); index++) {
-				if(radioButtonList.get(index).getText() == project.getTracks().get(index).getAnimalId() && radioButtonList.get(index).isSelected()) {
-				if(comboBoxSegment.getSelectionModel().getSelectedIndex() !=-1) {	
+				if(radioButtonList.get(index).getText() == project.getTracks().get(index).getAnimalId() && radioButtonList.get(index).isSelected()) {						
 					for(int i=0; i<project.getUnassignedSegments().get(comboBoxSegment.getSelectionModel().getSelectedIndex()).size(); i++) {;
-						project.getTracks().get(index).add(project.getUnassignedSegments().get(comboBoxSegment.getSelectionModel().getSelectedIndex()).getTimePointAtIndex(i));
-						comboBoxSegment.getItems().remove(comboBoxSegment.getSelectionModel().getSelectedIndex());	
-					}
-				}
-					
-				}
-				
-	}
-
+					project.getTracks().get(index).add(project.getUnassignedSegments().get(comboBoxSegment.getSelectionModel().getSelectedIndex()).getTimePointAtIndex(i));					}
+			}
+			}
+			
+			
+			comboBoxSegment.getItems().remove(comboBoxSegment.getSelectionModel().getSelectedIndex());
+	} 
+	comboBoxSegment.getSelectionModel().select(0);
 }
-	}
 
 	/**
 	 * Helper method that videoView, timeDisplayed, progressAutoTrack, videoSlider,
@@ -351,6 +353,7 @@ public class MainWindowController implements AutoTrackListener {
 		}
 
 		Platform.runLater(() -> {
+			comboBoxSegment.getSelectionModel().select(0);
 			progressAutoTrack.setProgress(1.0);
 			btnTrack.setText("Start auto-tracking");
 			canvasView.setOnMouseClicked(new EventHandler<MouseEvent>() {
@@ -404,7 +407,6 @@ public class MainWindowController implements AutoTrackListener {
 
 		for (int i = 0; i < pointsWithinBounds.size(); i++) {
 			// TimePoint last = toDraw.get(current - 5).getFinalTimePoint();
-			GraphicsContext drawingPen = canvasView.getGraphicsContext2D();
 			drawingPen.setFill(Color.DARKGREEN);
 			drawingPen.fillOval(pointsWithinBounds.get(i).getX(), pointsWithinBounds.get(i).getY(), 5, 5);
 			System.out.println("LINE 412 drawn point X" + pointsWithinBounds.get(i).getX());
@@ -445,14 +447,16 @@ public class MainWindowController implements AutoTrackListener {
 
 	@FXML
 	public void showSelectedAutoTrack() {
+		if(comboBoxSegment.getSelectionModel().getSelectedIndex() !=-1) {
 		AnimalTrack track = project.getUnassignedSegments().get(comboBoxSegment.getSelectionModel().getSelectedIndex());
 		System.out.println(track);
-		GraphicsContext drawingPen = canvasView.getGraphicsContext2D();
+		videoSlider.setValue(track.getFinalTimePoint().getFrameNum());
+
 		drawingPen.setFill(Color.TOMATO);
 		for (int i = 0; i < track.size(); i++) {
 			drawingPen.fillOval(track.getTimePointAtIndex(i).getX(), track.getTimePointAtIndex(i).getY(), 5, 5);
 		}
-		videoSlider.setValue(track.getFinalTimePoint().getFrameNum());
+	}
 	}
 
 }
