@@ -11,7 +11,6 @@ import edu.augustana.csc285.Ibis.datamodel.AnimalTrack;
 import edu.augustana.csc285.Ibis.datamodel.ProjectData;
 import edu.augustana.csc285.Ibis.utils.SizingUtilities;
 import edu.augustana.csc285.Ibis.utils.UtilsForOpenCV;
-import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
@@ -41,7 +40,7 @@ public class CalibrationWindowController {
 	@FXML
 	private Slider videoSlider;
 	@FXML
-	private Label timeDisplayed;
+	private Label timeDisplayedLabel;
 	@FXML
 	private TextField startTimeTextField;
 	@FXML
@@ -62,8 +61,9 @@ public class CalibrationWindowController {
 	private Button setEmptyFrameButton;
 	@FXML
 	private TextField numberOfChicksLabel;
-	
-	private ArrayList<String> names = new ArrayList<String>();
+	private GraphicsContext drawingPen;
+
+	private ArrayList<String> chickNames = new ArrayList<String>();
 	private List<Point> arenaPoints = new ArrayList<Point>();
 
 	private int numberOfChicks = 0;
@@ -71,118 +71,106 @@ public class CalibrationWindowController {
 	private ProjectData project;
 
 	private List<Point> pointsToCalibrate = new ArrayList<Point>();
-	private List<Color> colorChoice;
 
-	private boolean finishedAllCalibration=false;
-	private boolean specifiedTheRectangle=false;
-	
-	/**
-	 * initializes a listener that calls showFrameAt(int frameNum) to update imageView.
-	 */
-	
+
+	private boolean specifiedCalibrationRatio = false;
+	private boolean specifiedTheArenaBounds = false;
+
 	@FXML
 	public void initialize() {
-		colorChoice = new ArrayList<Color>();
-		colorChoice.add(Color.BLACK);
-		colorChoice.add(Color.BLUE);
-		colorChoice.add(Color.GREEN);
-		
+		drawingPen = canvasView.getGraphicsContext2D();
+
 		videoSlider.valueProperty().addListener(new ChangeListener<Number>() {
 			@Override
 			public void changed(ObservableValue<? extends Number> observable, Number initalVal, Number finalVal) {
-				timeDisplayed.setText(getTimeString());
+				timeDisplayedLabel.setText(getTimeString());
 				showFrameAt(finalVal.intValue());
 			}
 		});
 	}
-	
+
 	/**
 	 * takes in point from mouse click and draws a visual point centered on the x and y coordinates.
-	 * DUPLICATE CODE IN MAIN WINDOW CONTROLLER.
 	 * @param pt
 	 */
-	
+
 	public void drawPoint(Point pt) {
-		GraphicsContext drawingPen = canvasView.getGraphicsContext2D();
 		drawingPen.setFill(Color.FUCHSIA);
 		drawingPen.fillOval(pt.getX()-2, pt.getY()-2, 5, 5);
 
 	}
-	
+
 	/**
 	 * Handles button that takes user to mainWindowController. If no chicks have been registered with handleAddButton()
 	 * or the window has not been calibrated prompts user to go back and complete these steps.
 	 * @throws IOException
 	 */
-	
+
 	@FXML
 	public void handleFinishButton() throws IOException {
 
-		if (numberOfChicks > 0 && finishedAllCalibration && specifiedTheRectangle) { 
-	
+		if (numberOfChicks > 0 && specifiedCalibrationRatio && specifiedTheArenaBounds) { 
+
 
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("MainWindow.fxml"));
 			AnchorPane root = (AnchorPane) loader.load();
-
 			MainWindowController nextController = loader.getController();
 
-			for (int i = 0; i < names.size();i++) {
-				project.getTracks().add(new AnimalTrack(names.get(i)));
-				project.getTracks().get(i).setColor(colorChoice.get(i % colorChoice.size()));
+			for (int i = 0; i < chickNames.size();i++) {
+				project.getTracks().add(new AnimalTrack(chickNames.get(i)));
 			}
-			
 			nextController.setProject(project);
-		
+
 			Scene nextScene = new Scene(root, root.getPrefWidth(), root.getPrefHeight());
 			nextScene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 			Stage primary = (Stage) finishButton.getScene().getWindow();
 			primary.setScene(nextScene);
 			primary.setTitle("Chick Tracker 1.0");
+
 		} else if (numberOfChicks==0) {
 			LaunchScreenController.informationalDialog("Please add at least one chick to begin the traking");
-		}else if(!finishedAllCalibration) {
+		} else if(!specifiedCalibrationRatio) {
 			LaunchScreenController.informationalDialog("Please finish the calibration before proceeding");
-		}else if(!specifiedTheRectangle) {
+		} else if(!specifiedTheArenaBounds) {
 			LaunchScreenController.informationalDialog("Please specifie the areana bounds");
 		}
 	}
-	
+
 	/**
 	 * Handles button that initiates calibration process. Displays message prompting user to select points for List pointsToCalibrate.
 	 * creates each point with mouse click and when four points are selected calls calculateDist() method.
 	 */
-	
+
 	@FXML
 	public void handleCalibrateRatio() {
 		LaunchScreenController.informationalDialog("Place two vertical points first, then two horizontal points");
 		clearTheCanvasView();
 		pointsToCalibrate.clear();
-		finishedAllCalibration=false;
+		specifiedCalibrationRatio = false;
 		canvasView.setOnMouseClicked(new EventHandler<MouseEvent>() {
 			public void handle(MouseEvent event) {
-					if (pointsToCalibrate.size() < 4) {
-						Point newPoint =new Point((int)event.getX(), (int)event.getY()); 
-						pointsToCalibrate.add(newPoint);
-						drawPoint(newPoint);
+				if (pointsToCalibrate.size() < 4) {
+					Point newPoint =new Point((int)event.getX(), (int)event.getY()); 
+					pointsToCalibrate.add(newPoint);
+					drawPoint(newPoint);
 
-						if(pointsToCalibrate.size() == 2) {
-							double distanceInCm = getDoubleFromUser("Vertical Distance");
-							if(distanceInCm !=0) {
-								setYPerCm(distanceInCm);
-								}
-							
-						} else if (pointsToCalibrate.size() == 4) {						
-							double distanceInCm = getDoubleFromUser("Horizantal Distance");
-							if(distanceInCm !=0) {
+					if(pointsToCalibrate.size() == 2) {
+						double distanceInCm = getDoubleFromUser("Vertical Distance");
+						if(distanceInCm != 0) {
+							setYPerCm(distanceInCm);
+						}
+
+					} else if (pointsToCalibrate.size() == 4) {						
+						double distanceInCm = getDoubleFromUser("Horizantal Distance");
+						if(distanceInCm != 0) {
 							setXPerCm(distanceInCm);
-								}
 						}
 					}
+				}
 			}
 		});
-		
 	}
-	
+
 	/**
 	 * Set the Y pixels per cm for the video
 	 * @param distanceInCm - the input taken from the user
@@ -205,44 +193,38 @@ public class CalibrationWindowController {
 		Point ptEnd = pointsToCalibrate.get(3);
 		double horizantalDistInCanvas = ptStart.distance(ptEnd);
 		double horizantalDistInVideo = horizantalDistInCanvas * getVideoToCanvasRatio();
-		
+
 		project.getVideo().setXPixelsPerCm(horizantalDistInVideo / distanceInCm);
-		finishedAllCalibration=true;
+		specifiedCalibrationRatio=true;
 	}
 	
 	@FXML
-	public void handleArenaBounds() {
-		LaunchScreenController.informationalDialog("Place a point in the upper left corner first then a point in the bottom right");
-		specifiedTheRectangle=false;
+	public void handleArenaBoundsButton() {
+		LaunchScreenController.informationalDialog("Place a point in the upper left corner of the area to track, then add another point in the bottom right");
+		specifiedTheArenaBounds=false;
 		clearTheCanvasView();
 		arenaPoints.clear();
 		canvasView.setOnMouseClicked(new EventHandler<MouseEvent>() {
 			public void handle(MouseEvent event) {
-				if(arenaPoints.size()<2) {
-				Point newPoint =new Point((int)event.getX(), (int)event.getY()); 
-				arenaPoints.add(newPoint);
-				drawPoint(newPoint);
-				
+				if(arenaPoints.size() < 2) {
+					Point newPoint = new Point((int)event.getX(), (int)event.getY()); 
+					arenaPoints.add(newPoint);
+					drawPoint(newPoint);
+
 				}
-				if(arenaPoints.size()==2) {
+				if(arenaPoints.size() == 2) {
 					int arenaWidth =(int) Math.abs(arenaPoints.get(1).getX() - arenaPoints.get(0).getX());
 					int arenaHeight = (int)Math.abs(arenaPoints.get(1).getY() - arenaPoints.get(0).getY());
 					Rectangle arenaBounds = new Rectangle((int)(arenaPoints.get(0).getX()), (int)(arenaPoints.get(0).getY()),(arenaWidth), (arenaHeight));
 					project.getVideo().setArenaBounds(arenaBounds);
 
-					specifiedTheRectangle=true;
-
+					specifiedTheArenaBounds=true;
 				}
-				
 			}
-			
 		});
-	
-		
 	}
-	
+
 	public void clearTheCanvasView() {
-		GraphicsContext drawingPen = canvasView.getGraphicsContext2D(); 
 		drawingPen.clearRect(0, 0, canvasView.getWidth(), canvasView.getHeight());
 	}
 	public double getVideoToCanvasRatio() {
@@ -257,23 +239,23 @@ public class CalibrationWindowController {
 		dialog.setHeaderText(null);
 		dialog.setContentText("Please enter the " + msg +" in (cm): ");
 		Optional<String> result = dialog.showAndWait();
+
 		if (result.isPresent()) {
-			String userNumText = result.get();
+			String userInputAsText = result.get();
 			try {
-				double userNum = Double.parseDouble(userNumText);
-				return userNum;
+				double userInputtAsDouble = Double.parseDouble(userInputAsText);
+				return userInputtAsDouble;
 			} catch (NumberFormatException ex) {
 				LaunchScreenController.informationalDialog("Please type a number");
 				return getDoubleFromUser(msg);
 			}			
 		} else {
-			LaunchScreenController.informationalDialog("Please draw the points agian");
+			LaunchScreenController.informationalDialog("Please draw the points again");
 			pointsToCalibrate.clear();
-			GraphicsContext drawingPen = canvasView.getGraphicsContext2D(); 
-			drawingPen.clearRect(0, 0, canvasView.getWidth(), canvasView.getHeight());
-		return 0;
+			clearTheCanvasView();
+			return 0;
 		}		
-		
+
 	}
 
 	/**
@@ -311,10 +293,10 @@ public class CalibrationWindowController {
 	 * Handles FXML button, prompts user to enter name for new chick and updates
 	 * label to display current size of List numberOfChicks.
 	 */
-	
+
 	@FXML
 	public void handleAddbutton() {
-		String suggestedInput = "Chick #" + (names.size() + 1);
+		String suggestedInput = "Chick #" + (chickNames.size() + 1);
 		TextInputDialog dialog = new TextInputDialog(suggestedInput);
 		dialog.setTitle("Id assigner");
 		dialog.setHeaderText(null);
@@ -325,28 +307,28 @@ public class CalibrationWindowController {
 		if (result.isPresent()) {
 			numberOfChicks++;
 			numberOfChicksLabel.setText("" + numberOfChicks);
-			names.add(result.get());
+			chickNames.add(result.get());
 		}
-		System.out.println("Size of the strings adding for the chick names = "+names.size() +" in calibration line 307");
+		System.out.println("Size of the strings adding for the chick names = "+chickNames.size() +" in calibration line 307");
 	}
 
 	/**
 	 * Handles FXML button, removes last chick in the List numberOfChicks
 	 */
-	
+
 	@FXML
 	public void handleRemoveButton() {
 		if (numberOfChicks > 0) {
 			numberOfChicks--;
 			numberOfChicksLabel.setText("" + numberOfChicks);
-			names.remove(names.size() - 1);
-			System.out.println("Size of the strings remove for the chick names = "+names.size() +" in calibration line 320");
+			chickNames.remove(chickNames.size() - 1);
+			System.out.println("Size of the strings remove for the chick names = "+chickNames.size() +" in calibration line 320");
 		}
 	}
 	/**
 	 * Handles button that sets startFrameNum to the current frame displayed in imageView
 	 */
-	
+
 	@FXML
 	public void handleSetStartTimeButton() {
 		startTimeTextField.setText(getTimeString());
@@ -355,7 +337,7 @@ public class CalibrationWindowController {
 	/**
 	 * Handles button that sets endFrameNum to the current frame displayed in imageView
 	 */
-	
+
 	@FXML
 	public void handleSetEndTimeButton() {
 		endTimeTextField.setText(getTimeString());
@@ -365,11 +347,11 @@ public class CalibrationWindowController {
 	 * Handles button that sets emptyFrameNum to the current frame displayed in imageView.
 	 * Used for autoTracking methods as blank screen to compare.
 	 */
-	
+
 	@FXML
 	public void handleSetEmptyFrame() {
 		emptyFrameTextField.setText(getTimeString());
 		project.getVideo().setEmptyFrameNum((int)videoSlider.getValue());
 	}
-	
+
 }

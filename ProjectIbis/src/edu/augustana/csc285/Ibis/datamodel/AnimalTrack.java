@@ -5,25 +5,23 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-import javafx.scene.paint.Color;
-
 
 
 
 public class AnimalTrack implements Iterable<TimePoint>{
 	private String animalID;
 	private List<TimePoint> positions;
-	private Color color;
+
 	public AnimalTrack(String id) {
 		this.animalID = id;
 		positions = new ArrayList<TimePoint>();
 	}
-	
+
 	public void add(TimePoint pt) {
-			positions.add(pt);
-			Collections.sort(positions);
+		positions.add(pt);
+		Collections.sort(positions);
 	}
-	
+
 	/**
 	 * 
 	 * @param startFrameNum - the starting time (inclusive)
@@ -39,9 +37,9 @@ public class AnimalTrack implements Iterable<TimePoint>{
 		}
 		return pointsInInterval;
 	}
-	
+
 	public TimePoint getTimePointAtIndex(int index) {
-			return positions.get(index);
+		return positions.get(index);
 	}
 
 	/**
@@ -49,7 +47,7 @@ public class AnimalTrack implements Iterable<TimePoint>{
 	 * @param frameNum
 	 * @return
 	 */
-	
+
 	public TimePoint getTimePointAtTime(int frameNum) {
 		//binary searching used to be a for loop
 		int first=0;
@@ -67,27 +65,21 @@ public class AnimalTrack implements Iterable<TimePoint>{
 		}
 		return null; //if not in the list
 	}
-	
-	
+
+
 	public TimePoint getFinalTimePoint() {
 		return positions.get(positions.size()-1);
 	}
-	
+
 	public int size() {
 		return positions.size();
 	}
-	
-	public void setColor(Color newColor) {
-		color = newColor;
-	}
-	
-	public Color getColor() {
-		return color;
-	}
+
+
 	public String getAnimalId() {
 		return this.animalID;
 	}
-	
+
 	public String toString() {
 		int startFrame = positions.get(0).getFrameNum();
 		int endFrame = getFinalTimePoint().getFrameNum();

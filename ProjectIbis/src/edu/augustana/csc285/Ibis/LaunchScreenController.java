@@ -27,12 +27,12 @@ public class LaunchScreenController {
 	private Video video;
 	private ProjectData project;
 
-	
+
 	/**
 	 * When the user clicks the browse button the method opens a window for the user
 	 * to select a video. 
 	 */
-	
+
 	@FXML
 	public void handleNewProject()  {
 		FileChooser fileChooser = new FileChooser();
@@ -49,12 +49,12 @@ public class LaunchScreenController {
 			}
 		}
 	}
-	
+
 	/**
 	 * Handles button that prompts user to open existing json project.
 	 * Used for resuming work on a previously saved project.
 	 */
-	
+
 	@FXML
 	public void handleLoadProjectButton() {
 		FileChooser fileChooser = new FileChooser();
@@ -70,7 +70,7 @@ public class LaunchScreenController {
 				e.printStackTrace();
 			}			
 		}
-		
+
 	}
 	/**
 	 * Handles button that takes user to next window.
@@ -79,7 +79,7 @@ public class LaunchScreenController {
 	 * 
 	 * @throws IOException
 	 */
-	
+
 	@FXML
 	public void handleOK() throws IOException {
 		if (!newProjectTextField.getText().equals("") && this.loadProjectTextField.getText().equals("")) {
@@ -96,10 +96,8 @@ public class LaunchScreenController {
 
 	}
 	/**
-	 * Helper method for when warning messages or prompts are to be displayed to the user.
-	 * creates alert popup with proper information displayed.
-	 * 
-	 * @param message
+	 * Creates a dialogWindow with a message that is passed in
+	 * @param message - message to display
 	 */
 	public static void informationalDialog(String message) {
 		Alert alert = new Alert(AlertType.INFORMATION);
@@ -109,10 +107,7 @@ public class LaunchScreenController {
 		alert.setContentText(message);
 		alert.showAndWait();
 	}
-	/**
-	 * Helper method that takes the user to calibration screen.
-	 * @throws IOException
-	 */
+
 	public void proceedToCalibration() throws IOException {
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("CalibrationWindow.fxml"));
 		AnchorPane root = (AnchorPane) loader.load();
@@ -124,18 +119,15 @@ public class LaunchScreenController {
 		primary.setScene(nextScene);
 		primary.setTitle("Calibration Window");
 	}
-	/**
-	 * Helper method that takes the user to main window screen.
-	 * @throws IOException
-	 */
+	
 	public void proceedToMainWindow() throws IOException {
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("MainWindow.fxml"));
 		AnchorPane root = (AnchorPane) loader.load();
-		
+
 		MainWindowController nextController = loader.getController();
-				
+
 		nextController.setProject(project);
-		
+
 		Scene nextScene = new Scene(root, root.getPrefWidth(), root.getPrefHeight());
 		nextScene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 		Stage primary = (Stage) okButton.getScene().getWindow();

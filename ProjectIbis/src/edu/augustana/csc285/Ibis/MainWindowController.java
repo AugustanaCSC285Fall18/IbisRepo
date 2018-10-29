@@ -3,11 +3,8 @@ package edu.augustana.csc285.Ibis;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
+
 
 import org.opencv.core.Mat;
 
@@ -77,20 +74,13 @@ public class MainWindowController implements AutoTrackListener {
 	private FlowPane flowPanel;
 	private List<RadioButton> radioButtonList;
 
-	ToggleGroup buttonGroup = new ToggleGroup();
+	private ToggleGroup buttonGroup = new ToggleGroup();
 
-	private ScheduledExecutorService timer;
 
 	private AutoTracker autoTracker;
-
 	private ProjectData project;
 	private GraphicsContext drawingPen;
 
-	/**
-	 * Initializes ArrayList of RadioButton for chick toggle group. Adds listener
-	 * for mouseClick that draws points. Adds observer for slideBar that updates
-	 * imageView with new frame.
-	 */
 
 	@FXML
 	public void initialize() {
@@ -99,17 +89,8 @@ public class MainWindowController implements AutoTrackListener {
 		videoSlider.valueProperty().addListener(new ChangeListener<Number>() {
 			@Override
 			public void changed(ObservableValue<? extends Number> observable, Number initalVal, Number finalVal) {
-				timeDisplayed.setText(getTimeString());
+				timeDisplayed.setText(getTimeAsString());
 				showFrameAt(finalVal.intValue());
-				for(AnimalTrack animal : project.getUnassignedSegments()) {
-					List<TimePoint> segment = animal.getTimePointsWithinInterval(project.getVideo().getCurrentFrameNum() - (int) (project.getVideo().getFrameRate() * 1.5), project.getVideo().getCurrentFrameNum() - (int) (project.getVideo().getFrameRate() * 3));
-					if(!segment.isEmpty()) {
-						
-						for(TimePoint point : segment) {
-							
-						}
-					}
-				}
 				drawArenaBound();
 			}
 		});
@@ -117,11 +98,9 @@ public class MainWindowController implements AutoTrackListener {
 	}
 
 	/**
-	 * Sets current project to param passed in. Sets videoSlider bounds to maximum
-	 * and minimum values for the video. Displays the first frame of the given
-	 * video.
+	 * Sets current project to the project received from the previous window. 
 	 * 
-	 * @param project
+	 * @param project - received project
 	 */
 	public void setProject(ProjectData project) {
 		this.project = project;
@@ -145,15 +124,14 @@ public class MainWindowController implements AutoTrackListener {
 	}
 
 	/**
-	 * Helper method for when user is saving json file. Uses a fileChooser to select
-	 * the save destination and name.
+	 * Allows user to save current progress as json file. 
 	 * 
-	 * @param e
+	 * @param event
 	 * @throws IOException
 	 */
 
 	@FXML
-	public void SaveProjectItem(ActionEvent e) throws IOException {
+	public void SaveProjectItem(ActionEvent event) throws IOException {
 		FileChooser fileChooser = new FileChooser();
 		fileChooser.setTitle("Saving the project");
 		fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(" JSON file", "*.json"));
@@ -164,15 +142,14 @@ public class MainWindowController implements AutoTrackListener {
 	}
 
 	/**
-	 * Helper method for when user is saving scv file. Uses a fileChooser to select
-	 * save destination and name.
+	 * Method for when user wants to export the data to a CSV file.
 	 * 
-	 * @param e
+	 * @param event 
 	 * @throws IOException
 	 */
 
 	@FXML
-	public void ExportToCSVItem(ActionEvent e) throws IOException {
+	public void ExportToCSVItem(ActionEvent event) throws IOException {
 		FileChooser fileChooser = new FileChooser();
 		fileChooser.setTitle("Exporting to CSV file");
 		fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("CSV", "*.csv"));
@@ -182,40 +159,11 @@ public class MainWindowController implements AutoTrackListener {
 		}
 	}
 
-	/**
-	 * Returns videoSlider object.
-	 * 
-	 * @return Slider
-	 */
 	public Slider getSlider() {
 		return this.videoSlider;
 	}
 
-	/**
-	 * Creates a runnable object and timer that automatically plays through the
-	 * video
-	 */
-	protected void startPlaying() {
-		Runnable frameGrabber = new Runnable() {
-			@Override
-			public void run() {
-				// TODO: this playing approach doesn't work yet... may need a different
-				// approach...
-				showFrameAt(project.getVideo().getCurrentFrameNum() + 1);
-			}
-		};
-		// timer for 33 milliseconds, can call in larger increments of frames to play
-		// faster
-		this.timer = Executors.newSingleThreadScheduledExecutor();
-		this.timer.scheduleAtFixedRate(frameGrabber, 0, 33, TimeUnit.MILLISECONDS);
-	}
-
-	/**
-	 * updates and formats timeLabel as slider moves
-	 * 
-	 * @return String
-	 */
-	public String getTimeString() {
+	public String getTimeAsString() {
 		int timeInSecs = (int) Math.round(project.getVideo().convertFrameNumsToSeconds((int) videoSlider.getValue()));
 		textFieldCurFrameNum.setText(String.format("%05d", (int) videoSlider.getValue()));
 		return String.format("%02d:%02d", timeInSecs / 60, timeInSecs % 60);
@@ -223,7 +171,7 @@ public class MainWindowController implements AutoTrackListener {
 
 	/**
 	 * takes in point from mouse click and draws a visual point centered on the x
-	 * and y coordinates. DUPLICATE CODE IN CALIBRATION WINDOW CONTROLLER.
+	 * and y coordinates. 
 	 * 
 	 * @param event
 	 */
@@ -246,10 +194,9 @@ public class MainWindowController implements AutoTrackListener {
 	}
 
 	/**
-	 * Helper method for displaying correct image for the frame passed in. TODO want
-	 * to draw the correct dots previously stored for this frame?
+	 * Helper method for displaying correct image for the frame passed in. 
 	 * 
-	 * @param frameNum
+	 * @param frameNum - current frame number
 	 */
 	public void showFrameAt(int frameNum) {
 		if (autoTracker == null || !autoTracker.isRunning()) {
@@ -263,11 +210,8 @@ public class MainWindowController implements AutoTrackListener {
 	}
 
 	/**
-	 * Handles start autoTrack button. runs autoTrack between
-	 * project.getVideo().getStartFrameNum() and
-	 * project.getVideo().getEndFrameNum().
-	 */
-
+	 * Starts the autoTracker and checks if its not cancelled
+	 * */
 	@FXML
 	public void handleAutoTrack() {
 		if (autoTracker == null || !autoTracker.isRunning()) {
@@ -287,25 +231,28 @@ public class MainWindowController implements AutoTrackListener {
 		} else {
 			autoTracker.cancelAnalysis();
 			btnTrack.setText("Start auto-tracking");
-			timeDisplayed.setText(getTimeString());
+			timeDisplayed.setText(getTimeAsString());
 		}
 	}
 
+	/**
+	 * Assigns the selected track to the current selected chick
+	 */
+	
 	@FXML
 	public void handleAssignButton() {
 		if (comboBoxSegment.getItems().size() > 0) {
 			for (int index = 0; index < radioButtonList.size(); index++) {
 				if(radioButtonList.get(index).getText() == project.getTracks().get(index).getAnimalId() && radioButtonList.get(index).isSelected()) {						
 					for(int i=0; i<project.getUnassignedSegments().get(comboBoxSegment.getSelectionModel().getSelectedIndex()).size(); i++) {;
-					project.getTracks().get(index).add(project.getUnassignedSegments().get(comboBoxSegment.getSelectionModel().getSelectedIndex()).getTimePointAtIndex(i));					}
+					project.getTracks().get(index).add(project.getUnassignedSegments().get(comboBoxSegment.getSelectionModel().getSelectedIndex()).getTimePointAtIndex(i));					
+					}
+				}
 			}
-			}
-			
-			
 			comboBoxSegment.getItems().remove(comboBoxSegment.getSelectionModel().getSelectedIndex());
-	} 
-	comboBoxSegment.getSelectionModel().select(0);
-}
+		} 
+		comboBoxSegment.getSelectionModel().select(0);
+	}
 
 	/**
 	 * Helper method that videoView, timeDisplayed, progressAutoTrack, videoSlider,
@@ -318,7 +265,7 @@ public class MainWindowController implements AutoTrackListener {
 		// this method is being run by the AutoTracker's thread, so we must
 		// ask the JavaFX UI thread to update some visual properties
 		Platform.runLater(() -> {
-			timeDisplayed.setText(getTimeString());
+			timeDisplayed.setText(getTimeAsString());
 			videoView.setImage(imgFrame);
 			progressAutoTrack.setProgress(fractionComplete);
 			videoSlider.setValue(frameNumber);
@@ -332,7 +279,7 @@ public class MainWindowController implements AutoTrackListener {
 	 * unassignedSegments. Resets progressAutoTrack bar and btnTrack label to base
 	 * state.
 	 * 
-	 * @param List<AnimalTrack>
+	 * @param List<AnimalTrack> - unassigned tracks received from Autotracker
 	 */
 
 	@Override
@@ -340,12 +287,11 @@ public class MainWindowController implements AutoTrackListener {
 		System.out.println("TRACKING COMPLETE");
 		System.out.println("Size of unassigned segments before removal: " + trackedSegments.size() + " line 340");
 		project.getUnassignedSegments().clear();
-		removeTrackWithLessThanFivePoints(trackedSegments);
+		removeTracksWithLessThanFivePoints(trackedSegments);
 		project.getUnassignedSegments().addAll(trackedSegments);
 
 		System.out.println("How many chicks are there in the project " + project.getTracks().size() + " line 345");
-		System.out.println(
-				"size of unassigned segments after removal :" + project.getUnassignedSegments().size() + " line 346");
+		System.out.println("size of unassigned segments after removal :" + project.getUnassignedSegments().size() + " line 346");
 
 		for (int index = 0; index < trackedSegments.size(); index++) {
 			comboBoxSegment.getItems().add(trackedSegments.get(index).getAnimalId());
@@ -371,7 +317,8 @@ public class MainWindowController implements AutoTrackListener {
 
 	}
 
-	public void removeTrackWithLessThanFivePoints(List<AnimalTrack> trackedSegments) {
+
+	public void removeTracksWithLessThanFivePoints(List<AnimalTrack> trackedSegments) {
 		List<AnimalTrack> newlist = new ArrayList<AnimalTrack>();
 		for (int index = 0; index < trackedSegments.size(); index++) {
 			if (trackedSegments.get(index).size() < 5) {
@@ -386,6 +333,7 @@ public class MainWindowController implements AutoTrackListener {
 	 * each one.
 	 */
 	public void createRadioButtonsForChicks() {
+		
 		for (int i = 0; i < project.getTracks().size(); i++) {
 			radioButtonList.add(new RadioButton());
 			radioButtonList.get(i).setText(project.getTracks().get(i).getAnimalId());
@@ -448,15 +396,15 @@ public class MainWindowController implements AutoTrackListener {
 	@FXML
 	public void showSelectedAutoTrack() {
 		if(comboBoxSegment.getSelectionModel().getSelectedIndex() !=-1) {
-		AnimalTrack track = project.getUnassignedSegments().get(comboBoxSegment.getSelectionModel().getSelectedIndex());
-		System.out.println(track);
-		videoSlider.setValue(track.getFinalTimePoint().getFrameNum());
+			AnimalTrack track = project.getUnassignedSegments().get(comboBoxSegment.getSelectionModel().getSelectedIndex());
+			System.out.println(track);
+			videoSlider.setValue(track.getFinalTimePoint().getFrameNum());
 
-		drawingPen.setFill(Color.TOMATO);
-		for (int i = 0; i < track.size(); i++) {
-			drawingPen.fillOval(track.getTimePointAtIndex(i).getX(), track.getTimePointAtIndex(i).getY(), 5, 5);
+			drawingPen.setFill(Color.TOMATO);
+			for (int i = 0; i < track.size(); i++) {
+				drawingPen.fillOval(track.getTimePointAtIndex(i).getX(), track.getTimePointAtIndex(i).getY(), 5, 5);
+			}
 		}
-	}
 	}
 
 }

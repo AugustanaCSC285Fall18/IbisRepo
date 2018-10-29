@@ -15,7 +15,7 @@ public class ProjectData {
 	private Video video;
 	private List<AnimalTrack> tracks;
 	private List<AnimalTrack> unassignedSegments;
-	
+
 	/**
 	 * Constructor for ProjectData objects.
 	 * Sets video filepath from param.
@@ -49,7 +49,7 @@ public class ProjectData {
 	public List<AnimalTrack> getUnassignedSegments() {
 		return unassignedSegments;
 	}
-	
+
 	/**
 	 * Setter method for unassignedSegments.
 	 * @param track
@@ -75,7 +75,7 @@ public class ProjectData {
 		out.print(json);
 		out.close();
 	}
-	
+
 	/**
 	 * Helper method used when exporting project to CSV file.
 	 * @param saveFile
@@ -87,10 +87,10 @@ public class ProjectData {
 		out.println();
 		for (AnimalTrack trackToSave: tracks) {
 			for(TimePoint point: trackToSave) {
-			 out.print(trackToSave.getAnimalId()+", "+ String.format("%.2f", (point.getFrameNum()/video.getFrameRate())));
-			 out.print(", "+ String.format("%.2f", (point.getX()/ video.getXPixelsPerCm())));
-			 out.print(", "+ String.format("%.2f", (point.getY()/ video.getYPixelsPerCm())));
-			 out.println();
+				out.print(trackToSave.getAnimalId()+", "+ String.format("%.2f", (point.getFrameNum()/video.getFrameRate())));
+				out.print(", "+ String.format("%.2f", (point.getX()/ video.getXPixelsPerCm())));
+				out.print(", "+ String.format("%.2f", (point.getY()/ video.getYPixelsPerCm())));
+				out.println();
 			}
 		}
 		out.close();
@@ -126,5 +126,5 @@ public class ProjectData {
 		data.getVideo().connectVideoCapture();
 		return data;
 	}
-	
+
 }
