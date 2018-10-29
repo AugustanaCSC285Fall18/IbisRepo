@@ -6,8 +6,6 @@ import java.util.Iterator;
 import java.util.List;
 
 
-
-
 public class AnimalTrack implements Iterable<TimePoint>{
 	private String animalID;
 	private List<TimePoint> positions;
@@ -37,6 +35,19 @@ public class AnimalTrack implements Iterable<TimePoint>{
 		}
 		return pointsInInterval;
 	}
+	
+	/**
+	 * Create (or modify, if existing) a timepoint for the specified time & place.
+	 */
+	public void setTimePointAtTime(double x, double y, int frameNum) {
+		TimePoint oldPt = getTimePointAtTime(frameNum);
+		if (oldPt != null) {
+			oldPt.setX(x);
+			oldPt.setY(y);
+		} else {
+			add(new TimePoint(x, y, frameNum));
+		}
+	}
 
 	public TimePoint getTimePointAtIndex(int index) {
 		return positions.get(index);
@@ -50,17 +61,9 @@ public class AnimalTrack implements Iterable<TimePoint>{
 
 	public TimePoint getTimePointAtTime(int frameNum) {
 		//binary searching used to be a for loop
-		int first=0;
-		int last = positions.size();		
-		while(first<= last) {
-			int middle= (first+last)/2;
-			if(positions.get(middle).getFrameNum()<frameNum) {
-				first=middle+1;
-			}else if(positions.get(middle).getFrameNum()==frameNum) {
-				return positions.get(middle);
-			}else {
-				last = middle-1;
-				middle=(first+last)/2;
+		for (TimePoint pt : positions) {
+			if (pt.getFrameNum() == frameNum) {
+				return pt;
 			}
 		}
 		return null; //if not in the list

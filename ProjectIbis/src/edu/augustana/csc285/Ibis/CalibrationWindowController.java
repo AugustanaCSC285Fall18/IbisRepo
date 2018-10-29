@@ -74,7 +74,7 @@ public class CalibrationWindowController {
 
 
 	private boolean specifiedCalibrationRatio = false;
-	private boolean specifiedTheArenaBounds = false;
+	private boolean specifiedTheArenaBounds = true;
 
 	@FXML
 	public void initialize() {
@@ -128,11 +128,11 @@ public class CalibrationWindowController {
 			primary.setTitle("Chick Tracker 1.0");
 
 		} else if (numberOfChicks==0) {
-			LaunchScreenController.informationalDialog("Please add at least one chick to begin the traking");
+			LaunchScreenController.informationalDialog("Please add at least one chick to begin the traking", "Warning");
 		} else if(!specifiedCalibrationRatio) {
-			LaunchScreenController.informationalDialog("Please finish the calibration before proceeding");
+			LaunchScreenController.informationalDialog("Please finish the calibration before proceeding", "Warning");
 		} else if(!specifiedTheArenaBounds) {
-			LaunchScreenController.informationalDialog("Please specifie the areana bounds");
+			LaunchScreenController.informationalDialog("Please specifie the areana bounds", "Warning");
 		}
 	}
 
@@ -143,7 +143,7 @@ public class CalibrationWindowController {
 
 	@FXML
 	public void handleCalibrateRatio() {
-		LaunchScreenController.informationalDialog("Place two vertical points first, then two horizontal points");
+		LaunchScreenController.informationalDialog("Place two vertical points first, then two horizontal points", "Information");
 		clearTheCanvasView();
 		pointsToCalibrate.clear();
 		specifiedCalibrationRatio = false;
@@ -200,7 +200,7 @@ public class CalibrationWindowController {
 	
 	@FXML
 	public void handleArenaBoundsButton() {
-		LaunchScreenController.informationalDialog("Place a point in the upper left corner of the area to track, then add another point in the bottom right");
+		LaunchScreenController.informationalDialog("Place a point in the upper left corner of the area to track, then add another point in the bottom right", "Error");
 		specifiedTheArenaBounds=false;
 		clearTheCanvasView();
 		arenaPoints.clear();
@@ -215,6 +215,7 @@ public class CalibrationWindowController {
 				if(arenaPoints.size() == 2) {
 					int arenaWidth =(int) Math.abs(arenaPoints.get(1).getX() - arenaPoints.get(0).getX());
 					int arenaHeight = (int)Math.abs(arenaPoints.get(1).getY() - arenaPoints.get(0).getY());
+					//the origin is always set to be the first click of
 					Rectangle arenaBounds = new Rectangle((int)(arenaPoints.get(0).getX()), (int)(arenaPoints.get(0).getY()),(arenaWidth), (arenaHeight));
 					project.getVideo().setArenaBounds(arenaBounds);
 
@@ -227,6 +228,7 @@ public class CalibrationWindowController {
 	public void clearTheCanvasView() {
 		drawingPen.clearRect(0, 0, canvasView.getWidth(), canvasView.getHeight());
 	}
+	
 	public double getVideoToCanvasRatio() {
 		double aspectRatio = project.getVideo().getFrameWidth() / project.getVideo().getFrameHeight();
 		double displayWidth = Math.min(videoView.getFitWidth(), videoView.getFitHeight() * aspectRatio);
@@ -246,11 +248,11 @@ public class CalibrationWindowController {
 				double userInputtAsDouble = Double.parseDouble(userInputAsText);
 				return userInputtAsDouble;
 			} catch (NumberFormatException ex) {
-				LaunchScreenController.informationalDialog("Please type a number");
+				LaunchScreenController.informationalDialog("Please type a number", "Information");
 				return getDoubleFromUser(msg);
 			}			
 		} else {
-			LaunchScreenController.informationalDialog("Please draw the points again");
+			LaunchScreenController.informationalDialog("Please draw the points again", "Information");
 			pointsToCalibrate.clear();
 			clearTheCanvasView();
 			return 0;
@@ -309,7 +311,7 @@ public class CalibrationWindowController {
 			numberOfChicksLabel.setText("" + numberOfChicks);
 			chickNames.add(result.get());
 		}
-		System.out.println("Size of the strings adding for the chick names = "+chickNames.size() +" in calibration line 307");
+		//System.out.println("Size of the strings adding for the chick names = "+chickNames.size() +" in calibration line 307");
 	}
 
 	/**
@@ -322,7 +324,7 @@ public class CalibrationWindowController {
 			numberOfChicks--;
 			numberOfChicksLabel.setText("" + numberOfChicks);
 			chickNames.remove(chickNames.size() - 1);
-			System.out.println("Size of the strings remove for the chick names = "+chickNames.size() +" in calibration line 320");
+			//System.out.println("Size of the strings remove for the chick names = "+chickNames.size() +" in calibration line 320");
 		}
 	}
 	/**

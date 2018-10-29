@@ -10,7 +10,6 @@
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.ProgressBar?>
 <?import javafx.scene.control.Slider?>
-<?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.FlowPane?>
@@ -30,7 +29,6 @@
       </StackPane>
       <Slider fx:id="videoSlider" blockIncrement="1.0" layoutX="207.0" layoutY="299.0" prefHeight="14.0" prefWidth="413.0" />
       <Label fx:id="timeDisplayed" layoutX="620.0" layoutY="296.0" prefHeight="21.0" prefWidth="68.0" text="00:00" />
-      <TextField fx:id="textFieldCurFrameNum" editable="false" layoutX="15.0" layoutY="50.0" prefHeight="25.0" prefWidth="68.0" text="0" />
       <Button fx:id="btnTrack" layoutX="10.0" layoutY="386.0" mnemonicParsing="false" onAction="#handleAutoTrack" prefHeight="31.0" prefWidth="178.0" text="Start auto-tracking" />
       <ProgressBar fx:id="progressAutoTrack" layoutX="10.0" layoutY="425.0" prefHeight="23.0" prefWidth="178.0" progress="0.0" />
       <MenuBar layoutX="14.0" layoutY="14.0">
@@ -41,6 +39,11 @@
                   <MenuItem mnemonicParsing="false" onAction="#ExportToCSVItem" text="Export data to CSV file" />
             </items>
           </Menu>
+            <Menu mnemonicParsing="false" text="About">
+              <items>
+                <MenuItem mnemonicParsing="false" onAction="#showAboutUs" text="Us" />
+              </items>
+            </Menu>
         </menus>
       </MenuBar>
       <FlowPane fx:id="flowPanel" layoutX="239.0" layoutY="325.0" prefHeight="138.0" prefWidth="373.0" />

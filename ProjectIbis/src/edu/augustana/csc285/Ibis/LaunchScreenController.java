@@ -87,11 +87,11 @@ public class LaunchScreenController {
 		}else if(newProjectTextField.getText().equals("") && !this.loadProjectTextField.getText().equals("")) {
 			proceedToMainWindow();
 		}else if(!newProjectTextField.getText().equals("") &&!this.loadProjectTextField.getText().equals("")) {
-			informationalDialog("Only one file is allowed please try again");
+			informationalDialog("Only one file is allowed please try again", "Error");
 			this.newProjectTextField.setText("");
 			this.loadProjectTextField.setText("");
 		}else {
-			informationalDialog("Please select a file");
+			informationalDialog("Please select a file", "Error");
 		}
 
 	}
@@ -99,11 +99,11 @@ public class LaunchScreenController {
 	 * Creates a dialogWindow with a message that is passed in
 	 * @param message - message to display
 	 */
-	public static void informationalDialog(String message) {
+	public static void informationalDialog(String message, String header) {
 		Alert alert = new Alert(AlertType.INFORMATION);
 		alert.setResizable(false);
 		alert.setHeaderText(null);
-		alert.setTitle("Error");
+		alert.setTitle(header);
 		alert.setContentText(message);
 		alert.showAndWait();
 	}
